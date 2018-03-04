@@ -26,4 +26,5 @@ target
 *.iml
 
 config.properties
+tyr-secret.json
 

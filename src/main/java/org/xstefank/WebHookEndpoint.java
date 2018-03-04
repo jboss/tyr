@@ -4,6 +4,7 @@ import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.PullRequestService;
+import org.jboss.logging.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,17 +17,24 @@ import java.util.stream.Collectors;
 @Path("/")
 public class WebHookEndpoint {
 
-    private static Properties config;
+    private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
+
+    private static String oauthToken;
 
     static {
         InputStream is = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("config.properties");
 
-        config = new Properties();
+        Properties config = new Properties();
         try {
             config.load(is);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.info("properties cannot be loaded");
+        }
+
+        oauthToken = config.getProperty("github.oauth.token");
+        if (oauthToken == null) {
+            oauthToken = System.getProperty("GITHUB_OAUTH_TOKEN");
         }
     }
 
@@ -35,7 +43,7 @@ public class WebHookEndpoint {
     public String testGet() throws IOException {
 
         GitHubClient client = new GitHubClient();
-        client.setOAuth2Token(config.getProperty("github.oauth.token"));
+        client.setOAuth2Token(oauthToken);
 
         PullRequestService service = new PullRequestService(client);
         RepositoryId repo = new RepositoryId("xstefank", "test-repo");

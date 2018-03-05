@@ -1,5 +1,7 @@
 package org.xstefank;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.jboss.logging.Logger;
@@ -38,8 +40,8 @@ public class WebHookEndpoint {
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void processPullRequest(Object pullRequest) {
-        log.info(pullRequest);
+    public void processPullRequest(JsonNode pullRequest) {
+        log.info(pullRequest.get("pull_request").get("body"));
     }
 
 }

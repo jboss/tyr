@@ -1,18 +1,15 @@
 package org.xstefank;
 
 import org.eclipse.egit.github.core.PullRequest;
-import org.eclipse.egit.github.core.RepositoryId;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.PullRequestService;
+import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.jboss.logging.Logger;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import java.io.IOException;
+import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 @Path("/")
 public class WebHookEndpoint {
@@ -38,18 +35,11 @@ public class WebHookEndpoint {
         }
     }
 
-    @GET
-    @Path("/get")
-    public String testGet() throws IOException {
-
-        GitHubClient client = new GitHubClient();
-        client.setOAuth2Token(oauthToken);
-
-        PullRequestService service = new PullRequestService(client);
-        RepositoryId repo = new RepositoryId("xstefank", "test-repo");
-        List<PullRequest> open = service.getPullRequests(repo, "open");
-
-        return open.stream().map(pr -> pr.getTitle()).collect(Collectors.toList()).toString();
+    @POST
+    @Path("/pull-request")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void processPullRequest(Object pullRequest) {
+        log.info(pullRequest);
     }
 
 }

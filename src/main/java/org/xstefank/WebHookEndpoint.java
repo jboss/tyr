@@ -41,7 +41,8 @@ public class WebHookEndpoint {
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
     public void processPullRequest(JsonNode pullRequest) {
-        log.info(pullRequest.get("pull_request").get("body"));
+        log.info("pr received");
+        JsonNode prBody = pullRequest.get("pull_request").get("body");
     }
 
 }

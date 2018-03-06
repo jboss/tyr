@@ -16,13 +16,15 @@ public class TemplateChecker {
             "Issue: https://issues.jboss.org/browse/JBEAP-\\d+");
 
     public static List<Violation> check(String s) {
-        log.info("going to check s " + s);
+        log.info("going to check: " + s);
+        List<Violation> violations = new ArrayList<>();
+
         Matcher matcher = pattern.matcher(s);
         if (!matcher.matches()) {
-            log.info("not matched body");
+            violations.add(new Violation("not matched", "description invalid"));
         }
 
-        return new ArrayList<>();
+        return violations;
     }
 
 }

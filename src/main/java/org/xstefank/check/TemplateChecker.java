@@ -19,7 +19,7 @@ public class TemplateChecker {
         log.info("going to check s " + s);
         Matcher matcher = pattern.matcher(s);
         if (!matcher.matches()) {
-            log.info("not matched");
+            log.info("not matched body");
         }
 
         return new ArrayList<>();

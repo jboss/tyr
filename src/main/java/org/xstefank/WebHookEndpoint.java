@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.jboss.logging.Logger;
+import org.xstefank.check.TemplateChecker;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -43,6 +44,8 @@ public class WebHookEndpoint {
     public void processPullRequest(JsonNode pullRequest) {
         log.info("pr received");
         JsonNode prBody = pullRequest.get("pull_request").get("body");
+
+        TemplateChecker.check(prBody.asText());
     }
 
 }

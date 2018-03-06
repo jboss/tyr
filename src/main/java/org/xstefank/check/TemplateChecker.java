@@ -11,16 +11,12 @@ public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    private static Pattern pattern = Pattern.compile("Upstream Issue: (https://issues.jboss.org/browse/WFLY-\\d+|Upstream not required)\n" +
-            "Upstream PR: #\\d+\n" +
-            "Issue: https://issues.jboss.org/browse/JBEAP-\\d+");
-
     public static List<Violation> check(String s) {
         log.info("going to check: " + s);
         List<Violation> violations = new ArrayList<>();
-
-        Matcher matcher = pattern.matcher(s);
-        if (!matcher.matches()) {
+        
+        if (!s.contains("WFLY")) {
+            log.info("not matched");
             violations.add(new Violation("not matched", "description invalid"));
         }
 

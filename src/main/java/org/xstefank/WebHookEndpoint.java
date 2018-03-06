@@ -67,6 +67,7 @@ public class WebHookEndpoint {
         List<Violation> violations = TemplateChecker.check(pullRequest.get("body").asText());
 
         if (!violations.isEmpty()) {
+            log.info("invalid desc");
             GitHubClient client = new GitHubClient();
             client.setOAuth2Token(oauthToken);
 
@@ -98,6 +99,40 @@ public class WebHookEndpoint {
 
 
             log.info("status updated " + response.getStatus() + response.getEntity() + response.toString());
+        } else {
+            log.info("valid desc");
+            GitHubClient client = new GitHubClient();
+            client.setOAuth2Token(oauthToken);
+
+            CommitService commitService = new CommitService(client);
+
+            JsonNode head = pullRequest.get("head");
+            RepositoryId repo = RepositoryId.createFromId(head.get("repo").get("full_name").asText());
+            String sha = head.get("sha").asText();
+
+            Client resteasyClient = ClientBuilder.newClient();
+            URI statusUri = UriBuilder
+                    .fromUri(GITHUB_BASE)
+                    .path("/repos")
+                    .path("/" + repo.generateId())
+                    .path("/statuses")
+                    .path("/" + sha)
+                    .build();
+
+
+            WebTarget target = resteasyClient.target(statusUri);
+
+            Entity<StatusPayload> json = Entity.json(new StatusPayload("success",
+                    uriInfo.getBaseUri().toString(), "", "jboss-set"));
+
+            Response response = target.request()
+                    .header("Content-Type", MediaType.APPLICATION_JSON)
+                    .header("Authorization", "token " + oauthToken)
+                    .post(json);
+
+
+            log.info("status updated " + response.getStatus() + response.getEntity() + response.toString());
+
         }
 
     }

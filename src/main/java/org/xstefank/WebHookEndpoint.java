@@ -86,6 +86,9 @@ public class WebHookEndpoint {
                     .path("/" + sha)
                     .build();
 
+            log.info("URL - " + statusUri.toString());
+            log.info("token - " + oauthToken);
+
 
             WebTarget target = resteasyClient.target(statusUri);
 
@@ -98,7 +101,7 @@ public class WebHookEndpoint {
                     .post(json);
 
 
-            log.info("status updated " + response.getStatus() + response.getEntity() + response.toString());
+            log.info("status updated " + response.getStatus() + " | " + response.getEntity() + " | " + response.toString());
         } else {
             log.info("valid desc");
             GitHubClient client = new GitHubClient();

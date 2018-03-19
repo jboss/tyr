@@ -14,7 +14,7 @@ public class TemplateChecker {
     public static List<Violation> check(String s) {
         log.info("going to check: " + s);
         List<Violation> violations = new ArrayList<>();
-        
+
         if (!s.contains("WFLY")) {
             log.info("not matched");
             violations.add(new Violation("not matched", "description invalid"));

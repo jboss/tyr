@@ -21,6 +21,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -32,6 +35,9 @@ import java.util.Properties;
 public class WebHookEndpoint {
 
     private static final String GITHUB_BASE = "https://api.github.com";
+    private static final String CONFIG_FILE = "config.properties";
+    private static final String TOKEN_PROPERTY = "github.oauth.token";
+    private static final String JBOSS_CONFIG_DIR = "jboss.server.config.dir";
 
     private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
 
@@ -41,20 +47,7 @@ public class WebHookEndpoint {
     private UriInfo uriInfo;
 
     static {
-        InputStream is = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("config.properties");
-
-        Properties config = new Properties();
-        try {
-            config.load(is);
-        } catch (Exception e) {
-            log.info("properties cannot be loaded");
-        }
-
-        oauthToken = config.getProperty("github.oauth.token");
-        if (oauthToken == null) {
-            oauthToken = System.getProperty("GITHUB_OAUTH_TOKEN");
-        }
+        oauthToken = readToken();
     }
 
     @POST
@@ -71,8 +64,6 @@ public class WebHookEndpoint {
             GitHubClient client = new GitHubClient();
             client.setOAuth2Token(oauthToken);
 
-            CommitService commitService = new CommitService(client);
-
             JsonNode head = pullRequest.get("head");
             RepositoryId repo = RepositoryId.createFromId(head.get("repo").get("full_name").asText());
             String sha = head.get("sha").asText();
@@ -85,10 +76,6 @@ public class WebHookEndpoint {
                     .path("/statuses")
                     .path("/" + sha)
                     .build();
-
-            log.info("URL - " + statusUri.toString());
-            log.info("token - " + oauthToken);
-
 
             WebTarget target = resteasyClient.target(statusUri);
 
@@ -107,8 +94,6 @@ public class WebHookEndpoint {
             GitHubClient client = new GitHubClient();
             client.setOAuth2Token(oauthToken);
 
-            CommitService commitService = new CommitService(client);
-
             JsonNode head = pullRequest.get("head");
             RepositoryId repo = RepositoryId.createFromId(head.get("repo").get("full_name").asText());
             String sha = head.get("sha").asText();
@@ -121,8 +106,7 @@ public class WebHookEndpoint {
                     .path("/statuses")
                     .path("/" + sha)
                     .build();
-
-
+            
             WebTarget target = resteasyClient.target(statusUri);
 
             Entity<StatusPayload> json = Entity.json(new StatusPayload("success",
@@ -138,6 +122,41 @@ public class WebHookEndpoint {
 
         }
 
+    }
+
+    private static String readToken() {
+        String token;
+        token = readTokenFromProperties("src/main/resources", CONFIG_FILE);
+        token = token == null ? readTokenFromProperties(System.getProperty(JBOSS_CONFIG_DIR), CONFIG_FILE) : token;
+        return token == null ? System.getProperty("GITHUB_OAUTH_TOKEN") : token;
+    }
+
+    private static String readTokenFromProperties(String dirName, String fileName) {
+        InputStream is = null;
+        File dir = new File(dirName);
+        File fileProp = new File(dir, fileName);
+
+        try {
+            is = new FileInputStream(fileProp);
+            Properties properties = new Properties();
+            properties.load(is);
+
+            if (properties.getProperty(TOKEN_PROPERTY) != null) {
+                return properties.getProperty(TOKEN_PROPERTY);
+            }
+        } catch (Exception e) {
+            // intentionally ignored
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                // intentionally ignored
+            }
+        }
+
+        return null;
     }
 
 }

@@ -37,6 +37,7 @@ public class WebHookEndpoint {
     private static final String GITHUB_BASE = "https://api.github.com";
     private static final String CONFIG_FILE = "config.properties";
     private static final String TOKEN_PROPERTY = "github.oauth.token";
+    private static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
     private static final String JBOSS_CONFIG_DIR = "jboss.server.config.dir";
 
     private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
@@ -77,6 +78,8 @@ public class WebHookEndpoint {
                     .path("/" + sha)
                     .build();
 
+            log.info("token - " + oauthToken);
+
             WebTarget target = resteasyClient.target(statusUri);
 
             Entity<StatusPayload> json = Entity.json(new StatusPayload("error",
@@ -106,7 +109,7 @@ public class WebHookEndpoint {
                     .path("/statuses")
                     .path("/" + sha)
                     .build();
-            
+
             WebTarget target = resteasyClient.target(statusUri);
 
             Entity<StatusPayload> json = Entity.json(new StatusPayload("success",
@@ -128,7 +131,7 @@ public class WebHookEndpoint {
         String token;
         token = readTokenFromProperties("src/main/resources", CONFIG_FILE);
         token = token == null ? readTokenFromProperties(System.getProperty(JBOSS_CONFIG_DIR), CONFIG_FILE) : token;
-        return token == null ? System.getProperty("GITHUB_OAUTH_TOKEN") : token;
+        return token == null ? System.getenv(TOKEN_ENV) : token;
     }
 
     private static String readTokenFromProperties(String dirName, String fileName) {

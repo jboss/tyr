@@ -23,4 +23,9 @@ public class Check {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s, expecting %s", name, description, regex);
+    }
 }

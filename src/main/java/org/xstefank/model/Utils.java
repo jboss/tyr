@@ -21,6 +21,7 @@ public class Utils {
     public static final String REPO = "repo";
     public static final String FULL_NAME = "full_name";
     public static final String SHA = "sha";
+    public static final String TITLE = "title";
 
     public static String readTokenFromProperties(String dirName, String fileName) {
         InputStream is = null;

@@ -10,52 +10,50 @@ import org.xstefank.model.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    private static List<Check> checks = loadChecks();
+    private static ConfigJSON config = readConfig();
 
     public static void checkPR(JsonNode payload) {
-
-        log.info("checking title");
-        System.out.println(checks);
-
-        log.info("updating status");
-        GitHubAPI.updateCommitStatus("xstefank/test-repo",
-                payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
-                CommitStatus.SUCCESS, "https://github.com/xstefank/tyr/",
-                "testing format", "PR format check");
-
-    }
-
-    private static List<Check> loadChecks() {
-        checks = new ArrayList<>();
-        ConfigJSON config;
-
-        try {
-            config = readConfig();
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Cannot load configuration file", e);
-        }
+        StringBuilder status = new StringBuilder();
 
         if (config.getTitle() != null) {
-            checks.add(new TitleCheck(config.getTitle()));
+            log.info("checking title");
+            Pattern pattern = Pattern.compile(config.getTitle());
+            Matcher matcher = pattern.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+            if (!matcher.matches()) {
+                status.append(new TitleCheck(config.getTitle())).append(System.lineSeparator());
+            }
         }
 
-        return checks;
+
+        log.info("updating status");
+        String description = status.toString();
+
+        GitHubAPI.updateCommitStatus("xstefank/test-repo",
+                payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
+                description.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
+                "https://github.com/xstefank/tyr/",
+                description.isEmpty() ? "valid" : description, "PR format check");
+
     }
 
-    private static ConfigJSON readConfig() throws IOException {
+    private static ConfigJSON readConfig() {
         String configFileName = System.getProperty("template.format.file");
         log.info(configFileName);
         File configFile = new File(configFileName);
         ObjectMapper mapper = new ObjectMapper();
 
-        return mapper.readValue(configFile, ConfigJSON.class);
+        try {
+            return mapper.readValue(configFile, ConfigJSON.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Cannot load configuration file", e);
+        }
     }
 
 }

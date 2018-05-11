@@ -1,26 +1,23 @@
 package org.xstefank.check;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.logging.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.xstefank.api.GitHubAPI;
+import org.xstefank.model.CommitStatus;
+import org.xstefank.model.Utils;
 
 public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    public static List<Violation> check(String s) {
-        log.info("going to check: " + s);
-        List<Violation> violations = new ArrayList<>();
+    public static void checkPR(JsonNode payload) {
 
-        if (!s.contains("WFLY")) {
-            log.info("not matched");
-            violations.add(new Violation("not matched", "description invalid"));
-        }
+        log.info("updating status");
+        GitHubAPI.updateCommitStatus("xstefank/test-repo",
+                payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
+                CommitStatus.SUCCESS, "https://github.com/xstefank/tyr/",
+                "testing format", "PR format check");
 
-        return violations;
     }
 
 }

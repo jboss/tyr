@@ -20,12 +20,11 @@ public class TemplateChecker {
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
     private List<Check> checks;
-    private String repository;
+    private FormatYAML config;
 
     public TemplateChecker() {
-        FormatYAML config = readConfig();
+        config = readConfig();
         checks = registerChecks(config);
-        repository = config.getRepository();
     }
 
     public void checkPR(JsonNode payload) {
@@ -40,10 +39,10 @@ public class TemplateChecker {
         log.info("updating status");
         String description = joiner.toString();
 
-        GitHubAPI.updateCommitStatus("xstefank/test-repo",
+        GitHubAPI.updateCommitStatus(config.getRepository(),
                 payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
                 description.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
-                "https://github.com/xstefank/tyr/",
+                config.getUrl(),
                 description.isEmpty() ? "valid" : description, "PR format check");
 
     }

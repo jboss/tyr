@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public class FormatYAML {
 
     private String repository;
+    private String url;
     private String title;
     private Description description;
 
@@ -18,6 +19,14 @@ public class FormatYAML {
 
     public void setRepository(String repository) {
         this.repository = repository;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getTitle() {

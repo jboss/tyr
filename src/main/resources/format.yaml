@@ -1,5 +1,7 @@
 
 repository: "xstefank/test-repo"
+url: "https://github.com/xstefank/test-repo/blob/master/.github/pull_request_template.md"
+
 title: "\\[WFLY-\\d+\\]\\s+.*|WFLY-\\d+\\s+.*"
 description:
   required rows:

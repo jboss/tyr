@@ -2,10 +2,11 @@ package org.xstefank.check;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.model.CommitStatus;
-import org.xstefank.model.ConfigJSON;
+import org.xstefank.model.FormatYAML;
 import org.xstefank.model.Utils;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    private static ConfigJSON config = readConfig();
+    private static FormatYAML config = readConfig();
 
     public static void checkPR(JsonNode payload) {
         StringBuilder status = new StringBuilder();
@@ -43,14 +44,14 @@ public class TemplateChecker {
 
     }
 
-    private static ConfigJSON readConfig() {
+    private static FormatYAML readConfig() {
         String configFileName = System.getProperty("template.format.file");
         log.info(configFileName);
         File configFile = new File(configFileName);
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         try {
-            return mapper.readValue(configFile, ConfigJSON.class);
+            return mapper.readValue(configFile, FormatYAML.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot load configuration file", e);
         }

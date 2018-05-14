@@ -2,7 +2,7 @@ package org.xstefank.model;
 
 import java.util.List;
 
-public class ConfigJSON {
+public class FormatYAML {
 
     private String title;
     private List<String> description;

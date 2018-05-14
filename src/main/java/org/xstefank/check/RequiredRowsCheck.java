@@ -2,9 +2,9 @@ package org.xstefank.check;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.logging.Logger;
-import org.xstefank.api.GitHubAPI;
-import org.xstefank.model.FormatYAML;
 import org.xstefank.model.Utils;
+import org.xstefank.model.yaml.Format;
+import org.xstefank.model.yaml.Row;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,23 +17,23 @@ public class RequiredRowsCheck implements Check {
 
     private static final Logger log = Logger.getLogger(RequiredRowsCheck.class);
 
-    private List<FormatYAML.Row> rows;
+    private List<Row> rows;
 
-    public RequiredRowsCheck(List<FormatYAML.Row> rows) {
+    public RequiredRowsCheck(List<Row> rows) {
         this.rows = rows;
     }
 
     @Override
     public String check(JsonNode payload) {
         log.info("checking required rows");
-        List<FormatYAML.Row> requiredRows = new ArrayList<>(rows);
+        List<Row> requiredRows = new ArrayList<>(rows);
         String description = payload.get(Utils.PULL_REQUEST).get(Utils.BODY).asText();
         Scanner scanner = new Scanner(description);
 
         while (scanner.hasNextLine() && !requiredRows.isEmpty()) {
             String line = scanner.nextLine();
-            for (Iterator<FormatYAML.Row> it = requiredRows.iterator(); it.hasNext(); ) {
-                FormatYAML.Row row = it.next();
+            for (Iterator<Row> it = requiredRows.iterator(); it.hasNext(); ) {
+                Row row = it.next();
                 Matcher matcher = row.getPattern().matcher(line);
                 if (matcher.matches()) {
                     System.out.println("matched line " + line);
@@ -45,7 +45,7 @@ public class RequiredRowsCheck implements Check {
 
         if (!requiredRows.isEmpty()) {
             StringJoiner joiner = new StringJoiner(", ");
-            for (FormatYAML.Row row : requiredRows) {
+            for (Row row : requiredRows) {
                 joiner.add(row.getMessage());
             }
 

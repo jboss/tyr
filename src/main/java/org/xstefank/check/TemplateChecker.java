@@ -11,30 +11,27 @@ import org.xstefank.model.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    private static FormatYAML config = readConfig();
+    private static List<Check> checks = registerChecks();
 
     public static void checkPR(JsonNode payload) {
-        StringBuilder status = new StringBuilder();
-
-        if (config.getTitle() != null) {
-            log.info("checking title");
-            Pattern pattern = Pattern.compile(config.getTitle());
-            Matcher matcher = pattern.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
-            if (!matcher.matches()) {
-                status.append(new TitleCheck(config.getTitle())).append(System.lineSeparator());
+        StringJoiner joiner = new StringJoiner(", ");
+        for (Check check : checks) {
+            String message = check.check(payload);
+            if (message != null) {
+                joiner.add(message);
             }
         }
 
-
         log.info("updating status");
-        String description = status.toString();
+        String description = joiner.toString();
 
         GitHubAPI.updateCommitStatus("xstefank/test-repo",
                 payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
@@ -42,6 +39,21 @@ public class TemplateChecker {
                 "https://github.com/xstefank/tyr/",
                 description.isEmpty() ? "valid" : description, "PR format check");
 
+    }
+
+    private static List<Check> registerChecks() {
+        FormatYAML config = readConfig();
+        List<Check> checks = new ArrayList<>();
+
+        if (config.getTitle() != null) {
+            checks.add(new TitleCheck(config.getTitle()));
+        }
+
+        if (config.getDescription() != null) {
+            checks.add(new RequiredRowsCheck(config.getDescription().getRequiredRows()));
+        }
+
+        return checks;
     }
 
     private static FormatYAML readConfig() {

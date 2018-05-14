@@ -14,11 +14,13 @@ public class WebHookEndpoint {
 
     private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
 
+    private TemplateChecker templateChecker = new TemplateChecker();
+
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
     public void processPullRequest(JsonNode pullRequestPayload) {
-        TemplateChecker.checkPR(pullRequestPayload);
+        templateChecker.checkPR(pullRequestPayload);
     }
 
 

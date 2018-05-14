@@ -1,4 +1,5 @@
 
+repository: "xstefank/test-repo"
 title: "\\[WFLY-\\d+\\]\\s+.*|WFLY-\\d+\\s+.*"
 description:
   required rows:

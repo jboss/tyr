@@ -19,9 +19,16 @@ public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
-    private static List<Check> checks = registerChecks();
+    private List<Check> checks;
+    private String repository;
 
-    public static void checkPR(JsonNode payload) {
+    public TemplateChecker() {
+        FormatYAML config = readConfig();
+        checks = registerChecks(config);
+        repository = config.getRepository();
+    }
+
+    public void checkPR(JsonNode payload) {
         StringJoiner joiner = new StringJoiner(", ");
         for (Check check : checks) {
             String message = check.check(payload);
@@ -41,8 +48,7 @@ public class TemplateChecker {
 
     }
 
-    private static List<Check> registerChecks() {
-        FormatYAML config = readConfig();
+    private static List<Check> registerChecks(FormatYAML config) {
         List<Check> checks = new ArrayList<>();
 
         if (config.getTitle() != null) {

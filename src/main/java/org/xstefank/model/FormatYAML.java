@@ -8,8 +8,17 @@ import java.util.regex.Pattern;
 
 public class FormatYAML {
 
+    private String repository;
     private String title;
     private Description description;
+
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
 
     public String getTitle() {
         return title;

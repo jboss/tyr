@@ -11,3 +11,4 @@ format:
 
   additional:
     - TitleIssueLinkIncludedCheck
+    - OneCommitOnlyCheck

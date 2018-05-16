@@ -11,6 +11,7 @@ public class AdditionalChecks {
 
     static {
         additionalChecks.put("TitleIssueLinkIncludedCheck", new TitleIssueLinkIncludedCheck());
+        additionalChecks.put("OneCommitOnlyCheck", new OneCommitOnlyCheck());
     }
 
     public static Check findCheck(String name) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
+import org.xstefank.check.additional.AdditionalChecks;
 import org.xstefank.model.CommitStatus;
 import org.xstefank.model.yaml.FormatConfigation;
 import org.xstefank.model.yaml.Format;
@@ -58,6 +59,10 @@ public class TemplateChecker {
 
         if (format.getDescription() != null) {
             checks.add(new RequiredRowsCheck(format.getDescription().getRequiredRows()));
+        }
+
+        for (String additional : format.getAdditional()) {
+            checks.add(AdditionalChecks.findCheck(additional));
         }
 
         return checks;

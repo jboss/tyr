@@ -70,6 +70,9 @@ public class TemplateChecker {
 
     private static FormatConfigation readConfig() {
         String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
+        if (configFileName == null) {
+            configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
+        }
         log.info(configFileName);
         File configFile = new File(configFileName);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());

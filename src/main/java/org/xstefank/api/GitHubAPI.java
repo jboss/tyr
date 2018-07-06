@@ -49,9 +49,7 @@ public class GitHubAPI {
     }
 
     private static String readToken() {
-        String token;
-        token = readTokenFromProperties("src/main/resources", Utils.CONFIG_FILE);
-        token = token == null ? readTokenFromProperties(System.getProperty(Utils.JBOSS_CONFIG_DIR), Utils.CONFIG_FILE) : token;
-        return token == null ? System.getenv(Utils.TOKEN_ENV) : token;
+        String token = readTokenFromProperties(System.getProperty(Utils.JBOSS_CONFIG_DIR), Utils.CONFIG_FILE);
+        return token == null || token.isEmpty() ? System.getenv(Utils.TOKEN_ENV) : token;
     }
 }

@@ -1,6 +1,6 @@
 package org.xstefank.model.yaml;
 
-public class FormatConfigation {
+public class FormatConfig {
 
     private String repository;
     private String statusUrl;

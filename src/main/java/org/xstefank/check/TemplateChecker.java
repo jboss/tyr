@@ -7,7 +7,7 @@ import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.additional.AdditionalChecks;
 import org.xstefank.model.CommitStatus;
-import org.xstefank.model.yaml.FormatConfigation;
+import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.Format;
 import org.xstefank.model.Utils;
 
@@ -23,7 +23,7 @@ public class TemplateChecker {
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
     private List<Check> checks;
-    private FormatConfigation config;
+    private FormatConfig config;
 
     public TemplateChecker() {
         config = readConfig();
@@ -68,7 +68,7 @@ public class TemplateChecker {
         return checks;
     }
 
-    private static FormatConfigation readConfig() {
+    private static FormatConfig readConfig() {
         String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
         if (configFileName == null) {
             configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
@@ -78,7 +78,7 @@ public class TemplateChecker {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         try {
-            return mapper.readValue(configFile, FormatConfigation.class);
+            return mapper.readValue(configFile, FormatConfig.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot load configuration file", e);
         }

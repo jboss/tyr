@@ -53,13 +53,20 @@ public class TemplateChecker {
     private static List<Check> registerChecks(Format format) {
         List<Check> checks = new ArrayList<>();
 
-        if (format.getTitle() != null) {
-            checks.add(new TitleCheck(format.getTitle()));
+        String title = format.getTitle();
+
+        if (title != null) {
+            checks.add(new TitleCheck(title));
         }
 
         if (format.getDescription() != null) {
             checks.add(new RequiredRowsCheck(format.getDescription().getRequiredRows()));
         }
+
+        if (format.getCommit() != null) {
+            checks.add(new LatestCommitCheck(format.getCommit()));
+        } else if (title != null)
+            checks.add(new LatestCommitCheck(title));
 
         for (String additional : format.getAdditional()) {
             checks.add(AdditionalChecks.findCheck(additional));

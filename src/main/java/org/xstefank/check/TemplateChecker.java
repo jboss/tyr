@@ -31,16 +31,16 @@ public class TemplateChecker {
     }
 
     public void checkPR(JsonNode payload) {
-        StringJoiner joiner = new StringJoiner(", ");
+        String description = "";
         for (Check check : checks) {
             String message = check.check(payload);
             if (message != null) {
-                joiner.add(message);
+                description = message;
+                break;
             }
         }
 
         log.info("updating status");
-        String description = joiner.toString();
 
         GitHubAPI.updateCommitStatus(config.getRepository(),
                 payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),

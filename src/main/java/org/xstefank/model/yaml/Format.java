@@ -5,6 +5,7 @@ import java.util.List;
 public class Format {
 
     private String title;
+    private String commit;
     private Description description;
     private List<String> additional;
 
@@ -16,19 +17,15 @@ public class Format {
         this.title = title;
     }
 
-    public Description getDescription() {
-        return description;
-    }
+    public String getCommit() { return commit; }
 
-    public void setDescription(Description description) {
-        this.description = description;
-    }
+    public void setCommit(String commit) { this.commit = commit; }
 
-    public List<String> getAdditional() {
-        return additional;
-    }
+    public Description getDescription() { return description; }
 
-    public void setAdditional(List<String> additional) {
-        this.additional = additional;
-    }
+    public void setDescription(Description description) { this.description = description; }
+
+    public List<String> getAdditional() { return additional; }
+
+    public void setAdditional(List<String> additional) { this.additional = additional; }
 }

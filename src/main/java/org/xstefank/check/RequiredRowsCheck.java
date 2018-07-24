@@ -3,7 +3,6 @@ package org.xstefank.check;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.logging.Logger;
 import org.xstefank.model.Utils;
-import org.xstefank.model.yaml.Format;
 import org.xstefank.model.yaml.Row;
 
 import java.util.ArrayList;

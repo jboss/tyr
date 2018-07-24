@@ -3,13 +3,14 @@ package org.xstefank.check;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.additional.AdditionalChecks;
 import org.xstefank.model.CommitStatus;
-import org.xstefank.model.yaml.FormatConfig;
-import org.xstefank.model.yaml.Format;
 import org.xstefank.model.Utils;
+import org.xstefank.model.yaml.Format;
+import org.xstefank.model.yaml.FormatConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class TemplateChecker {
 
     public void checkPR(JsonNode payload) {
         StringJoiner joiner = new StringJoiner(", ");
+
         for (Check check : checks) {
             String message = check.check(payload);
             if (message != null) {
@@ -42,7 +44,8 @@ public class TemplateChecker {
         log.info("updating status");
         String description = joiner.toString();
 
-        GitHubAPI.updateCommitStatus(config.getRepository(),
+        log.info(description);
+        GitHubAPI.updatePRStatus(config.getRepository(),
                 payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
                 description.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
                 config.getStatusUrl(),
@@ -59,6 +62,10 @@ public class TemplateChecker {
 
         if (format.getDescription() != null) {
             checks.add(new RequiredRowsCheck(format.getDescription().getRequiredRows()));
+        }
+
+        if (format.getCommit() != null) {
+            checks.add(new LatestCommitCheck(format.getCommit()));
         }
 
         for (String additional : format.getAdditional()) {

@@ -1,5 +1,7 @@
 package org.xstefank.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.jboss.logging.Logger;
 import org.xstefank.model.CommitStatus;
 import org.xstefank.model.StatusPayload;
@@ -23,7 +25,7 @@ public class GitHubAPI {
     private static final Logger log = Logger.getLogger(GitHubAPI.class);
 
     public static void updateCommitStatus(String repository, String sha, CommitStatus status,
-                                    String targetUrl, String description, String context) {
+                                      String targetUrl, String description, String context) {
 
         Client resteasyClient = ClientBuilder.newClient();
         URI statusUri = UriBuilder
@@ -46,6 +48,29 @@ public class GitHubAPI {
 
         log.info("Status update: " + response.getStatus());
         response.close();
+    }
+
+    public static JsonNode getJsonWithCommits(JsonNode payload) {
+        Client restClient = ClientBuilder.newClient();
+        WebTarget target = restClient.target(getUriFromPayload(payload));
+
+        Response response = target.request()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
+                .get();
+
+        JsonNode commitsJson = response.readEntity(JsonNode.class);
+        response.close();
+
+        return commitsJson;
+    }
+
+    private static URI getUriFromPayload(JsonNode payload) {
+        String url = payload.get(Utils.PULL_REQUEST).get(Utils.URL).asText();
+        URI commitsUri = UriBuilder.fromPath(url)
+                .path(Utils.COMMITS)
+                .build();
+        return commitsUri;
     }
 
     private static String readToken() {

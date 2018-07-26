@@ -24,6 +24,11 @@ public class Utils {
     public static final String TITLE = "title";
     public static final String COMMITS = "commits";
 
+    //Commit payload
+    public static final String COMMIT = "commit";
+    public static final String MESSAGE = "message";
+    public static final String URL = "url";
+
     public static String readTokenFromProperties(String dirName, String fileName) {
         InputStream is = null;
         File dir = new File(dirName);

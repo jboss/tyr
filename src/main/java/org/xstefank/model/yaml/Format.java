@@ -5,6 +5,7 @@ import java.util.List;
 public class Format {
 
     private String title;
+    private String commit;
     private Description description;
     private List<String> additional;
 
@@ -14,6 +15,14 @@ public class Format {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCommit() {
+	return commit;
+    }
+
+    public void setCommit(String commit) {
+	this.commit = commit;
     }
 
     public Description getDescription() {

@@ -2,6 +2,8 @@
   
 ![Powered by OpenShift Online](https://www.openshift.com/images/logos/powered_by_openshift.png)
 
+[![Build Status](https://travis-ci.org/xstefank/tyr.svg?branch=master)](https://travis-ci.org/xstefank/tyr)
+
 Pull request template status check
 
 ## Running

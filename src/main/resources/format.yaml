@@ -3,6 +3,10 @@ repository: "xstefank/test-repo"
 statusUrl: "https://github.com/xstefank/test-repo/blob/master/.github/pull_request_template.md"
 
 format:
+  skipPatterns:
+    title: "((.*)?NO JIRA REQUIRED(.*)\\s?)|(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
+    commit: "((.*)?NO JIRA REQUIRED(.*)\\s?)|(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
+    description: "((.*)?NO JIRA REQUIRED(.*)\\s?)|(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
   title: "\\[WFLY-\\d+\\]\\s+.*|WFLY-\\d+\\s+.*"
 # commit: "\\[WFLY-\\d+\\]\\s+"
   description:

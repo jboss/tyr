@@ -1,27 +1,37 @@
 package org.xstefank.model.yaml;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Format {
 
-    private String title;
-    private String commit;
+    private Pattern title;
+    private Pattern commit;
+    private SkipPatterns skipPatterns;
     private Description description;
     private List<String> additional;
 
-    public String getTitle() {
+    public SkipPatterns getSkipPatterns() {
+        return skipPatterns;
+    }
+
+    public void setSkipPatterns(SkipPatterns skipPatterns) {
+        this.skipPatterns = skipPatterns;
+    }
+
+    public Pattern getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Pattern title) {
         this.title = title;
     }
 
-    public String getCommit() {
+    public Pattern getCommit() {
 	return commit;
     }
 
-    public void setCommit(String commit) {
+    public void setCommit(Pattern commit) {
 	this.commit = commit;
     }
 

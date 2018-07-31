@@ -14,8 +14,8 @@ public class TitleCheck implements Check {
 
     private Pattern pattern;
 
-    public TitleCheck(String regex) {
-        this.pattern = Pattern.compile(regex);
+    public TitleCheck(Pattern pattern) {
+        this.pattern = pattern;
     }
 
     @Override

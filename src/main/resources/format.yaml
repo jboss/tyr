@@ -1,15 +1,14 @@
 
-repository: "xstefank/test-repo"
-statusUrl: "https://github.com/xstefank/test-repo/blob/master/.github/pull_request_template.md"
+repository: "xstefank/tyr"
+statusUrl: "https://github.com/xstefank/tyr/blob/config/src/main/resources/format.yaml"
 
 format:
-  title: "\\[WFLY-\\d+\\]\\s+.*|WFLY-\\d+\\s+.*"
-# commit: "\\[WFLY-\\d+\\]\\s+"
+  title: "\\[Issue #\\d+\\]\\s+.*|Issue #\\d+\\s+.*"
+  commit: "\\[Issue #\\d+\\]\\s+.*|Issue #\\d+\\s+.*"
   description:
     required rows:
-      - pattern: "JIRA:\\s+https://issues.jboss.org/browse/WFLY-\\d+|https://issues.jboss.org/browse/WFLY-\\d+"
-        message: "The PR description must contain a link to the JIRA issue"
+      - pattern: "Issue:\\s+https://github.com/xstefank/tyr/issues/\\d+|Issue:\\s+#\\d+"
+        message: "The PR description must contain a link to the issue it is intended to fix"
 
   additional:
-    - TitleIssueLinkIncludedCheck
     - OneCommitOnlyCheck

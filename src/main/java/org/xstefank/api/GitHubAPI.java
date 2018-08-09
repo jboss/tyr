@@ -67,10 +67,9 @@ public class GitHubAPI {
 
     private static URI getUriFromPayload(JsonNode payload) {
         String url = payload.get(Utils.PULL_REQUEST).get(Utils.URL).asText();
-        URI commitsUri = UriBuilder.fromPath(url)
+        return UriBuilder.fromPath(url)
                 .path(Utils.COMMITS)
                 .build();
-        return commitsUri;
     }
 
     private static String readToken() {

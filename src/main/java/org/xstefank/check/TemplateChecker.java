@@ -22,13 +22,14 @@ public class TemplateChecker {
 
     public TemplateChecker(FormatConfig config) {
         if (config == null) {
-            throw new IllegalArgumentException("Argument config is null!");
+            throw new IllegalArgumentException("Argument config cannot be null");
         }
         this.config = config;
         checks = registerChecks(config.getFormat());
     }
 
     public void checkPR(JsonNode payload) {
+        log.info("checking PR");
         String description = "";
         for (Check check : checks) {
             String message = check.check(payload);

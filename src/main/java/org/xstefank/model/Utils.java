@@ -18,8 +18,6 @@ public class Utils {
     public static final String PULL_REQUEST = "pull_request";
     public static final String BODY = "body";
     public static final String HEAD = "head";
-    public static final String REPO = "repo";
-    public static final String FULL_NAME = "full_name";
     public static final String SHA = "sha";
     public static final String TITLE = "title";
     public static final String COMMITS = "commits";

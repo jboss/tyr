@@ -3,11 +3,8 @@ package org.xstefank.model;
 public class StatusPayload {
 
     private String state;
-
     private String target_url;
-
     private String description;
-
     private String context;
 
     public StatusPayload() {

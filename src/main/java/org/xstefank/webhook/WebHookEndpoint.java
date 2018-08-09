@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.logging.Logger;
-import org.xstefank.check.SkipChecker;
+import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
@@ -27,7 +27,7 @@ public class WebHookEndpoint {
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
     public void processPullRequest(JsonNode pullRequestPayload) {
-        if (!SkipChecker.shouldSkip(pullRequestPayload, config)) {
+        if (!SkipCheck.shouldSkip(pullRequestPayload, config)) {
             templateChecker.checkPR(pullRequestPayload);
         }
     }

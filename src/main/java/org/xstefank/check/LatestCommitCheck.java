@@ -16,8 +16,8 @@ public class LatestCommitCheck implements Check {
 
     private Pattern pattern;
 
-    public LatestCommitCheck(String regex) {
-        this.pattern = Pattern.compile(regex);
+    public LatestCommitCheck(Pattern pattern) {
+        this.pattern = pattern;
         log.info(pattern.toString());
     }
 

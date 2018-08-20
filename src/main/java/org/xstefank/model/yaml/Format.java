@@ -3,12 +3,11 @@ package org.xstefank.model.yaml;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class Format {
 
-    private Pattern title;
-    private Pattern commit;
+    private RegexDefinition title;
+    private RegexDefinition commit;
     private SkipPatterns skipPatterns;
     private Description description;
     private List<String> additional;
@@ -25,19 +24,19 @@ public class Format {
         this.skipPatterns = skipPatterns;
     }
 
-    public Pattern getTitle() {
+    public RegexDefinition getTitle() {
         return title;
     }
 
-    public void setTitle(Pattern title) {
+    public void setTitle(RegexDefinition title) {
         this.title = title;
     }
 
-    public Pattern getCommit() {
+    public RegexDefinition getCommit() {
         return commit;
     }
 
-    public void setCommit(Pattern commit) {
+    public void setCommit(RegexDefinition commit) {
         this.commit = commit;
     }
 

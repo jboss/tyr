@@ -5,7 +5,6 @@ import org.jboss.logging.Logger;
 import org.xstefank.check.additional.AdditionalChecks;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.Format;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,19 +14,21 @@ public class TemplateChecker {
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
     private List<Check> checks;
-    private FormatConfig config;
 
     public TemplateChecker(FormatConfig config) {
-        if (config == null) {
-            throw new IllegalArgumentException("Argument config cannot be null");
+        if (config == null || config.getFormat() == null) {
+            throw new IllegalArgumentException("Input argument cannot be null!");
         }
-        this.config = config;
         checks = registerChecks(config.getFormat());
     }
 
     public String checkPR(JsonNode payload) {
         log.info("checking PR");
         String description = "";
+
+        if (checks.isEmpty()) {
+            log.warn("No checks were requested in the configuration");
+        }
         for (Check check : checks) {
             String message = check.check(payload);
             if (message != null) {
@@ -54,8 +55,10 @@ public class TemplateChecker {
             checks.add(new LatestCommitCheck(format.getCommit()));
         }
 
-        for (String additional : format.getAdditional()) {
-            checks.add(AdditionalChecks.findCheck(additional));
+        if (format.getAdditional() != null) {
+            for (String additional : format.getAdditional()) {
+                checks.add(AdditionalChecks.findCheck(additional));
+            }
         }
 
         return checks;

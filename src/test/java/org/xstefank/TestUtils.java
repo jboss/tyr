@@ -6,9 +6,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import org.xstefank.model.yaml.Format;
 import org.xstefank.model.ConfigTest;
 import org.xstefank.model.yaml.FormatConfig;
-
+import org.xstefank.model.yaml.SkipPatterns;
 import java.io.File;
 import java.io.IOException;
 
@@ -22,7 +23,10 @@ public class TestUtils {
     public static final JsonNode BAD_TEST_PAYLOAD = loadJson(JSON_DIR + "/badTestPayload.json");
     public static final JsonNode ISSUE_PAYLOAD = loadJson(JSON_DIR + "/issuePayload.json");
     public static final JsonNode EMPTY_PAYLOAD = createEmptyJsonPayload();
+    public static final JsonNode TEST_COMMITS_PAYLOAD = loadJson(JSON_DIR + "/testCommitsPayload.json");
 
+    public static final String READ_TOKEN = "readToken";
+    public static final String GET_JSON_WITH_COMMITS = "getJsonWithCommits";
     public static final FormatConfig FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
     public static final String TEST_CONFIG_PATH = ConfigTest.class.getClassLoader().getResource("testConfig.properties").getPath();
 
@@ -82,4 +86,11 @@ public class TestUtils {
         return null;
     }
 
+    public static FormatConfig setUpFormatConfig(SkipPatterns testSkipPatterns) {
+        Format testFormat = new Format();
+        testFormat.setSkipPatterns(testSkipPatterns);
+        FormatConfig testFormatConfig = new FormatConfig();
+        testFormatConfig.setFormat(testFormat);
+        return testFormatConfig;
+    }
 }

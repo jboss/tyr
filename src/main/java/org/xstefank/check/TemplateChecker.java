@@ -52,10 +52,8 @@ public class TemplateChecker {
     private static List<Check> registerChecks(Format format) {
         List<Check> checks = new ArrayList<>();
 
-        Pattern title = format.getTitle();
-
-        if (title != null) {
-            checks.add(new TitleCheck(title));
+        if (format.getTitle() != null) {
+            checks.add(new TitleCheck(format.getTitle()));
         }
 
         if (format.getDescription() != null) {
@@ -64,8 +62,7 @@ public class TemplateChecker {
 
         if (format.getCommit() != null) {
             checks.add(new LatestCommitCheck(format.getCommit()));
-        } else if (title != null)
-            checks.add(new LatestCommitCheck(title));
+        }
 
         for (String additional : format.getAdditional()) {
             checks.add(AdditionalChecks.findCheck(additional));

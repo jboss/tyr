@@ -12,7 +12,7 @@ import java.util.StringJoiner;
 import java.util.regex.Matcher;
 
 public class RequiredRowsCheck implements Check {
-    
+
     private List<Row> rows;
 
     public RequiredRowsCheck(List<Row> rows) {

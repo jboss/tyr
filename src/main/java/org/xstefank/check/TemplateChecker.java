@@ -8,9 +8,9 @@ import org.xstefank.model.CommitStatus;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.Format;
 import org.xstefank.model.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TemplateChecker {
 

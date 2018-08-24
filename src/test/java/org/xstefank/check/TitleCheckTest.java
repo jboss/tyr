@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 
 public class TitleCheckTest {
 
-    private TitleCheck titleCheck;
     private static JsonNode testPayload;
-    
+    private TitleCheck titleCheck;
+
     @BeforeClass
     public static void beforeClass() throws IOException {
         File testFile = new File(TitleCheckTest.class.getClassLoader().getResource("testPayload.json").getFile());

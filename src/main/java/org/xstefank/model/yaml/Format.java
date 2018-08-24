@@ -28,11 +28,11 @@ public class Format {
     }
 
     public Pattern getCommit() {
-	return commit;
+        return commit;
     }
 
     public void setCommit(Pattern commit) {
-	this.commit = commit;
+        this.commit = commit;
     }
 
     public Description getDescription() {

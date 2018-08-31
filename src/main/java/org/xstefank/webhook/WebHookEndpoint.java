@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.logging.Logger;
+import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
+import org.xstefank.model.CommitStatus;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
 import javax.ws.rs.Consumes;
@@ -26,9 +28,18 @@ public class WebHookEndpoint {
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void processPullRequest(JsonNode pullRequestPayload) {
-        if (!SkipCheck.shouldSkip(pullRequestPayload, config)) {
-            templateChecker.checkPR(pullRequestPayload);
+    public void processPullRequest(JsonNode payload) {
+        if (!SkipCheck.shouldSkip(payload, config)) {
+            String errorMessage = templateChecker.checkPR(payload);
+            if (errorMessage != null) {
+                log.info("updating status");
+
+                GitHubAPI.updateCommitStatus(config.getRepository(),
+                        payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
+                        errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
+                        config.getStatusUrl(),
+                        errorMessage.isEmpty() ? "valid" : errorMessage, "PR format check");
+            }
         }
     }
 

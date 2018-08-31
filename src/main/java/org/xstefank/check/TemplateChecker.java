@@ -2,12 +2,9 @@ package org.xstefank.check;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.logging.Logger;
-import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.additional.AdditionalChecks;
-import org.xstefank.model.CommitStatus;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.Format;
-import org.xstefank.model.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +25,7 @@ public class TemplateChecker {
         checks = registerChecks(config.getFormat());
     }
 
-    public void checkPR(JsonNode payload) {
+    public String checkPR(JsonNode payload) {
         log.info("checking PR");
         String description = "";
         for (Check check : checks) {
@@ -39,14 +36,7 @@ public class TemplateChecker {
             }
         }
 
-        log.info("updating status");
-
-        GitHubAPI.updateCommitStatus(config.getRepository(),
-                payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
-                description.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
-                config.getStatusUrl(),
-                description.isEmpty() ? "valid" : description, "PR format check");
-
+        return description;
     }
 
     private static List<Check> registerChecks(Format format) {

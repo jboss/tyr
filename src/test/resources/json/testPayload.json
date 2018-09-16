@@ -1,0 +1,7 @@
+{
+  "pull_request": {
+    "title": "Test PR",
+    "body": "Test description",
+    "commits": "1"
+  }
+}

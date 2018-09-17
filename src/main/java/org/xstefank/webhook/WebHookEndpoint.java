@@ -7,15 +7,19 @@ import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
+import org.xstefank.verification.InvalidConfigurationException;
+import org.xstefank.verification.VerificationHandler;
 import org.xstefank.model.CommitStatus;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
+
 import static org.xstefank.check.TemplateChecker.TEMPLATE_FORMAT_FILE;
 
 @Path("/")
@@ -51,10 +55,11 @@ public class WebHookEndpoint {
         log.info(configFileName);
         File configFile = new File(configFileName);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-
         try {
-            return mapper.readValue(configFile, FormatConfig.class);
-        } catch (IOException e) {
+            FormatConfig formatConfig = mapper.readValue(configFile, FormatConfig.class);
+            VerificationHandler.verifyConfiguration(formatConfig);
+            return formatConfig;
+        } catch (IOException | InvalidConfigurationException e) {
             throw new IllegalArgumentException("Cannot load configuration file", e);
         }
     }

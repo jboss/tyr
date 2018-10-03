@@ -26,7 +26,7 @@ import static org.xstefank.check.TemplateChecker.TEMPLATE_FORMAT_FILE;
 public class WebHookEndpoint {
 
     private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
-    private FormatConfig config = readConfig();
+    private static final FormatConfig config = readConfig();
     private TemplateChecker templateChecker = new TemplateChecker(config);
 
     @POST

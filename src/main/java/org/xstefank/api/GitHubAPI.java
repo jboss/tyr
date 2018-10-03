@@ -17,11 +17,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
-import static org.xstefank.model.Utils.readTokenFromProperties;
+import static org.xstefank.model.Utils.TOKEN_PROPERTY;
 
 public class GitHubAPI {
 
-    private static String oauthToken = readToken();
+    private static final String oauthToken = readToken();
     private static final Logger log = Logger.getLogger(GitHubAPI.class);
 
     public static void updateCommitStatus(String repository, String sha, CommitStatus status,
@@ -73,7 +73,7 @@ public class GitHubAPI {
     }
 
     private static String readToken() {
-        String token = readTokenFromProperties(System.getProperty(Utils.JBOSS_CONFIG_DIR), Utils.CONFIG_FILE);
-        return token == null || token.isEmpty() ? System.getenv(Utils.TOKEN_ENV) : token;
+        String token = Utils.getTyrProperty(TOKEN_PROPERTY);
+        return token == null ? System.getenv(Utils.TOKEN_ENV) : token;
     }
 }

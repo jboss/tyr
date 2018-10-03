@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 public class Utils {
@@ -13,6 +15,7 @@ public class Utils {
     public static final String TOKEN_PROPERTY = "github.oauth.token";
     public static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
     public static final String JBOSS_CONFIG_DIR = "jboss.server.config.dir";
+    public static final String TEMPLATE_FORMAT_URL = "template.format.url";
 
     //PR payload
     public static final String PULL_REQUEST = "pull_request";
@@ -27,31 +30,33 @@ public class Utils {
     public static final String MESSAGE = "message";
     public static final String URL = "url";
 
-    public static String readTokenFromProperties(String dirName, String fileName) {
-        InputStream is = null;
-        File dir = new File(dirName);
-        File fileProp = new File(dir, fileName);
+    private static Properties tyrProperties = null;
 
-        try {
-            is = new FileInputStream(fileProp);
-            Properties properties = new Properties();
-            properties.load(is);
-
-            if (properties.getProperty(TOKEN_PROPERTY) != null) {
-                return properties.getProperty(TOKEN_PROPERTY);
-            }
-        } catch (Exception e) {
-            // intentionally ignored
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
+    static void loadProperties(String dirName, String fileName) {
+        tyrProperties = new Properties();
+        if (dirName != null && fileName != null) {
+            File dir = new File(dirName);
+            File fileProp = new File(dir, fileName);
+            if (fileProp.exists()) {
+                try (InputStream is = new FileInputStream(fileProp)) {
+                    tyrProperties.load(is);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("There was a problem with reading properties", e);
                 }
-            } catch (IOException e) {
-                // intentionally ignored
             }
         }
+    }
 
-        return null;
+    public static String getTyrProperty(String key) {
+        if (tyrProperties == null)
+            loadProperties(System.getProperty(JBOSS_CONFIG_DIR), CONFIG_FILE);
+        return tyrProperties.getProperty(key);
+    }
+
+    public static URL getFormatUrl() throws MalformedURLException {
+        String target = System.getProperty(TEMPLATE_FORMAT_URL);
+        if (target == null)
+            target = getTyrProperty(TEMPLATE_FORMAT_URL);
+        return target != null ? new URL(target) : null;
     }
 }

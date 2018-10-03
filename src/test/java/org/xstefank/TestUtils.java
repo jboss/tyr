@@ -3,6 +3,7 @@ package org.xstefank;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.xstefank.model.ConfigTest;
 import org.xstefank.model.yaml.FormatConfig;
 
 import java.io.File;
@@ -17,6 +18,7 @@ public class TestUtils {
     public static final JsonNode BAD_TEST_PAYLOAD = loadJson(JSON_DIR + "/badTestPayload.json");
     public static final JsonNode EMPTY_PAYLOAD = createEmptyJsonPayload();
     public static final FormatConfig FOMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
+    public static final String TEST_CONFIG_PATH = ConfigTest.class.getClassLoader().getResource("testConfig.properties").getPath();
 
     public static FormatConfig loadFormatFromYamlFile(String fileName) {
         try {

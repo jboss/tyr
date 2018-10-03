@@ -3,6 +3,7 @@ package org.xstefank.webhook;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.net.URL;
 import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
@@ -48,15 +49,21 @@ public class WebHookEndpoint {
     }
 
     private static FormatConfig readConfig() {
-        String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
-        if (configFileName == null) {
-            configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
-        }
-        log.info(configFileName);
-        File configFile = new File(configFileName);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        FormatConfig formatConfig;
         try {
-            FormatConfig formatConfig = mapper.readValue(configFile, FormatConfig.class);
+            URL formatFileUrl = Utils.getFormatUrl();
+            if (formatFileUrl != null)
+                formatConfig = mapper.readValue(formatFileUrl.openStream(), FormatConfig.class);
+            else {
+                String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
+                if (configFileName == null) {
+                    configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
+                }
+                log.info(configFileName);
+                File configFile = new File(configFileName);
+                formatConfig = mapper.readValue(configFile, FormatConfig.class);
+            }
             VerificationHandler.verifyConfiguration(formatConfig);
             return formatConfig;
         } catch (IOException | InvalidConfigurationException e) {

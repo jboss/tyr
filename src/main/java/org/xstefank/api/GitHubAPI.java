@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jboss.logging.Logger;
 import org.xstefank.model.CommitStatus;
+import org.xstefank.model.TyrProperties;
 import org.xstefank.model.StatusPayload;
 import org.xstefank.model.Utils;
 
@@ -73,7 +74,7 @@ public class GitHubAPI {
     }
 
     private static String readToken() {
-        String token = Utils.getTyrProperty(TOKEN_PROPERTY);
+        String token = TyrProperties.getProperty(TOKEN_PROPERTY);
         return token == null ? System.getenv(Utils.TOKEN_ENV) : token;
     }
 }

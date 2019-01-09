@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.jboss.logging.Logger;
 import org.xstefank.model.CommitStatus;
-import org.xstefank.model.TyrProperties;
 import org.xstefank.model.StatusPayload;
+import org.xstefank.model.TyrProperties;
 import org.xstefank.model.Utils;
 
 import javax.ws.rs.client.Client;
@@ -26,7 +26,7 @@ public class GitHubAPI {
     private static final Logger log = Logger.getLogger(GitHubAPI.class);
 
     public static void updateCommitStatus(String repository, String sha, CommitStatus status,
-                                      String targetUrl, String description, String context) {
+                                          String targetUrl, String description, String context) {
 
         Client resteasyClient = ClientBuilder.newClient();
         URI statusUri = UriBuilder
@@ -47,29 +47,43 @@ public class GitHubAPI {
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .post(json);
 
-        log.info("Status update: " + response.getStatus());
+        log.info("Github status update: " + response.getStatus());
         response.close();
     }
 
-    public static JsonNode getJsonWithCommits(JsonNode payload) {
+    public static JsonNode getJsonWithCommits(JsonNode prPayload) {
+        return getJsonFromUri(getCommitsUri(prPayload));
+    }
+
+    public static JsonNode getJsonWithPullRequest(JsonNode issuePayload) {
+        return getJsonFromUri(getPullRequestUri(issuePayload));
+    }
+
+    private static JsonNode getJsonFromUri(URI uri) {
         Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(getUriFromPayload(payload));
+        WebTarget target = restClient.target(uri);
 
         Response response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .get();
 
-        JsonNode commitsJson = response.readEntity(JsonNode.class);
+        JsonNode json = response.readEntity(JsonNode.class);
         response.close();
 
-        return commitsJson;
+        return json;
     }
 
-    private static URI getUriFromPayload(JsonNode payload) {
-        String url = payload.get(Utils.PULL_REQUEST).get(Utils.URL).asText();
+    private static URI getCommitsUri(JsonNode prPayload) {
+        String url = prPayload.get(Utils.PULL_REQUEST).get(Utils.URL).asText();
         return UriBuilder.fromPath(url)
                 .path(Utils.COMMITS)
+                .build();
+    }
+
+    private static URI getPullRequestUri(JsonNode issuePayload) {
+        String url = issuePayload.get(Utils.ISSUE).get(Utils.PULL_REQUEST).get(Utils.URL).asText();
+        return UriBuilder.fromPath(url)
                 .build();
     }
 

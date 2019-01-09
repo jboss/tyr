@@ -13,7 +13,7 @@ public class ConfigTest {
 
     @Test
     public void testValidTemplateConfig() {
-        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FOMAT_CONFIG);
+        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
         Assert.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
     }
 

@@ -6,7 +6,7 @@ import org.xstefank.model.yaml.FormatConfig;
 
 import static org.xstefank.TestUtils.loadFormatFromYamlFile;
 import static org.xstefank.TestUtils.YAML_DIR;
-import static org.xstefank.TestUtils.FOMAT_CONFIG;
+import static org.xstefank.TestUtils.FORMAT_CONFIG;
 
 public class VerificationsTest {
 
@@ -19,7 +19,7 @@ public class VerificationsTest {
 
     @Test
     public void testReadValidFormatConfiguration() throws InvalidConfigurationException {
-        VerificationHandler.verifyConfiguration(FOMAT_CONFIG);
+        VerificationHandler.verifyConfiguration(FORMAT_CONFIG);
     }
 
     @Test(expected = InvalidConfigurationException.class)

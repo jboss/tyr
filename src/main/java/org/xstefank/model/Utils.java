@@ -11,6 +11,9 @@ public class Utils {
     public static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
     public static final String JBOSS_CONFIG_DIR = "jboss.server.config.dir";
     public static final String TEMPLATE_FORMAT_URL = "template.format.url";
+    public static final String USERLIST_FILE_NAME = "user-list.txt";
+    public static final String ADMINLIST_FILE_NAME = "admin-list.txt";
+    public static final String WHITELIST_ENABLED = "whitelist.enabled";
 
     //PR payload
     public static final String PULL_REQUEST = "pull_request";
@@ -19,6 +22,16 @@ public class Utils {
     public static final String SHA = "sha";
     public static final String TITLE = "title";
     public static final String COMMITS = "commits";
+    public static final String NUMBER = "number";
+    public static final String REF = "ref";
+    public static final String BASE = "base";
+
+    //Issue payload
+    public static final String ISSUE = "issue";
+    public static final String COMMENT = "comment";
+    public static final String USER = "user";
+    public static final String LOGIN = "login";
+    public static final String ACTION = "action";
 
     //Commit payload
     public static final String COMMIT = "commit";

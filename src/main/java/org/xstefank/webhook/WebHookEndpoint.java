@@ -8,6 +8,7 @@ import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
+import org.xstefank.whitelist.WhitelistProcessing;
 import org.xstefank.verification.InvalidConfigurationException;
 import org.xstefank.verification.VerificationHandler;
 import org.xstefank.model.CommitStatus;
@@ -28,23 +29,21 @@ public class WebHookEndpoint {
 
     private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
     private static final FormatConfig config = readConfig();
+    private static final WhitelistProcessing whitelistProcessing =
+            WhitelistProcessing.IS_WHITELISTING_ENABLED ? new WhitelistProcessing(config) : null;
+
     private TemplateChecker templateChecker = new TemplateChecker(config);
 
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void processPullRequest(JsonNode payload) {
-        if (!SkipCheck.shouldSkip(payload, config)) {
-            String errorMessage = templateChecker.checkPR(payload);
-            if (errorMessage != null) {
-                log.info("updating status");
-
-                GitHubAPI.updateCommitStatus(config.getRepository(),
-                        payload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
-                        errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
-                        config.getStatusUrl(),
-                        errorMessage.isEmpty() ? "valid" : errorMessage, "PR format check");
-            }
+    public void processRequest(JsonNode payload) {
+        if (whitelistProcessing != null) {
+            processPRWithWhitelisting(payload);
+        } else if (payload.has(Utils.PULL_REQUEST)) {
+            processPullRequest(payload);
+        } else {
+            return;
         }
     }
 
@@ -68,6 +67,33 @@ public class WebHookEndpoint {
             return formatConfig;
         } catch (IOException | InvalidConfigurationException e) {
             throw new IllegalArgumentException("Cannot load configuration file", e);
+        }
+    }
+
+    private void processPullRequest(JsonNode prPayload) {
+        if (!SkipCheck.shouldSkip(prPayload, config)) {
+            String errorMessage = templateChecker.checkPR(prPayload);
+            if (errorMessage != null) {
+                log.info("updating status");
+
+                GitHubAPI.updateCommitStatus(config.getRepository(),
+                        prPayload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
+                        errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
+                        config.getStatusUrl(),
+                        errorMessage.isEmpty() ? "valid" : errorMessage, "PR format check");
+            }
+        }
+    }
+    private void processPRWithWhitelisting(JsonNode payload) {
+        if (payload.has(Utils.ISSUE)) {
+            whitelistProcessing.processPRComment(payload);
+        } else if (payload.has(Utils.PULL_REQUEST)) {
+            String username = payload.get(Utils.PULL_REQUEST).get(Utils.USER).get(Utils.LOGIN).asText();
+            if (whitelistProcessing.isUserEligibleToRunCI(username) &&
+                    payload.get(Utils.ACTION).asText().matches("opened")) {
+                whitelistProcessing.triggerCI(payload.get(Utils.PULL_REQUEST));
+            }
+            processPullRequest(payload);
         }
     }
 }

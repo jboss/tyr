@@ -1,6 +1,8 @@
 package org.xstefank.model.yaml;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Format {
@@ -10,6 +12,10 @@ public class Format {
     private SkipPatterns skipPatterns;
     private Description description;
     private List<String> additional;
+    private Map<String, String> commands;
+
+    @JsonProperty("CI")
+    private List<String> CI;
 
     public SkipPatterns getSkipPatterns() {
         return skipPatterns;
@@ -49,5 +55,21 @@ public class Format {
 
     public void setAdditional(List<String> additional) {
         this.additional = additional;
+    }
+
+    public Map<String, String> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(Map<String, String> commands) {
+        this.commands = commands;
+    }
+
+    public List<String> getCI() {
+        return CI;
+    }
+
+    public void setCI(List<String> CI) {
+        this.CI = CI;
     }
 }

@@ -1,0 +1,16 @@
+{
+  "action": "created",
+  "issue": {
+    "user": {
+      "login": "prUser"
+    },
+    "pull_request": {
+      "url": "http://www.justuselessurl.org/"
+    }
+  },
+  "comment": {
+    "user": {
+      "login": "commentUser"
+    }
+  }
+}

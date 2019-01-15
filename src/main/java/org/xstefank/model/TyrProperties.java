@@ -18,6 +18,20 @@ public class TyrProperties {
         return properties.getProperty(key);
     }
 
+    public static boolean getBooleanProperty(String key) {
+        return Boolean.parseBoolean(properties.getProperty(key));
+    }
+
+    public static int getIntProperty(String key) {
+        String stringProp = properties.getProperty(key);
+
+        try {
+            return Integer.parseInt(stringProp);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Property cannot be converted to integer", e);
+        }
+    }
+
     static Properties loadProperties(String dirName, String fileName) {
         Properties properties = new Properties();
         if (dirName != null && fileName != null) {

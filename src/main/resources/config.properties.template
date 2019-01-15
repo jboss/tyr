@@ -1,1 +1,8 @@
 github.oauth.token=
+whitelist.enabled=
+
+teamcity.host=
+teamcity.port=
+teamcity.user=
+teamcity.password=
+teamcity.branch.mapping=

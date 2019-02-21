@@ -8,13 +8,13 @@ import java.util.List;
 public class Description {
 
     @JsonProperty("required rows")
-    private List<Row> requiredRows;
+    private List<RegexDefinition> requiredRows;
 
-    public List<Row> getRequiredRows() {
+    public List<RegexDefinition> getRequiredRows() {
         return new ArrayList<>(requiredRows);
     }
 
-    public void setRequiredRows(List<Row> requiredRows) {
+    public void setRequiredRows(List<RegexDefinition> requiredRows) {
         this.requiredRows = requiredRows;
     }
 }

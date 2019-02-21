@@ -2,7 +2,7 @@ package org.xstefank.model.yaml;
 
 import java.util.regex.Pattern;
 
-public class Row {
+public class RegexDefinition {
 
     private Pattern pattern;
     private String message;

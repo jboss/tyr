@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xstefank.TestUtils;
-import org.xstefank.model.yaml.Row;
+import org.xstefank.model.yaml.RegexDefinition;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -14,12 +14,12 @@ import static java.util.Collections.singletonList;
 
 public class RequiredRowsCheckTest {
 
-    private static Row row;
+    private static RegexDefinition row;
     private RequiredRowsCheck requiredRowsCheck;
 
     @BeforeClass
     public static void beforeClass() {
-        row = new Row();
+        row = new RegexDefinition();
         row.setPattern(Pattern.compile("^Test.*description$"));
         row.setMessage("Does not match");
     }

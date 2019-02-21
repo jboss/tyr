@@ -3,14 +3,15 @@ package org.xstefank.check;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
+import org.xstefank.model.yaml.RegexDefinition;
 
 import java.util.regex.Matcher;
 
 public class SkipCheck {
 
     public static boolean shouldSkip(JsonNode payload, FormatConfig config) {
-        if (config == null) {
-            throw new IllegalArgumentException("Argument config is null!");
+        if (payload == null || config == null) {
+            throw new IllegalArgumentException("Input arguments cannot be null!");
         }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
@@ -25,7 +26,9 @@ public class SkipCheck {
 
     private static boolean skipByCommit(JsonNode payload, FormatConfig config) {
         if (config.getFormat().getSkipPatterns().getCommit() != null) {
-            LatestCommitCheck latestCommitCheck = new LatestCommitCheck(config.getFormat().getSkipPatterns().getCommit());
+            RegexDefinition commitRegexDefinition = new RegexDefinition();
+            commitRegexDefinition.setPattern(config.getFormat().getSkipPatterns().getCommit());
+            LatestCommitCheck latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
             return (latestCommitCheck.check(payload) == null);
         }
         return false;

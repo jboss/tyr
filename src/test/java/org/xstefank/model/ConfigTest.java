@@ -6,10 +6,13 @@ import org.junit.Test;
 import org.xstefank.TestUtils;
 import org.xstefank.check.TemplateChecker;
 
+import static org.xstefank.TestUtils.TEST_CONFIG_PATH;
+
 public class ConfigTest {
 
-    private Properties properties =
-            TyrProperties.loadProperties("", TestUtils.TEST_CONFIG_PATH);
+    private Properties properties = TyrProperties.loadProperties(
+            TEST_CONFIG_PATH.getParent().toString(),
+            TEST_CONFIG_PATH.getFileName().toString());
 
     @Test
     public void testValidTemplateConfig() {

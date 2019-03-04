@@ -25,6 +25,7 @@ public class Utils {
     public static final String NUMBER = "number";
     public static final String REF = "ref";
     public static final String BASE = "base";
+    public static final String COMMITS_URL = "commits_url";
 
     //Issue payload
     public static final String ISSUE = "issue";

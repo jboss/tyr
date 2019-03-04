@@ -59,7 +59,7 @@ public class GitHubAPI {
         return getJsonFromUri(getPullRequestUri(issuePayload));
     }
 
-    private static JsonNode getJsonFromUri(URI uri) {
+    static JsonNode getJsonFromUri(URI uri) {
         Client restClient = ClientBuilder.newClient();
         WebTarget target = restClient.target(uri);
 
@@ -68,6 +68,13 @@ public class GitHubAPI {
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .get();
 
+        if (response.getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
+            throw new IllegalArgumentException("Can not get json from URI. Authentication with invalid github token");
+        }
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            throw new IllegalArgumentException("Can not get json from URI. Response status " + response.getStatus());
+        }
+
         JsonNode json = response.readEntity(JsonNode.class);
         response.close();
 
@@ -75,9 +82,8 @@ public class GitHubAPI {
     }
 
     private static URI getCommitsUri(JsonNode prPayload) {
-        String url = prPayload.get(Utils.PULL_REQUEST).get(Utils.URL).asText();
+        String url = prPayload.get(Utils.PULL_REQUEST).get(Utils.COMMITS_URL).asText();
         return UriBuilder.fromPath(url)
-                .path(Utils.COMMITS)
                 .build();
     }
 

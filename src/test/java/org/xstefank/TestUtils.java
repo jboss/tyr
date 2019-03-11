@@ -6,8 +6,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.xstefank.model.yaml.Format;
-import org.xstefank.model.ConfigTest;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.SkipPatterns;
 import java.io.File;
@@ -28,7 +30,7 @@ public class TestUtils {
     public static final String READ_TOKEN = "readToken";
     public static final String GET_JSON_WITH_COMMITS = "getJsonWithCommits";
     public static final FormatConfig FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
-    public static final String TEST_CONFIG_PATH = ConfigTest.class.getClassLoader().getResource("testConfig.properties").getPath();
+    public static final Path TEST_CONFIG_PATH = getFilePath("testConfig.properties");
 
     public static FormatConfig loadFormatFromYamlFile(String fileName) {
         try {
@@ -84,6 +86,14 @@ public class TestUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static Path getFilePath(String fileName) {
+        try {
+            return Paths.get(TestUtils.class.getClassLoader().getResource(fileName).toURI());
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("Cannot get path of file: " + fileName, e);
+        }
     }
 
     public static FormatConfig setUpFormatConfig(SkipPatterns testSkipPatterns) {

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.xstefank.model.yaml.Format;
@@ -34,7 +36,7 @@ public class TestUtils {
 
     public static FormatConfig loadFormatFromYamlFile(String fileName) {
         try {
-            File file = new File(TestUtils.class.getClassLoader().getResource(fileName).getFile());
+            File file = getFile(fileName);
             return new ObjectMapper(new YAMLFactory()).readValue(file, FormatConfig.class);
         } catch (IOException e) {
             throw new RuntimeException("Cannot load file " + fileName);
@@ -72,7 +74,7 @@ public class TestUtils {
 
     private static JsonNode loadJson(String fileName) {
         try {
-            File file = new File(TestUtils.class.getClassLoader().getResource(fileName).getFile());
+            File file = getFile(fileName);
             return new ObjectMapper().readTree(file);
         } catch (IOException e) {
             throw new RuntimeException("Cannot load file "+ fileName);
@@ -102,5 +104,10 @@ public class TestUtils {
         FormatConfig testFormatConfig = new FormatConfig();
         testFormatConfig.setFormat(testFormat);
         return testFormatConfig;
+    }
+
+    private static File getFile(String fileName) throws UnsupportedEncodingException {
+        String path = TestUtils.class.getClassLoader().getResource(fileName).getFile();
+        return new File(URLDecoder.decode(path, "UTF-8"));
     }
 }

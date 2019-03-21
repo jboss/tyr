@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.StringJoiner;
 import java.util.regex.Matcher;
 
 public class RequiredRowsCheck implements Check {
@@ -38,13 +37,9 @@ public class RequiredRowsCheck implements Check {
         }
 
         if (!requiredRows.isEmpty()) {
-            StringJoiner joiner = new StringJoiner(", ");
-            for (RegexDefinition row : requiredRows) {
-                joiner.add(row.getMessage());
-            }
-
-            return joiner.toString();
+            return requiredRows.get(0).getMessage();
         }
+
         return null;
     }
 

@@ -28,6 +28,7 @@ public class TestUtils {
     public static final JsonNode ISSUE_PAYLOAD = loadJson(JSON_DIR + "/issuePayload.json");
     public static final JsonNode EMPTY_PAYLOAD = createEmptyJsonPayload();
     public static final JsonNode TEST_COMMITS_PAYLOAD = loadJson(JSON_DIR + "/testCommitsPayload.json");
+    public static final JsonNode MULTIPLE_COMMIT_MESSAGES_PAYLOAD = loadJson(JSON_DIR + "/multipleCommitMessagesPayload.json");
 
     public static final String READ_TOKEN = "readToken";
     public static final String GET_JSON_WITH_COMMITS = "getJsonWithCommits";

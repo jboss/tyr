@@ -25,7 +25,8 @@ public class LatestCommitCheck implements Check {
     @Override
     public String check(JsonNode payload) {
         JsonNode commitsJson = GitHubAPI.getJsonWithCommits(payload);
-        Matcher matcher = pattern.matcher(commitsJson.get(commitsJson.size() - 1).get(Utils.COMMIT).get(Utils.MESSAGE).asText());
+        String commitMessages = commitsJson.get(commitsJson.size() - 1).get(Utils.COMMIT).get(Utils.MESSAGE).asText();
+        Matcher matcher = pattern.matcher(commitMessages.split("\\r?\\n")[0]);
 
         if (!matcher.matches()) {
             return message;

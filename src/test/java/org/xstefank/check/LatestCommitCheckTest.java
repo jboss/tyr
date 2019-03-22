@@ -65,4 +65,14 @@ public class LatestCommitCheckTest {
 
         Assert.assertEquals("Unexpected message returned", LatestCommitCheck.DEFAULT_MESSAGE, latestCommitCheck.check(TestUtils.TEST_PAYLOAD));
     }
+
+    @Test
+    public void testMultipleCommitMessages() {
+        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
+
+        commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
+        latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
+
+        Assert.assertNull(latestCommitCheck.check(TestUtils.TEST_PAYLOAD));
+    }
 }

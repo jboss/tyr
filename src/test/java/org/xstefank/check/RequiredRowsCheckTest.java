@@ -8,6 +8,7 @@ import org.xstefank.TestUtils;
 import org.xstefank.model.yaml.RegexDefinition;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.singletonList;
@@ -49,5 +50,20 @@ public class RequiredRowsCheckTest {
     @Test(expected = NullPointerException.class)
     public void testIfEmptyPayloadThrowsException() throws IOException {
         requiredRowsCheck.check(TestUtils.EMPTY_PAYLOAD);
+    }
+
+    @Test
+    public void testMultipleFailedLines() {
+        RegexDefinition secondRow = new RegexDefinition();
+        String expectedErrorMessage = "Second error message";
+
+        secondRow.setPattern(Pattern.compile("(?!.*)"));
+        secondRow.setMessage(expectedErrorMessage);
+
+        requiredRowsCheck = new RequiredRowsCheck(Arrays.asList(row, secondRow));
+        String errorMessage = requiredRowsCheck.check(TestUtils.TEST_PAYLOAD);
+
+        Assert.assertNotNull(errorMessage);
+        Assert.assertEquals(expectedErrorMessage, errorMessage);
     }
 }

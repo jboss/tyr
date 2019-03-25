@@ -102,4 +102,9 @@ public class TeamCityCI implements ContinuousIntegration {
 
         return branchMap;
     }
+
+    @Override
+    public void triggerFailedBuild(JsonNode prPayload) {
+        throw new UnsupportedOperationException("Method is not implemented");
+    }
 }

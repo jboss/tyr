@@ -6,5 +6,7 @@ public interface ContinuousIntegration {
 
     void triggerBuild(JsonNode prPayload);
 
+    void triggerFailedBuild(JsonNode prPayload);
+
     void init();
 }

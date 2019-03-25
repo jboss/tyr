@@ -10,6 +10,7 @@ public class CommandsLoader {
     static {
         commands.put(AddUserCommand.NAME, new AddUserCommand());
         commands.put(RetestCommand.NAME, new RetestCommand());
+        commands.put(RetestFailedCommand.NAME, new RetestFailedCommand());
     }
 
     public static Command getCommand(String key) {

@@ -50,6 +50,12 @@ public class WhitelistProcessing {
         }
     }
 
+    public void triggerFailedCI(JsonNode prPayload) {
+        for (ContinuousIntegration CI : continuousIntegrations) {
+            CI.triggerFailedBuild(prPayload);
+        }
+    }
+
     public boolean isUserEligibleToRunCI(String username) {
         return userList.hasUsername(username) || adminList.hasUsername(username);
     }

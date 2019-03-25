@@ -6,6 +6,7 @@ public class TestCI implements ContinuousIntegration {
 
     public static final String NAME = "TestCI";
     private boolean triggered;
+    private boolean triggeredFailed;
 
     public TestCI() {
         CILoader.addCI(NAME, this);
@@ -17,11 +18,21 @@ public class TestCI implements ContinuousIntegration {
     }
 
     @Override
+    public void triggerFailedBuild(JsonNode prPayload) {
+        triggeredFailed = true;
+    }
+
+    @Override
     public void init() {
         triggered = false;
+        triggeredFailed = false;
     }
 
     public boolean isTriggered() {
         return triggered;
+    }
+
+    public boolean isTriggeredFailed() {
+        return triggeredFailed;
     }
 }

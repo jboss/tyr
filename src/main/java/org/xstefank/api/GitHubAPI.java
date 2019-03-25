@@ -42,12 +42,15 @@ public class GitHubAPI {
         Entity<StatusPayload> json = Entity.json(new StatusPayload(status.toString(),
                 targetUrl, description, context));
 
+        log.debug("Sending status: " + json);
+
         Response response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .post(json);
 
         log.info("Github status update: " + response.getStatus());
+        log.debug("Github response: " + response.readEntity(String.class));
         response.close();
     }
 

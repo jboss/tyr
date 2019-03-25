@@ -54,7 +54,7 @@ public abstract class CommandTest {
 
         TestUtils.deleteFileIfExists(userListFile);
         TestUtils.deleteFileIfExists(adminListFile);
-        TestUtils.writeUsernameToFile(COMMENT_USER, adminListFile);
+        TestUtils.writeLineToFile(COMMENT_USER, adminListFile);
 
         testCI = new TestCI();
     }

@@ -9,7 +9,7 @@ format:
   title:
     pattern: "^Test.*PR$"
 
-  additional:
+  additionalChecks:
     - TitleIssueLinkIncludedCheck
     - OneCommitOnlyCheck
 

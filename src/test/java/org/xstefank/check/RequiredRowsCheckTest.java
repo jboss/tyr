@@ -15,6 +15,7 @@
  */
 package org.xstefank.check;
 
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -22,8 +23,6 @@ import org.junit.Test;
 import org.xstefank.TestUtils;
 import org.xstefank.model.yaml.RegexDefinition;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.singletonList;
@@ -63,7 +62,7 @@ public class RequiredRowsCheckTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testIfEmptyPayloadThrowsException() throws IOException {
+    public void testIfEmptyPayloadThrowsException() {
         requiredRowsCheck.check(TestUtils.EMPTY_PAYLOAD);
     }
 

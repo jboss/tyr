@@ -37,19 +37,19 @@ public class LatestCommitCheckTest {
     private LatestCommitCheck latestCommitCheck;
 
     @Before
-    public void setUp() {
+    public void before() {
         commitRegexDefinition = new RegexDefinition();
         PowerMockito.suppress(method(GitHubAPI.class, TestUtils.READ_TOKEN));
         PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullCommitParameter() throws IllegalArgumentException {
+    public void testNullCommitParameter() {
         new LatestCommitCheck(null);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullCommitPatternParameter() throws IllegalArgumentException {
+    public void testNullCommitPatternParameter() {
         commitRegexDefinition.setPattern(null);
         new LatestCommitCheck(commitRegexDefinition);
     }

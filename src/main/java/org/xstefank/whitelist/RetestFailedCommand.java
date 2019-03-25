@@ -18,11 +18,9 @@ package org.xstefank.whitelist;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.xstefank.api.GitHubAPI;
 
-public class RetestFailedCommand implements Command {
+public class RetestFailedCommand extends Command {
 
     public static final String NAME = "RetestFailedCommand";
-
-    private String commandRegex;
 
     @Override
     public void process(JsonNode payload, WhitelistProcessing whitelistProcessing) {
@@ -34,15 +32,5 @@ public class RetestFailedCommand implements Command {
             JsonNode prPayload = GitHubAPI.getJsonWithPullRequest(payload);
             whitelistProcessing.triggerFailedCI(prPayload);
         }
-    }
-
-    @Override
-    public String getCommandRegex() {
-        return commandRegex;
-    }
-
-    @Override
-    public void setCommandRegex(String commandRegex) {
-        this.commandRegex = commandRegex;
     }
 }

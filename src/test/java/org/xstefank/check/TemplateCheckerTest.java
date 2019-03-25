@@ -21,7 +21,7 @@ import org.xstefank.model.yaml.FormatConfig;
 public class TemplateCheckerTest {
 
     @Test(expected=IllegalArgumentException.class)
-    public void testNullConfigParameter() throws IllegalArgumentException {
+    public void testNullConfigParameter() {
         new TemplateChecker(null);
     }
 

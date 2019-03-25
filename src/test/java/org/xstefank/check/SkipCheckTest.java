@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.xstefank.TestUtils;
 import org.xstefank.api.GitHubAPI;
+import org.xstefank.model.yaml.Format;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.SkipPatterns;
 import java.util.regex.Pattern;
@@ -38,26 +39,26 @@ public class SkipCheckTest {
     private SkipPatterns skipPatterns;
 
     @Before
-    public void setUp() {
+    public void before() {
         skipPatterns = new SkipPatterns();
         PowerMockito.suppress(method(GitHubAPI.class, TestUtils.READ_TOKEN));
         PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullConfigParameter() throws IllegalArgumentException{
+    public void testNullConfigParameter() {
         SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, null);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullPayloadParameter() throws IllegalArgumentException{
+    public void testNullPayloadParameter() {
         SkipCheck.shouldSkip(null, formatConfig);
     }
 
     @Test
     public void testSkipByTitleRegexMatch(){
         skipPatterns.setTitle(Pattern.compile("Test PR"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertTrue("Method cannot match valid title regex", SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
@@ -65,7 +66,7 @@ public class SkipCheckTest {
     @Test
     public void testSkipByTitleRegexNonMatch(){
         skipPatterns.setTitle(Pattern.compile("can't.*match.*this"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertFalse("Method matched invalid title regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
@@ -73,7 +74,7 @@ public class SkipCheckTest {
     @Test
     public void testSkipByCommitRegexMatch(){
         skipPatterns.setCommit(Pattern.compile("Test commit"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertTrue("Method cannot match valid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
@@ -81,7 +82,7 @@ public class SkipCheckTest {
     @Test
     public void testSkipByCommitRegexNonMatch(){
         skipPatterns.setCommit(Pattern.compile("can't.*match.*this"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertFalse("Method matched invalid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
@@ -89,7 +90,7 @@ public class SkipCheckTest {
     @Test
     public void testSkipByPullRequestDescriptionRegexMatch(){
         skipPatterns.setDescription(Pattern.compile("Test description"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertTrue("Method cannot match valid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
@@ -97,15 +98,23 @@ public class SkipCheckTest {
     @Test
     public void testSkipByPullRequestDescriptionRegexNonMatch(){
         skipPatterns.setDescription(Pattern.compile("can't.*match.*this"));
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertFalse("Method matched invalid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
     }
 
     @Test
     public void testShouldSkipEmptySkipPatterns() {
-        formatConfig = TestUtils.setUpFormatConfig(skipPatterns);
+        formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertFalse("Invalid result after empty skipping patterns",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+    }
+
+    private static FormatConfig setUpFormatConfig(SkipPatterns testSkipPatterns) {
+        Format testFormat = new Format();
+        testFormat.setSkipPatterns(testSkipPatterns);
+        FormatConfig testFormatConfig = new FormatConfig();
+        testFormatConfig.setFormat(testFormat);
+        return testFormatConfig;
     }
 }

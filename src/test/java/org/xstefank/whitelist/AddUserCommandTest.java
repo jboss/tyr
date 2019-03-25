@@ -21,11 +21,11 @@ import org.xstefank.TestUtils;
 
 public class AddUserCommandTest extends CommandTest {
 
-    private AddUserCommand addUserCommand = new AddUserCommand();
+    private final AddUserCommand addUserCommand = new AddUserCommand();
 
     @Test
     public void testAddUserCommand() {
-        addUserCommand.process(TestUtils.ISSUE_PAYLOAD, new WhitelistProcessing(TestUtils.FORMAT_CONFIG));
+        addUserCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
         Assert.assertTrue(TestUtils.fileContainsLine(userListFile, PR_AUTHOR));
         Assert.assertTrue(testCI.isTriggered());
     }

@@ -18,6 +18,7 @@ package org.xstefank.check;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.logging.Logger;
 import org.xstefank.check.additional.AdditionalChecks;
+import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.Format;
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class TemplateChecker {
     }
 
     public String checkPR(JsonNode payload) {
-        log.info("checking PR");
-        String description = "";
+        log.debug("checking PR" + Utils.LINE_SEPARATOR + payload);
+        String errorMessage = "";
 
         if (checks.isEmpty()) {
             log.warn("No checks were requested in the configuration");
@@ -47,12 +48,12 @@ public class TemplateChecker {
         for (Check check : checks) {
             String message = check.check(payload);
             if (message != null) {
-                description = message;
+                errorMessage = message;
                 break;
             }
         }
 
-        return description;
+        return errorMessage;
     }
 
     private static List<Check> registerChecks(Format format) {
@@ -70,8 +71,8 @@ public class TemplateChecker {
             checks.add(new LatestCommitCheck(format.getCommit()));
         }
 
-        if (format.getAdditional() != null) {
-            for (String additional : format.getAdditional()) {
+        if (format.getAdditionalChecks() != null) {
+            for (String additional : format.getAdditionalChecks()) {
                 checks.add(AdditionalChecks.findCheck(additional));
             }
         }

@@ -17,11 +17,30 @@ package org.xstefank.whitelist;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public interface Command {
+/**
+ * Command that can process issue payload received from GitHub API
+ */
+public abstract class Command {
 
-    void process(JsonNode payload, WhitelistProcessing whitelistProcessing);
+    private String commandRegex;
 
-    String getCommandRegex();
+    /**
+     * This method is used for command processing.
+     * You can define your own functionality of new command
+     * that you want to implement. Method is triggered automatically
+     * when the command regex is matched. You can set the regex
+     * in {@link CommandsLoader} class and use it in format.yaml.
+     * @param payload json received from GitHub API.
+     * @param whitelistProcessing class that offers some useful functionality
+     *                            for working with Continuous Integration.
+     */
+    public abstract void process(JsonNode payload, WhitelistProcessing whitelistProcessing);
 
-    void setCommandRegex(String commandRegex);
+    String getCommandRegex() {
+        return commandRegex;
+    }
+
+    void setCommandRegex(String commandRegex) {
+        this.commandRegex = commandRegex;
+    }
 }

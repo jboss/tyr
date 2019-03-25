@@ -16,8 +16,8 @@
 package org.xstefank.ci;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.client.Client;
@@ -96,11 +96,7 @@ public class TeamCityCI implements ContinuousIntegration {
 
     private String encryptCredentials(String username, String password) {
         String authStr = username + ":" + password;
-        try {
-            return DatatypeConverter.printBase64Binary(authStr.getBytes("utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Cannot encrypt credentials", e);
-        }
+        return DatatypeConverter.printBase64Binary(authStr.getBytes(StandardCharsets.UTF_8));
     }
 
     private String getBaseUrl(String host, int port) {

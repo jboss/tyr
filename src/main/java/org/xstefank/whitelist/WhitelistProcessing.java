@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.jboss.logging.Logger;
 import org.xstefank.ci.CILoader;
 import org.xstefank.ci.ContinuousIntegration;
 import org.xstefank.model.PersistentList;
@@ -31,25 +32,25 @@ public class WhitelistProcessing {
     public static final boolean IS_WHITELISTING_ENABLED =
             TyrProperties.getBooleanProperty(Utils.WHITELIST_ENABLED);
 
-    private static final List<ContinuousIntegration> continuousIntegrations = new ArrayList<>();
+    private static final Logger log = Logger.getLogger(WhitelistProcessing.class);
 
-    private final PersistentList userList;
-    private final PersistentList adminList;
+    private final List<String> userList;
+    private final List<String> adminList;
 
     private final List<Command> commands;
+    private final List<ContinuousIntegration> continuousIntegrations;
 
     public WhitelistProcessing(FormatConfig config) {
         String dirName = System.getProperty(Utils.JBOSS_CONFIG_DIR);
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
         commands = getCommands(config);
-        loadCIs(config);
+        continuousIntegrations = loadCIs(config);
     }
 
     public void processPRComment(JsonNode issuePayload) {
-        if (issuePayload.get(Utils.ISSUE).has(Utils.PULL_REQUEST) &&
-                issuePayload.get(Utils.ACTION).asText().matches("created") &&
-                !commands.isEmpty()) {
+        if (!commands.isEmpty() && issuePayload.get(Utils.ISSUE).has(Utils.PULL_REQUEST) &&
+                issuePayload.get(Utils.ACTION).asText().matches("created")) {
             String message = issuePayload.get(Utils.COMMENT).get(Utils.BODY).asText();
             for (Command command : commands) {
                 if (message.matches(command.getCommandRegex())) {
@@ -72,7 +73,7 @@ public class WhitelistProcessing {
     }
 
     public boolean isUserEligibleToRunCI(String username) {
-        return userList.hasUsername(username) || adminList.hasUsername(username);
+        return userList.contains(username) || adminList.contains(username);
     }
 
     String getCommentAuthor(JsonNode issuePayload) {
@@ -84,15 +85,18 @@ public class WhitelistProcessing {
     }
 
     boolean isUserOnAdminList(String username) {
-        return adminList.hasUsername(username);
+        return adminList.contains(username);
     }
 
     boolean isUserOnUserList(String username) {
-        return userList.hasUsername(username);
+        return userList.contains(username);
     }
 
-    void addUserToUserList(String username) {
-        userList.addUser(username);
+    boolean addUserToUserList(String username) {
+        if (userList.contains(username)) {
+            return false;
+        }
+        return userList.add(username);
     }
 
     private List<Command> getCommands(FormatConfig config) {
@@ -108,17 +112,20 @@ public class WhitelistProcessing {
             if (command != null) {
                 command.setCommandRegex(regexMap.get(key));
                 commands.add(command);
+            } else {
+                log.warnf("Command identified with \"%s\" does not exists", key);
             }
         }
 
         return commands;
     }
 
-    private void loadCIs(FormatConfig config) {
+    private List<ContinuousIntegration> loadCIs(FormatConfig config) {
+        List<ContinuousIntegration> continuousIntegrations = new ArrayList<>();
         List<String> CIConfigList = config.getFormat().getCI();
 
         if (CIConfigList == null || CIConfigList.isEmpty()) {
-            return;
+            return continuousIntegrations;
         }
 
         for (String key : CIConfigList) {
@@ -126,7 +133,10 @@ public class WhitelistProcessing {
             if (CI != null) {
                 CI.init();
                 continuousIntegrations.add(CI);
+            } else {
+                log.warnf("CI identified with \"%s\" does not exists", key);
             }
         }
+        return continuousIntegrations;
     }
 }

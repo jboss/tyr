@@ -14,6 +14,7 @@ public class Utils {
     public static final String USERLIST_FILE_NAME = "user-list.txt";
     public static final String ADMINLIST_FILE_NAME = "admin-list.txt";
     public static final String WHITELIST_ENABLED = "whitelist.enabled";
+    public static final String GITHUB_LINE_SEPARATOR = "\\r\\n";
 
     //PR payload
     public static final String PULL_REQUEST = "pull_request";

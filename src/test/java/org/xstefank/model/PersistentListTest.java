@@ -27,46 +27,48 @@ import org.xstefank.TestUtils;
 
 public class PersistentListTest {
 
-    private static final String FILE_NAME = "testList.txt";
-    private static File userListFile = new File(TestUtils.TARGET_DIR, FILE_NAME);
+    private static final String FILE_NAME = "list.txt";
+    private static File persistentListFile = new File(TestUtils.TARGET_DIR, FILE_NAME);
 
-    private final String USERNAME = "testUser";
-    private PersistentList testUserList;
+    private final String ELEMENT = "element";
+
+    private PersistentList persistentList;
 
     @BeforeClass
     public static void beforeClass() {
-        TestUtils.deleteFileIfExists(userListFile);
+        TestUtils.deleteFileIfExists(persistentListFile);
     }
 
     @Before
     public void before() {
-        testUserList = new PersistentList(userListFile);
-    }
-
-    @Test
-    public void testIfUserIsSaved() {
-        testUserList.addUser(USERNAME);
-        Assert.assertTrue(testUserList.hasUsername(USERNAME));
-        Assert.assertTrue(TestUtils.fileContainsLine(userListFile, USERNAME));
+        persistentList = new PersistentList(persistentListFile);
     }
 
     @Test
     public void testIfFileWasCreated() {
-        Assert.assertTrue(userListFile.exists());
+        Assert.assertTrue(persistentListFile.exists());
     }
 
     @Test
     public void testFileContentLoading() throws IOException {
-        FileWriter fw = new FileWriter(userListFile);
-        fw.write(USERNAME);
+        FileWriter fw = new FileWriter(persistentListFile);
+        fw.write(ELEMENT);
         fw.close();
 
-        testUserList = new PersistentList(userListFile);
-        Assert.assertTrue(testUserList.hasUsername(USERNAME));
+        persistentList = new PersistentList(persistentListFile);
+        Assert.assertTrue(persistentList.contains(ELEMENT));
+    }
+
+    @Test
+    public void testAddElement() {
+        persistentList.add(ELEMENT);
+
+        Assert.assertTrue(persistentList.contains(ELEMENT));
+        Assert.assertTrue(TestUtils.fileContainsLine(persistentListFile, ELEMENT));
     }
 
     @After
     public void after() {
-        TestUtils.deleteFileIfExists(userListFile);
+        TestUtils.deleteFileIfExists(persistentListFile);
     }
 }

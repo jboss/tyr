@@ -33,7 +33,8 @@ public class SkipCheck {
 
     private static boolean skipByTitle(JsonNode payload, FormatConfig config) {
         if (config.getFormat().getSkipPatterns().getTitle() != null) {
-            Matcher titleMatcher = config.getFormat().getSkipPatterns().getTitle().matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+            Matcher titleMatcher = config.getFormat().getSkipPatterns().getTitle()
+                    .matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
             return titleMatcher.matches();
         }
         return false;
@@ -44,7 +45,7 @@ public class SkipCheck {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
             commitRegexDefinition.setPattern(config.getFormat().getSkipPatterns().getCommit());
             LatestCommitCheck latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
-            return (latestCommitCheck.check(payload) == null);
+            return latestCommitCheck.check(payload) == null;
         }
         return false;
     }

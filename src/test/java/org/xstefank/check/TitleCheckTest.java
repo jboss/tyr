@@ -28,17 +28,17 @@ public class TitleCheckTest {
     private TitleCheck titleCheck;
 
     @Before
-    public void setUp() {
+    public void before() {
         titleRegexDefinition = new RegexDefinition();
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullTitleParameter() throws IllegalArgumentException {
+    public void testNullTitleParameter() {
         new TitleCheck(null);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullCommitPatternParameter() throws IllegalArgumentException {
+    public void testNullCommitPatternParameter() {
         titleRegexDefinition.setPattern(null);
         new TitleCheck(titleRegexDefinition);
     }
@@ -58,7 +58,8 @@ public class TitleCheckTest {
         titleCheck = new TitleCheck(titleRegexDefinition);
 
         Assert.assertNotNull("Matched invalid regex", titleCheck.check(TestUtils.TEST_PAYLOAD));
-        Assert.assertEquals("Unexpected message returned", titleRegexDefinition.getMessage(), titleCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertEquals("Unexpected message returned",
+                titleRegexDefinition.getMessage(), titleCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
@@ -66,6 +67,7 @@ public class TitleCheckTest {
         titleRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         titleCheck = new TitleCheck(titleRegexDefinition);
 
-        Assert.assertEquals("Unexpected message returned", TitleCheck.DEFAULT_MESSAGE, titleCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertEquals("Unexpected message returned",
+                TitleCheck.DEFAULT_MESSAGE, titleCheck.check(TestUtils.TEST_PAYLOAD));
     }
 }

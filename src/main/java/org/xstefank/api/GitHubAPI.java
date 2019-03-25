@@ -43,7 +43,7 @@ public class GitHubAPI {
     public static void updateCommitStatus(String repository, String sha, CommitStatus status,
                                           String targetUrl, String description, String context) {
 
-        Client resteasyClient = ClientBuilder.newClient();
+        Client client = ClientBuilder.newClient();
         URI statusUri = UriBuilder
                 .fromUri(Utils.GITHUB_BASE)
                 .path("/repos")
@@ -52,7 +52,7 @@ public class GitHubAPI {
                 .path("/" + sha)
                 .build();
 
-        WebTarget target = resteasyClient.target(statusUri);
+        WebTarget target = client.target(statusUri);
 
         Entity<StatusPayload> json = Entity.json(new StatusPayload(status.toString(),
                 targetUrl, description, context));
@@ -78,8 +78,8 @@ public class GitHubAPI {
     }
 
     static JsonNode getJsonFromUri(URI uri) {
-        Client restClient = ClientBuilder.newClient();
-        WebTarget target = restClient.target(uri);
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(uri);
 
         Response response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)

@@ -31,12 +31,14 @@ public class OneCommitOnlyCheckTest {
 
     @Test
     public void testIfPayloadHasOnlyOneCommit() {
-        Assert.assertNull("Invalid commits count", oneCommitOnlyCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertNull("Invalid commits count",
+                oneCommitOnlyCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
     public void testIfPayloadHasMoreCommits() {
-        Assert.assertNotNull("Commits count should not be valid", oneCommitOnlyCheck.check(TestUtils.BAD_TEST_PAYLOAD));
+        Assert.assertNotNull("Commits count should not be valid",
+                oneCommitOnlyCheck.check(TestUtils.BAD_TEST_PAYLOAD));
     }
 
     @Test(expected = NullPointerException.class)

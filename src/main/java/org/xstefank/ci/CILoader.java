@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class CILoader {
 
-    private static Map<String, ContinuousIntegration> CIs = new HashMap<>();
+    private static final Map<String, ContinuousIntegration> CIs = new HashMap<>();
 
     static {
         addCI(TeamCityCI.NAME, new TeamCityCI());

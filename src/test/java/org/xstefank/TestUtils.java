@@ -26,9 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.xstefank.model.yaml.Format;
 import org.xstefank.model.yaml.FormatConfig;
-import org.xstefank.model.yaml.SkipPatterns;
 import java.io.File;
 import java.io.IOException;
 
@@ -80,9 +78,9 @@ public class TestUtils {
         return false;
     }
 
-    public static void writeUsernameToFile(String username, File file) {
+    public static void writeLineToFile(String line, File file) {
         try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(username);
+            fileWriter.write(line);
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot write username to file", e);
         }
@@ -112,14 +110,6 @@ public class TestUtils {
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Cannot get path of file: " + fileName, e);
         }
-    }
-
-    public static FormatConfig setUpFormatConfig(SkipPatterns testSkipPatterns) {
-        Format testFormat = new Format();
-        testFormat.setSkipPatterns(testSkipPatterns);
-        FormatConfig testFormatConfig = new FormatConfig();
-        testFormatConfig.setFormat(testFormat);
-        return testFormatConfig;
     }
 
     private static File getFile(String fileName) throws UnsupportedEncodingException {

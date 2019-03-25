@@ -20,8 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xstefank.TestUtils;
 
-import java.io.IOException;
-
 public class TitleIssueLinkIncludedCheckTest {
 
     private TitleIssueLinkIncludedCheck titleIssueLinkIncludedCheck;
@@ -33,12 +31,14 @@ public class TitleIssueLinkIncludedCheckTest {
 
     @Test
     public void testIfTitleHasRightFormat() {
-        Assert.assertNull("Cannot match link to the issue", titleIssueLinkIncludedCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertNull("Cannot match link to the issue",
+                titleIssueLinkIncludedCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
     public void testIfTitleHasBadFormat() {
-        Assert.assertNotNull("Matched invalid title issue link", titleIssueLinkIncludedCheck.check(TestUtils.BAD_TEST_PAYLOAD));
+        Assert.assertNotNull("Matched invalid title issue link",
+                titleIssueLinkIncludedCheck.check(TestUtils.BAD_TEST_PAYLOAD));
     }
 
     @Test(expected = NullPointerException.class)
@@ -47,7 +47,7 @@ public class TitleIssueLinkIncludedCheckTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testIfEmptyPayloadThrowsException() throws IOException {
+    public void testIfEmptyPayloadThrowsException() {
         titleIssueLinkIncludedCheck.check(TestUtils.EMPTY_PAYLOAD);
     }
 }

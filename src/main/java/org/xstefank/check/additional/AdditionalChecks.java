@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class AdditionalChecks {
 
-    private static Map<String, Check> additionalChecks = new HashMap<>();
+    private static final Map<String, Check> additionalChecks = new HashMap<>();
 
     static {
         additionalChecks.put("TitleIssueLinkIncludedCheck", new TitleIssueLinkIncludedCheck());

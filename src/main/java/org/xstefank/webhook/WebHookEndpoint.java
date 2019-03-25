@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.net.URL;
-import org.jboss.logging.Logger;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
@@ -42,7 +41,6 @@ import static org.xstefank.check.TemplateChecker.TEMPLATE_FORMAT_FILE;
 @Path("/")
 public class WebHookEndpoint {
 
-    private static final Logger log = Logger.getLogger(WebHookEndpoint.class);
     private static final FormatConfig config = readConfig();
     private static final WhitelistProcessing whitelistProcessing =
             WhitelistProcessing.IS_WHITELISTING_ENABLED ? new WhitelistProcessing(config) : null;
@@ -57,8 +55,6 @@ public class WebHookEndpoint {
             processPRWithWhitelisting(payload);
         } else if (payload.has(Utils.PULL_REQUEST)) {
             processPullRequest(payload);
-        } else {
-            return;
         }
     }
 
@@ -74,7 +70,6 @@ public class WebHookEndpoint {
                 if (configFileName == null) {
                     configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
                 }
-                log.info(configFileName);
                 File configFile = new File(configFileName);
                 formatConfig = mapper.readValue(configFile, FormatConfig.class);
             }
@@ -89,8 +84,6 @@ public class WebHookEndpoint {
         if (!SkipCheck.shouldSkip(prPayload, config)) {
             String errorMessage = templateChecker.checkPR(prPayload);
             if (errorMessage != null) {
-                log.info("updating status");
-
                 GitHubAPI.updateCommitStatus(config.getRepository(),
                         prPayload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
                         errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
@@ -103,12 +96,14 @@ public class WebHookEndpoint {
         if (payload.has(Utils.ISSUE)) {
             whitelistProcessing.processPRComment(payload);
         } else if (payload.has(Utils.PULL_REQUEST)) {
+            processPullRequest(payload);
+            if (!payload.get(Utils.ACTION).asText().matches("opened")) {
+                return;
+            }
             String username = payload.get(Utils.PULL_REQUEST).get(Utils.USER).get(Utils.LOGIN).asText();
-            if (whitelistProcessing.isUserEligibleToRunCI(username) &&
-                    payload.get(Utils.ACTION).asText().matches("opened")) {
+            if (whitelistProcessing.isUserEligibleToRunCI(username)) {
                 whitelistProcessing.triggerCI(payload.get(Utils.PULL_REQUEST));
             }
-            processPullRequest(payload);
         }
     }
 }

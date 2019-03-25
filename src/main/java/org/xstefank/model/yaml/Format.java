@@ -25,7 +25,7 @@ public class Format {
     private RegexDefinition commit;
     private SkipPatterns skipPatterns;
     private Description description;
-    private List<String> additional;
+    private List<String> additionalChecks;
     private Map<String, String> commands;
 
     @JsonProperty("CI")
@@ -63,12 +63,12 @@ public class Format {
         this.description = description;
     }
 
-    public List<String> getAdditional() {
-        return additional;
+    public List<String> getAdditionalChecks() {
+        return additionalChecks;
     }
 
-    public void setAdditional(List<String> additional) {
-        this.additional = additional;
+    public void setAdditionalChecks(List<String> additionalChecks) {
+        this.additionalChecks = additionalChecks;
     }
 
     public Map<String, String> getCommands() {

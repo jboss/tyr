@@ -20,24 +20,30 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.function.UnaryOperator;
+import org.jboss.logging.Logger;
 
-public class PersistentList {
+public class PersistentList extends ArrayList<String> {
 
-    private List<String> list = new ArrayList<>();
+    private static final Logger log = Logger.getLogger(PersistentList.class);
+
     private File file;
 
     public PersistentList(File file) {
+        super();
         this.file = file;
         if (file.exists()) {
             loadFileContent(file);
-        } else {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new IllegalStateException("Cannot create new file with name " + file.getName(), e);
-            }
+            return;
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot create new file with name " + file.getName(), e);
         }
     }
 
@@ -45,20 +51,74 @@ public class PersistentList {
         this(new File(dirName, fileName));
     }
 
-    public void addUser(String username) {
-        if (list.contains(username)) {
-            return;
+    @Override
+    public boolean add(String s) {
+        if (!super.add(s)) {
+            return false;
         }
-        list.add(username);
-        try (FileWriter fw = new FileWriter(file, true)) {
-            fw.write(username + "\n");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+            pw.println(s);
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot write user to file", e);
+            log.error(e);
+            super.remove(s);
+            return false;
         }
+        return true;
     }
 
-    public boolean hasUsername(String  username) {
-        return list.contains(username);
+    @Override
+    public void add(int index, String element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends String> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends String> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String remove(int index) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void replaceAll(UnaryOperator<String> operator) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String set(int index, String element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void sort(Comparator<? super String> c) {
+        throw new UnsupportedOperationException();
     }
 
     private void loadFileContent(File file) {
@@ -66,11 +126,11 @@ public class PersistentList {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.startsWith("#")) {
-                    list.add(line);
+                    super.add(line);
                 }
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot read file " + file.getPath(), e);
+            throw new IllegalStateException("Cannot access file " + file.getPath(), e);
         }
     }
 }

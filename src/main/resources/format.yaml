@@ -23,9 +23,9 @@ format:
     - OneCommitOnlyCheck
 
   commands:
-    AddUserCommand: ^ok\s+to\s+test$
-    RetestCommand: ^retest\s+this\s+please$
-    RetestFailedTestsCommand: ^retest\s+failed\s+please$
+    AddUserCommand: ^ok\\s+to\\s+test$
+    RetestCommand: ^retest\\s+this\\s+please$
+    RetestFailedTestsCommand: ^retest\\s+failed\\s+please$
 
   CI:
     - TeamCity

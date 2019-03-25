@@ -21,13 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static org.xstefank.model.Utils.JBOSS_CONFIG_DIR;
 import static org.xstefank.model.Utils.CONFIG_FILE;
 
 public class TyrProperties {
 
     private static final Properties properties =
-            loadProperties(System.getProperty(JBOSS_CONFIG_DIR), CONFIG_FILE);
+            loadProperties(Utils.getConfigDirectory(), CONFIG_FILE);
 
     public static String getProperty(String key) {
         return properties.getProperty(key);

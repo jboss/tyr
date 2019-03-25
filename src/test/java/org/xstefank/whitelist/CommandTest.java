@@ -48,9 +48,8 @@ public abstract class CommandTest {
 
     @BeforeClass
     public static void beforeClass() {
-        System.setProperty(Utils.JBOSS_CONFIG_DIR, TestUtils.TARGET_DIR);
-        userListFile = new File(System.getProperty(Utils.JBOSS_CONFIG_DIR), Utils.USERLIST_FILE_NAME);
-        adminListFile = new File(System.getProperty(Utils.JBOSS_CONFIG_DIR), Utils.ADMINLIST_FILE_NAME);
+        userListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.USERLIST_FILE_NAME);
+        adminListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.ADMINLIST_FILE_NAME);
 
         TestUtils.deleteFileIfExists(userListFile);
         TestUtils.deleteFileIfExists(adminListFile);

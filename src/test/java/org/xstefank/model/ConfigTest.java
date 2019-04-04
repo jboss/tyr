@@ -25,9 +25,12 @@ import static org.xstefank.TestUtils.TEST_CONFIG_PATH;
 
 public class ConfigTest {
 
+    private final String currentDir = System.getProperty("user.dir");
+
     private Properties properties = TyrProperties.loadProperties(
             TEST_CONFIG_PATH.getParent().toString(),
             TEST_CONFIG_PATH.getFileName().toString());
+
 
     @Test
     public void testValidTemplateConfig() {
@@ -45,5 +48,12 @@ public class ConfigTest {
     public void readUrlTest() {
         Assert.assertEquals("https://www.someniceurlhere.org/",
                 properties.getProperty(Utils.TEMPLATE_FORMAT_URL));
+    }
+
+    @Test
+    public void testConfigPath() {
+        Assert.assertEquals(currentDir, Utils.getConfigDirectory());
+        System.setProperty(Utils.TYR_CONFIG_DIR, TestUtils.TARGET_DIR);
+        Assert.assertEquals(TestUtils.TARGET_DIR, Utils.getConfigDirectory());
     }
 }

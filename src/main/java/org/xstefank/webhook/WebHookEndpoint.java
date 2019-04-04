@@ -68,7 +68,7 @@ public class WebHookEndpoint {
             else {
                 String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
                 if (configFileName == null) {
-                    configFileName = System.getProperty(Utils.JBOSS_CONFIG_DIR) + "/format.yaml";
+                    configFileName = Utils.getConfigDirectory() + "/format.yaml";
                 }
                 File configFile = new File(configFileName);
                 formatConfig = mapper.readValue(configFile, FormatConfig.class);

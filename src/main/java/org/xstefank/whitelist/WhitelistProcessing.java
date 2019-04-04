@@ -41,7 +41,7 @@ public class WhitelistProcessing {
     private final List<ContinuousIntegration> continuousIntegrations;
 
     public WhitelistProcessing(FormatConfig config) {
-        String dirName = System.getProperty(Utils.JBOSS_CONFIG_DIR);
+        String dirName = Utils.getConfigDirectory();
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
         commands = getCommands(config);

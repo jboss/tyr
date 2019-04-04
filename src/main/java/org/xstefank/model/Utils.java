@@ -24,7 +24,7 @@ public class Utils {
     public static final String CONFIG_FILE = "config.properties";
     public static final String TOKEN_PROPERTY = "github.oauth.token";
     public static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
-    public static final String JBOSS_CONFIG_DIR = "jboss.server.config.dir";
+    public static final String TYR_CONFIG_DIR = "tyr.config.dir";
     public static final String TEMPLATE_FORMAT_URL = "template.format.url";
     public static final String USERLIST_FILE_NAME = "user-list.txt";
     public static final String ADMINLIST_FILE_NAME = "admin-list.txt";
@@ -61,5 +61,13 @@ public class Utils {
         if (target == null)
             target = TyrProperties.getProperty(TEMPLATE_FORMAT_URL);
         return target != null ? new URL(target) : null;
+    }
+
+    public static String getConfigDirectory() {
+        String path = System.getProperty(TYR_CONFIG_DIR);
+        if (path == null) {
+            return System.getProperty("user.dir");
+        }
+        return path;
     }
 }

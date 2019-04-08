@@ -14,16 +14,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <linkXRef>false</linkXRef>
         <version.com.fasterxml.jackson>2.9.8</version.com.fasterxml.jackson>
-        <version.wildfly>16.0.0.Final</version.wildfly>
-        <jboss.home>${project.build.directory}/wildfly-${version.wildfly}</jboss.home>
+        <version.thorntail>2.4.0.Final</version.thorntail>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.4.1.Final</version>
+                <groupId>io.thorntail</groupId>
+                <artifactId>bom</artifactId>
+                <version>${version.thorntail}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -32,21 +31,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>jaxrs</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
             <artifactId>org.eclipse.egit.github.core</artifactId>
             <version>2.1.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-            <version>1.0.2.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-            <version>3.3.1.Final</version>
         </dependency>
 
         <dependency>
@@ -96,21 +88,27 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
+            <groupId>io.thorntail</groupId>
+            <artifactId>arquillian</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wildfly</groupId>
-            <artifactId>wildfly-arquillian-container-managed</artifactId>
-            <version>8.2.1.Final</version>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>tyr</finalName>
         <plugins>
+            <plugin>
+                <groupId>io.thorntail</groupId>
+                <artifactId>thorntail-maven-plugin</artifactId>
+                <version>${version.thorntail}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -170,51 +168,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <build>
-                <testResources>
-                    <testResource>
-                        <directory>${project.basedir}/src/test/resources</directory>
-                        <filtering>true</filtering>
-                        <includes>
-                            <include>**/arquillian.xml</include>
-                            <include>**/arquillian.launch</include>
-                        </includes>
-                    </testResource>
-                    <testResource>
-                        <directory>${project.basedir}/src/test/resources</directory>
-                        <filtering>false</filtering>
-                        <excludes>
-                            <exclude>**/arquillian.xml</exclude>
-                            <exclude>**/arquillian.launch</exclude>
-                        </excludes>
-                    </testResource>
-                </testResources>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.1.1</version>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.wildfly</groupId>
-                                            <artifactId>wildfly-dist</artifactId>
-                                            <version>${version.wildfly}</version>
-                                            <type>zip</type>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>target</outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>

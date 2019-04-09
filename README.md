@@ -45,3 +45,10 @@ Pull request template status check
 1. Rerun (update existing or create new PR) - everything should be working now
 1. If everything runs ok the PR should be updated with the valid error or green color, and in terminal where the server runs you’ll see **Status update: 201**
 
+## OpenShift deployment
+
+This project contains an openshift profile to be easily deployable to [Openshift platform](https://www.openshift.com/). 
+To deploy to Openshift:
+
+1. login to your OS account (`oc login`)
+1. `mvn fabric8:deploy -Popenshift`

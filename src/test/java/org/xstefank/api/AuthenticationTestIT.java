@@ -27,8 +27,8 @@ import java.net.URL;
 public class AuthenticationTestIT {
 
     private static Client restClient;
-    private static final String RETURN_STATUS_UNAUTHORIZED_PATH = "/test/fakeGithub/ReturnStatusUnauthorized";
-    private static final String RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH = "/test/fakeGithub/ReturnStatusInternalServerError";
+    private static final String RETURN_STATUS_UNAUTHORIZED_PATH = "/fakeGithub/ReturnStatusUnauthorized";
+    private static final String RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH = "/fakeGithub/ReturnStatusInternalServerError";
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {

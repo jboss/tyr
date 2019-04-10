@@ -17,7 +17,16 @@ package org.xstefank.verification;
 
 import org.xstefank.model.yaml.FormatConfig;
 
+/**
+ * Verifies structure of the format.yaml configuration file
+ */
 public interface Verification {
 
+    /**
+     * Verify the provided format.yaml structure
+     *
+     * @param formatConfig object representing format.yaml file
+     * @throws InvalidConfigurationException if any validation error is encountered
+     */
     void verify(FormatConfig formatConfig) throws InvalidConfigurationException;
 }

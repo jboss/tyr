@@ -32,7 +32,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.jboss.logging.Logger;
 import org.xstefank.model.TyrProperties;
 import org.xstefank.model.Utils;
-import org.xstefank.model.json.triggerbuild.BuildJson;
+import org.xstefank.model.json.BuildJson;
 
 public class TeamCityCI implements ContinuousIntegration {
 
@@ -83,14 +83,23 @@ public class TeamCityCI implements ContinuousIntegration {
         Entity<BuildJson> json = Entity.json(new BuildJson("pull/" + pull, buildId,
                 sha, pull, branch));
 
-        Response response = target.request()
+        Response response = null;
+
+        try {
+            response = target.request()
                 .header(HttpHeaders.ACCEPT_ENCODING, "UTF-8")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + encryptedCredentials)
                 .post(json);
 
-        log.info("Teamcity status update: " + response.getStatus());
-        response.close();
+            log.info("Teamcity status update: " + response.getStatus());
+        } catch (Throwable e) {
+            log.error("Cannot run Team city build", e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
     }
 
 
@@ -100,7 +109,7 @@ public class TeamCityCI implements ContinuousIntegration {
     }
 
     private String getBaseUrl(String host, int port) {
-        return port == 443 ? "https://" + host + "/httpAuth" : "http://" + host + ":" + port + "/httpAuth";
+        return String.format("http://%s:%d/httpAuth", host, port);
     }
 
     private Map<String, String> parseBranchMapping(String mappings) {

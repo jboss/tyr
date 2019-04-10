@@ -10,7 +10,7 @@ format:
     pattern: "^Test.*PR$"
 
   additionalChecks:
-    - TitleIssueLinkIncludedCheck
+    - TitleJIRAIssueLinkIncludedCheck
     - OneCommitOnlyCheck
 
   CI:

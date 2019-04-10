@@ -61,15 +61,11 @@ public class WhitelistProcessing {
     }
 
     public void triggerCI(JsonNode prPayload) {
-        for (ContinuousIntegration CI : continuousIntegrations) {
-            CI.triggerBuild(prPayload);
-        }
+        continuousIntegrations.forEach(CI -> CI.triggerBuild(prPayload));
     }
 
     public void triggerFailedCI(JsonNode prPayload) {
-        for (ContinuousIntegration CI : continuousIntegrations) {
-            CI.triggerFailedBuild(prPayload);
-        }
+        continuousIntegrations.forEach(CI -> CI.triggerFailedBuild(prPayload));
     }
 
     public boolean isUserEligibleToRunCI(String username) {

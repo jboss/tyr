@@ -20,8 +20,6 @@ import org.xstefank.api.GitHubAPI;
 
 public class RetestCommand extends Command {
 
-    public static final String NAME = "RetestCommand";
-
     @Override
     public void process(JsonNode payload, WhitelistProcessing whitelistProcessing) {
         String pullRequestAuthor = whitelistProcessing.getPRAuthor(payload);
@@ -29,7 +27,7 @@ public class RetestCommand extends Command {
 
         if (whitelistProcessing.isUserOnUserList(pullRequestAuthor) &&
                 whitelistProcessing.isUserEligibleToRunCI(commentAuthor)) {
-            JsonNode prPayload = GitHubAPI.getJsonWithPullRequest(payload);
+            JsonNode prPayload = GitHubAPI.getPullRequestJSON(payload);
             whitelistProcessing.triggerCI(prPayload);
         }
     }

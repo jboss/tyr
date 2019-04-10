@@ -17,7 +17,18 @@ package org.xstefank.check;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+/**
+ * Validates pull request payload with a specified check
+ */
 public interface Check {
 
+    /**
+     * Performs any custom validation of the pull request. This method
+     * is invoked when the PR is updated (GitHub PR events)
+     *
+     * @param payload pull request JSON as received from GitHub
+     * @return null if check passed, error message otherwise (error message
+     * is limited by GitHub status to 140 characters)
+     */
     String check(JsonNode payload);
 }

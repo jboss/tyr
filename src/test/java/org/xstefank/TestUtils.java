@@ -44,7 +44,7 @@ public class TestUtils {
     public static final JsonNode MULTIPLE_COMMIT_MESSAGES_PAYLOAD = loadJson(JSON_DIR + "/multipleCommitMessagesPayload.json");
 
     public static final String READ_TOKEN = "readToken";
-    public static final String GET_JSON_WITH_COMMITS = "getJsonWithCommits";
+    public static final String GET_JSON_WITH_COMMITS = "getCommitsJSON";
     public static final FormatConfig FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
     public static final Path TEST_CONFIG_PATH = getFilePath("testConfig.properties");
 

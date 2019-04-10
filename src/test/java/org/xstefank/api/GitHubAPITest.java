@@ -27,6 +27,6 @@ public class GitHubAPITest {
 
     @Test(expected = NullPointerException.class)
     public void testGetJsonWithCommitsNullParameter() {
-        GitHubAPI.getJsonWithCommits(null);
+        GitHubAPI.getCommitsJSON(null);
     }
 }

@@ -24,14 +24,14 @@ import java.util.regex.Pattern;
 
 public class LatestCommitCheck implements Check {
 
-    static final String DEFAULT_MESSAGE = "Invalid commit title content";
+    static final String DEFAULT_MESSAGE = "Invalid commit message content";
 
     private Pattern pattern;
     private String message;
 
     public LatestCommitCheck(RegexDefinition commit) {
         if (commit == null || commit.getPattern() == null) {
-            throw new IllegalArgumentException("Input argument cannot be null!");
+            throw new IllegalArgumentException("Input argument cannot be null");
         }
         this.pattern = commit.getPattern();
         this.message = (commit.getMessage() != null) ? commit.getMessage() : DEFAULT_MESSAGE;
@@ -39,9 +39,9 @@ public class LatestCommitCheck implements Check {
 
     @Override
     public String check(JsonNode payload) {
-        JsonNode commitsJson = GitHubAPI.getJsonWithCommits(payload);
+        JsonNode commitsJson = GitHubAPI.getCommitsJSON(payload);
         String commitMessages = commitsJson.get(commitsJson.size() - 1).get(Utils.COMMIT).get(Utils.MESSAGE).asText();
-        Matcher matcher = pattern.matcher(commitMessages.split(Utils.GITHUB_LINE_SEPARATOR)[0]);
+        Matcher matcher = pattern.matcher(commitMessages.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
 
         if (!matcher.matches()) {
             return message;

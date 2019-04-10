@@ -30,7 +30,7 @@ public class TitleCheck implements Check {
 
     public TitleCheck(RegexDefinition title) {
         if (title == null || title.getPattern() == null) {
-            throw new IllegalArgumentException("Input argument cannot be null!");
+            throw new IllegalArgumentException("Input argument cannot be null");
         }
         pattern = title.getPattern();
         message = (title.getMessage() != null) ? title.getMessage() : DEFAULT_MESSAGE;

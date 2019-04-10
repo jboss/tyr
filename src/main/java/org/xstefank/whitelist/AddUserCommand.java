@@ -20,8 +20,6 @@ import org.xstefank.api.GitHubAPI;
 
 public class AddUserCommand extends Command {
 
-    public static final String NAME = "AddUserCommand";
-
     @Override
     public void process(JsonNode payload, WhitelistProcessing whitelistProcessing) {
         String pullRequestAuthor = whitelistProcessing.getPRAuthor(payload);
@@ -31,7 +29,7 @@ public class AddUserCommand extends Command {
                 !whitelistProcessing.isUserOnUserList(pullRequestAuthor) &&
                 whitelistProcessing.addUserToUserList(pullRequestAuthor)) {
 
-            JsonNode prPayload = GitHubAPI.getJsonWithPullRequest(payload);
+            JsonNode prPayload = GitHubAPI.getPullRequestJSON(payload);
             whitelistProcessing.triggerCI(prPayload);
         }
     }

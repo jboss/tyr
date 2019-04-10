@@ -26,25 +26,32 @@ import java.util.List;
 
 public class TemplateChecker {
 
-    public static final String TEMPLATE_FORMAT_FILE = "template.format.file";
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
     private List<Check> checks;
 
     public TemplateChecker(FormatConfig config) {
         if (config == null || config.getFormat() == null) {
-            throw new IllegalArgumentException("Input argument cannot be null!");
+            throw new IllegalArgumentException("Input argument cannot be null");
         }
         checks = registerChecks(config.getFormat());
     }
 
+    /**
+     * Verifies the pull request payload against a set of defined checks
+     *
+     * @param payload the PR paylaod JSON received from GitHub
+     * @return error message or empty string if there is no failure found
+     */
     public String checkPR(JsonNode payload) {
         log.debug("checking PR" + Utils.LINE_SEPARATOR + payload);
         String errorMessage = "";
 
         if (checks.isEmpty()) {
             log.warn("No checks were requested in the configuration");
+            return "";
         }
+
         for (Check check : checks) {
             String message = check.check(payload);
             if (message != null) {

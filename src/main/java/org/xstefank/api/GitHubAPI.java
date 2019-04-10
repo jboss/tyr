@@ -58,57 +58,71 @@ public class GitHubAPI {
                 targetUrl, description, context));
 
         log.debug("Sending status: " + json);
+        Response response = null;
 
-        Response response = target.request()
+        try {
+            response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .post(json);
 
-        log.info("Github status update: " + response.getStatus());
-        log.debug("Github response: " + response.readEntity(String.class));
-        response.close();
+            log.info("Github status update: " + response.getStatus());
+            log.debug("Github response: " + response.readEntity(String.class));
+        } catch (Throwable e) {
+            log.error("Cannot update GitHub status", e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
     }
 
-    public static JsonNode getJsonWithCommits(JsonNode prPayload) {
-        return getJsonFromUri(getCommitsUri(prPayload));
+    public static JsonNode getCommitsJSON(JsonNode prPayload) {
+        return getJSON(getCommitsUri(prPayload));
     }
 
-    public static JsonNode getJsonWithPullRequest(JsonNode issuePayload) {
-        return getJsonFromUri(getPullRequestUri(issuePayload));
+    public static JsonNode getPullRequestJSON(JsonNode issuePayload) {
+        return getJSON(getPullRequestUri(issuePayload));
     }
 
-    static JsonNode getJsonFromUri(URI uri) {
+    static JsonNode getJSON(URI uri) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(uri);
 
-        Response response = target.request()
+        Response response = null;
+
+        try {
+            response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
                 .get();
 
-        if (response.getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
-            throw new IllegalArgumentException("Can not get json from URI. Authentication with invalid github token");
-        }
-        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-            throw new IllegalArgumentException("Can not get json from URI. Response status " + response.getStatus());
-        }
+            if (response.getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new IllegalArgumentException("Can not get json from URI. Authentication with invalid github token");
+            }
+            if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+                throw new IllegalArgumentException("Can not get json from URI. Response status " + response.getStatus());
+            }
 
-        JsonNode json = response.readEntity(JsonNode.class);
-        response.close();
-
-        return json;
+            return response.readEntity(JsonNode.class);
+        } catch (Throwable e) {
+            log.error("Cannot retrieve JSON from " + uri.toString(), e);
+            throw e;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
     }
 
     private static URI getCommitsUri(JsonNode prPayload) {
         String url = prPayload.get(Utils.PULL_REQUEST).get(Utils.COMMITS_URL).asText();
-        return UriBuilder.fromPath(url)
-                .build();
+        return URI.create(url);
     }
 
     private static URI getPullRequestUri(JsonNode issuePayload) {
         String url = issuePayload.get(Utils.ISSUE).get(Utils.PULL_REQUEST).get(Utils.URL).asText();
-        return UriBuilder.fromPath(url)
-                .build();
+        return URI.create(url);
     }
 
     private static String readToken() {

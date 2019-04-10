@@ -20,34 +20,34 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xstefank.TestUtils;
 
-public class TitleIssueLinkIncludedCheckTest {
+public class TitleJIRAIssueLinkIncludedCheckTest {
 
-    private TitleIssueLinkIncludedCheck titleIssueLinkIncludedCheck;
+    private TitleJIRAIssueLinkIncludedCheck titleJIRAIssueLinkIncludedCheck;
 
     @Before
     public void before() {
-        titleIssueLinkIncludedCheck = new TitleIssueLinkIncludedCheck();
+        titleJIRAIssueLinkIncludedCheck = new TitleJIRAIssueLinkIncludedCheck();
     }
 
     @Test
     public void testIfTitleHasRightFormat() {
         Assert.assertNull("Cannot match link to the issue",
-                titleIssueLinkIncludedCheck.check(TestUtils.TEST_PAYLOAD));
+                titleJIRAIssueLinkIncludedCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
     public void testIfTitleHasBadFormat() {
         Assert.assertNotNull("Matched invalid title issue link",
-                titleIssueLinkIncludedCheck.check(TestUtils.BAD_TEST_PAYLOAD));
+                titleJIRAIssueLinkIncludedCheck.check(TestUtils.BAD_TEST_PAYLOAD));
     }
 
     @Test(expected = NullPointerException.class)
     public void testIfNullParameterThrowsException() {
-        titleIssueLinkIncludedCheck.check(null);
+        titleJIRAIssueLinkIncludedCheck.check(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testIfEmptyPayloadThrowsException() {
-        titleIssueLinkIncludedCheck.check(TestUtils.EMPTY_PAYLOAD);
+        titleJIRAIssueLinkIncludedCheck.check(TestUtils.EMPTY_PAYLOAD);
     }
 }

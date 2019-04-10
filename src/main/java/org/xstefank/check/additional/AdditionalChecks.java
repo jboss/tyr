@@ -25,8 +25,8 @@ public class AdditionalChecks {
     private static final Map<String, Check> additionalChecks = new HashMap<>();
 
     static {
-        additionalChecks.put("TitleIssueLinkIncludedCheck", new TitleIssueLinkIncludedCheck());
-        additionalChecks.put("OneCommitOnlyCheck", new OneCommitOnlyCheck());
+        additionalChecks.put(TitleJIRAIssueLinkIncludedCheck.class.getSimpleName(), new TitleJIRAIssueLinkIncludedCheck());
+        additionalChecks.put(OneCommitOnlyCheck.class.getSimpleName(), new OneCommitOnlyCheck());
     }
 
     public static Check findCheck(String name) {

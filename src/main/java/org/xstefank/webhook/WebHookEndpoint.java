@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 
-import static org.xstefank.check.TemplateChecker.TEMPLATE_FORMAT_FILE;
+import static org.xstefank.model.Utils.TEMPLATE_FORMAT_FILE;
 
 @Path("/")
 public class WebHookEndpoint {
@@ -88,7 +88,7 @@ public class WebHookEndpoint {
                         prPayload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
                         errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
                         config.getStatusUrl(),
-                        errorMessage.isEmpty() ? "valid" : errorMessage, "PR format check");
+                        errorMessage.isEmpty() ? "valid" : errorMessage, "PR format");
             }
         }
     }

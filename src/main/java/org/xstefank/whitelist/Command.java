@@ -30,6 +30,7 @@ public abstract class Command {
      * that you want to implement. Method is triggered automatically
      * when the command regex is matched. You can set the regex
      * in {@link CommandsLoader} class and use it in format.yaml.
+     *
      * @param payload json received from GitHub API.
      * @param whitelistProcessing class that offers some useful functionality
      *                            for working with Continuous Integration.

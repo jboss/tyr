@@ -33,7 +33,7 @@ public class AuthenticationTestIT {
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         return ShrinkWrap
-                .create(WebArchive.class, "test.war")
+                .create(WebArchive.class, AuthenticationTestIT.class.getSimpleName() + ".war")
                 .addClasses(FakeGitHub.class, JaxRsApplication.class);
     }
 
@@ -62,12 +62,12 @@ public class AuthenticationTestIT {
 
         return target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "token " + "")
+                .header(HttpHeaders.AUTHORIZATION, "token ")
                 .get();
     }
 
     private void testAuthentication(String endpointPath) {
-        GitHubAPI.getJsonFromUri(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
+        GitHubAPI.getJSON(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
     }
 
     @AfterClass

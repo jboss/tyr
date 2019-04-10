@@ -21,29 +21,31 @@ import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.RegexDefinition;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SkipCheck {
 
     public static boolean shouldSkip(JsonNode payload, FormatConfig config) {
         if (payload == null || config == null) {
-            throw new IllegalArgumentException("Input arguments cannot be null!");
+            throw new IllegalArgumentException("Input arguments cannot be null");
         }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
 
     private static boolean skipByTitle(JsonNode payload, FormatConfig config) {
-        if (config.getFormat().getSkipPatterns().getTitle() != null) {
-            Matcher titleMatcher = config.getFormat().getSkipPatterns().getTitle()
-                    .matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+        Pattern titlePattern = config.getFormat().getSkipPatterns().getTitle();
+        if (titlePattern != null) {
+            Matcher titleMatcher = titlePattern.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
             return titleMatcher.matches();
         }
         return false;
     }
 
     private static boolean skipByCommit(JsonNode payload, FormatConfig config) {
-        if (config.getFormat().getSkipPatterns().getCommit() != null) {
+        Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
+        if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
-            commitRegexDefinition.setPattern(config.getFormat().getSkipPatterns().getCommit());
+            commitRegexDefinition.setPattern(commitPattern);
             LatestCommitCheck latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
             return latestCommitCheck.check(payload) == null;
         }
@@ -51,10 +53,11 @@ public class SkipCheck {
     }
 
     private static boolean skipByDescriptionFirstRow(JsonNode payload, FormatConfig config) {
-        if (config.getFormat().getSkipPatterns().getDescription() != null) {
+        Pattern descriptionPattern = config.getFormat().getSkipPatterns().getDescription();
+        if (descriptionPattern != null) {
             String description = payload.get(Utils.PULL_REQUEST).get(Utils.BODY).asText();
             String firstRow = description.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0];
-            Matcher descriptionMatcher = config.getFormat().getSkipPatterns().getDescription().matcher(firstRow);
+            Matcher descriptionMatcher = descriptionPattern.matcher(firstRow);
             return descriptionMatcher.matches();
         }
         return false;

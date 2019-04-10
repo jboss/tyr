@@ -26,6 +26,7 @@ public class Utils {
     public static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
     public static final String TYR_CONFIG_DIR = "tyr.config.dir";
     public static final String TEMPLATE_FORMAT_URL = "template.format.url";
+    public static final String TEMPLATE_FORMAT_FILE = "template.format.file";
     public static final String USERLIST_FILE_NAME = "user-list.txt";
     public static final String ADMINLIST_FILE_NAME = "admin-list.txt";
     public static final String WHITELIST_ENABLED = "whitelist.enabled";

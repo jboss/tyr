@@ -22,7 +22,7 @@ import org.xstefank.model.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TitleIssueLinkIncludedCheck implements Check {
+public class TitleJIRAIssueLinkIncludedCheck implements Check {
 
     private static final String JIRA_PREFIX = "https://issues.jboss.org/browse/";
     private static Pattern titlePatter = Pattern.compile("WFLY-\\d+");

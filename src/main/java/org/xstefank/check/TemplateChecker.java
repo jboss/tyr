@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.jboss.logging.Logger;
 import org.xstefank.check.additional.AdditionalChecks;
 import org.xstefank.model.Utils;
@@ -43,7 +43,7 @@ public class TemplateChecker {
      * @param payload the PR paylaod JSON received from GitHub
      * @return error message or empty string if there is no failure found
      */
-    public String checkPR(JsonNode payload) {
+    public String checkPR(JsonObject payload) {
         log.debug("checking PR" + Utils.LINE_SEPARATOR + payload);
         String errorMessage = "";
 

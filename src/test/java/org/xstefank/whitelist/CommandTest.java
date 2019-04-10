@@ -15,8 +15,8 @@
  */
 package org.xstefank.whitelist;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.File;
+import javax.json.JsonObject;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,7 +61,7 @@ public abstract class CommandTest {
     @Before
     public void before() {
         // It is required to stub each method again for each invocation
-        PowerMockito.stub(method(GitHubAPI.class, "getPullRequestJSON", JsonNode.class))
+        PowerMockito.stub(method(GitHubAPI.class, "getPullRequestJSON", JsonObject.class))
                 .toReturn(TestUtils.TEST_PAYLOAD);
 
         whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);

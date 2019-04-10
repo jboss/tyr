@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.RegexDefinition;
 
@@ -33,9 +33,9 @@ public class RequiredRowsCheck implements Check {
     }
 
     @Override
-    public String check(JsonNode payload) {
+    public String check(JsonObject payload) {
         List<RegexDefinition> requiredRows = new ArrayList<>(rows);
-        String description = payload.get(Utils.PULL_REQUEST).get(Utils.BODY).asText();
+        String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);
 
         try (Scanner scanner = new Scanner(description)) {
             while (scanner.hasNextLine() && !requiredRows.isEmpty()) {

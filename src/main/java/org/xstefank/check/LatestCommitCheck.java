@@ -15,7 +15,8 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.RegexDefinition;
@@ -38,10 +39,13 @@ public class LatestCommitCheck implements Check {
     }
 
     @Override
-    public String check(JsonNode payload) {
-        JsonNode commitsJson = GitHubAPI.getCommitsJSON(payload);
-        String commitMessages = commitsJson.get(commitsJson.size() - 1).get(Utils.COMMIT).get(Utils.MESSAGE).asText();
-        Matcher matcher = pattern.matcher(commitMessages.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
+    public String check(JsonObject payload) {
+        JsonArray commitsJson = GitHubAPI.getCommitsJSON(payload);
+        String commitMessage = commitsJson.getJsonObject(commitsJson.size() - 1)
+                .getJsonObject(Utils.COMMIT)
+                .getString(Utils.MESSAGE);
+
+        Matcher matcher = pattern.matcher(commitMessage.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
 
         if (!matcher.matches()) {
             return message;

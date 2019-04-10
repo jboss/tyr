@@ -15,8 +15,11 @@
  */
 package org.xstefank.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
+import java.io.StringReader;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import org.jboss.logging.Logger;
 import org.xstefank.model.CommitStatus;
 import org.xstefank.model.StatusPayload;
@@ -77,15 +80,15 @@ public class GitHubAPI {
         }
     }
 
-    public static JsonNode getCommitsJSON(JsonNode prPayload) {
-        return getJSON(getCommitsUri(prPayload));
+    public static JsonArray getCommitsJSON(JsonObject prPayload) {
+        return getJSON(getCommitsUri(prPayload)).readArray();
     }
 
-    public static JsonNode getPullRequestJSON(JsonNode issuePayload) {
-        return getJSON(getPullRequestUri(issuePayload));
+    public static JsonObject getPullRequestJSON(JsonObject issuePayload) {
+        return getJSON(getPullRequestUri(issuePayload)).readObject();
     }
 
-    static JsonNode getJSON(URI uri) {
+    static JsonReader getJSON(URI uri) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(uri);
 
@@ -104,7 +107,8 @@ public class GitHubAPI {
                 throw new IllegalArgumentException("Can not get json from URI. Response status " + response.getStatus());
             }
 
-            return response.readEntity(JsonNode.class);
+            String responseEntity = response.readEntity(String.class);
+            return Json.createReader(new StringReader(responseEntity));
         } catch (Throwable e) {
             log.error("Cannot retrieve JSON from " + uri.toString(), e);
             throw e;
@@ -115,13 +119,13 @@ public class GitHubAPI {
         }
     }
 
-    private static URI getCommitsUri(JsonNode prPayload) {
-        String url = prPayload.get(Utils.PULL_REQUEST).get(Utils.COMMITS_URL).asText();
+    private static URI getCommitsUri(JsonObject prPayload) {
+        String url = prPayload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.COMMITS_URL);
         return URI.create(url);
     }
 
-    private static URI getPullRequestUri(JsonNode issuePayload) {
-        String url = issuePayload.get(Utils.ISSUE).get(Utils.PULL_REQUEST).get(Utils.URL).asText();
+    private static URI getPullRequestUri(JsonObject issuePayload) {
+        String url = issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.PULL_REQUEST).getString(Utils.URL);
         return URI.create(url);
     }
 

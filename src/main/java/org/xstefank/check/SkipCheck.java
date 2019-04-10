@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.FormatConfig;
 import org.xstefank.model.yaml.RegexDefinition;
@@ -25,23 +25,24 @@ import java.util.regex.Pattern;
 
 public class SkipCheck {
 
-    public static boolean shouldSkip(JsonNode payload, FormatConfig config) {
+    public static boolean shouldSkip(JsonObject payload, FormatConfig config) {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
 
-    private static boolean skipByTitle(JsonNode payload, FormatConfig config) {
+    private static boolean skipByTitle(JsonObject payload, FormatConfig config) {
         Pattern titlePattern = config.getFormat().getSkipPatterns().getTitle();
         if (titlePattern != null) {
-            Matcher titleMatcher = titlePattern.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+            Matcher titleMatcher = titlePattern.matcher(payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.TITLE));
             return titleMatcher.matches();
         }
         return false;
     }
 
-    private static boolean skipByCommit(JsonNode payload, FormatConfig config) {
+
+    private static boolean skipByCommit(JsonObject payload, FormatConfig config) {
         Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
         if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
@@ -52,10 +53,10 @@ public class SkipCheck {
         return false;
     }
 
-    private static boolean skipByDescriptionFirstRow(JsonNode payload, FormatConfig config) {
+    private static boolean skipByDescriptionFirstRow(JsonObject payload, FormatConfig config) {
         Pattern descriptionPattern = config.getFormat().getSkipPatterns().getDescription();
         if (descriptionPattern != null) {
-            String description = payload.get(Utils.PULL_REQUEST).get(Utils.BODY).asText();
+            String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);
             String firstRow = description.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0];
             Matcher descriptionMatcher = descriptionPattern.matcher(firstRow);
             return descriptionMatcher.matches();

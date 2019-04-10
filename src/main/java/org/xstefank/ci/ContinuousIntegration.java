@@ -15,13 +15,13 @@
  */
 package org.xstefank.ci;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 
 public interface ContinuousIntegration {
 
-    void triggerBuild(JsonNode prPayload);
+    void triggerBuild(JsonObject prPayload);
 
-    void triggerFailedBuild(JsonNode prPayload);
+    void triggerFailedBuild(JsonObject prPayload);
 
     void init();
 }

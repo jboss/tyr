@@ -25,7 +25,7 @@ public class BuildJson {
     private BuildType buildType;
     private Properties properties;
 
-    public BuildJson(String teamCityBranch, String id, String sha, String pull, String gitBranch) {
+    public BuildJson(String teamCityBranch, String id, String sha, int pull, String gitBranch) {
         this.teamCityBranch = teamCityBranch;
         buildType = new BuildType(id);
         properties = new Properties(sha, pull, gitBranch);

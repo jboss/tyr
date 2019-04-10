@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class SkipCheckTest {
     public void before() {
         skipPatterns = new SkipPatterns();
         PowerMockito.suppress(method(GitHubAPI.class, TestUtils.READ_TOKEN));
-        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
+        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
     }
 
     @Test (expected=IllegalArgumentException.class)

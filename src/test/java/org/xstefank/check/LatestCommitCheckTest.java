@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class LatestCommitCheckTest {
     public void before() {
         commitRegexDefinition = new RegexDefinition();
         PowerMockito.suppress(method(GitHubAPI.class, TestUtils.READ_TOKEN));
-        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
+        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
     }
 
     @Test (expected=IllegalArgumentException.class)
@@ -83,7 +83,7 @@ public class LatestCommitCheckTest {
 
     @Test
     public void testMultipleCommitMessages() {
-        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonNode.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
+        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
 
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
         latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);

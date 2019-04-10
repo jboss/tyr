@@ -15,10 +15,10 @@
  */
 package org.xstefank.webhook;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.net.URL;
+import javax.json.JsonObject;
 import org.xstefank.api.GitHubAPI;
 import org.xstefank.check.SkipCheck;
 import org.xstefank.check.TemplateChecker;
@@ -50,10 +50,10 @@ public class WebHookEndpoint {
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void processRequest(JsonNode payload) {
+    public void processRequest(JsonObject payload) {
         if (whitelistProcessing != null) {
             processPRWithWhitelisting(payload);
-        } else if (payload.has(Utils.PULL_REQUEST)) {
+        } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
             processPullRequest(payload);
         }
     }
@@ -80,29 +80,31 @@ public class WebHookEndpoint {
         }
     }
 
-    private void processPullRequest(JsonNode prPayload) {
+    private void processPullRequest(JsonObject prPayload) {
         if (!SkipCheck.shouldSkip(prPayload, config)) {
             String errorMessage = templateChecker.checkPR(prPayload);
             if (errorMessage != null) {
                 GitHubAPI.updateCommitStatus(config.getRepository(),
-                        prPayload.get(Utils.PULL_REQUEST).get(Utils.HEAD).get(Utils.SHA).asText(),
+                        prPayload.getJsonObject(Utils.PULL_REQUEST).getJsonObject(Utils.HEAD).getString(Utils.SHA),
                         errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
                         config.getStatusUrl(),
                         errorMessage.isEmpty() ? "valid" : errorMessage, "PR format");
             }
         }
     }
-    private void processPRWithWhitelisting(JsonNode payload) {
-        if (payload.has(Utils.ISSUE)) {
+    private void processPRWithWhitelisting(JsonObject payload) {
+        if (payload.getJsonObject(Utils.ISSUE) != null) {
             whitelistProcessing.processPRComment(payload);
-        } else if (payload.has(Utils.PULL_REQUEST)) {
+        } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
             processPullRequest(payload);
-            if (!payload.get(Utils.ACTION).asText().matches("opened")) {
+            if (!payload.getString(Utils.ACTION).matches("opened")) {
                 return;
             }
-            String username = payload.get(Utils.PULL_REQUEST).get(Utils.USER).get(Utils.LOGIN).asText();
+            String username = payload.getJsonObject(Utils.PULL_REQUEST)
+                    .getJsonObject(Utils.USER)
+                    .getString(Utils.LOGIN);
             if (whitelistProcessing.isUserEligibleToRunCI(username)) {
-                whitelistProcessing.triggerCI(payload.get(Utils.PULL_REQUEST));
+                whitelistProcessing.triggerCI(payload.getJsonObject(Utils.PULL_REQUEST));
             }
         }
     }

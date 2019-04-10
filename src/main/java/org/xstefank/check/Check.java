@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 
 /**
  * Validates pull request payload with a specified check
@@ -30,5 +30,5 @@ public interface Check {
      * @return null if check passed, error message otherwise (error message
      * is limited by GitHub status to 140 characters)
      */
-    String check(JsonNode payload);
+    String check(JsonObject payload);
 }

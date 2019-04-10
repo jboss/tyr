@@ -15,7 +15,7 @@
  */
 package org.xstefank.check.additional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.check.Check;
 import org.xstefank.model.Utils;
 
@@ -28,12 +28,12 @@ public class TitleJIRAIssueLinkIncludedCheck implements Check {
     private static Pattern titlePatter = Pattern.compile("WFLY-\\d+");
 
     @Override
-    public String check(JsonNode payload) {
+    public String check(JsonObject payload) {
         //expecting title in format [WFLY-XYZ] subject or WFLY-XYZ subject
-        Matcher matcher = titlePatter.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+        Matcher matcher = titlePatter.matcher(payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.TITLE));
         if (matcher.find()) {
             String titleIssue = matcher.group();
-            String description = payload.get(Utils.PULL_REQUEST).get(Utils.BODY).asText();
+            String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);
 
             if (!description.contains(JIRA_PREFIX + titleIssue)) {
                 return "The description does not contain the link to issue in the PR title";

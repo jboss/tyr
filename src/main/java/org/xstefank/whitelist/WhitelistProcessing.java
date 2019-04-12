@@ -15,10 +15,10 @@
  */
 package org.xstefank.whitelist;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.json.JsonObject;
 import org.jboss.logging.Logger;
 import org.xstefank.ci.CILoader;
 import org.xstefank.ci.ContinuousIntegration;
@@ -48,10 +48,11 @@ public class WhitelistProcessing {
         continuousIntegrations = loadCIs(config);
     }
 
-    public void processPRComment(JsonNode issuePayload) {
-        if (!commands.isEmpty() && issuePayload.get(Utils.ISSUE).has(Utils.PULL_REQUEST) &&
-                issuePayload.get(Utils.ACTION).asText().matches("created")) {
-            String message = issuePayload.get(Utils.COMMENT).get(Utils.BODY).asText();
+    public void processPRComment(JsonObject issuePayload) {
+        if (!commands.isEmpty() &&
+                issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.PULL_REQUEST) != null &&
+                issuePayload.getString(Utils.ACTION).matches("created")) {
+            String message = issuePayload.getJsonObject(Utils.COMMENT).getString(Utils.BODY);
             for (Command command : commands) {
                 if (message.matches(command.getCommandRegex())) {
                     command.process(issuePayload, this);
@@ -60,11 +61,11 @@ public class WhitelistProcessing {
         }
     }
 
-    public void triggerCI(JsonNode prPayload) {
+    public void triggerCI(JsonObject prPayload) {
         continuousIntegrations.forEach(CI -> CI.triggerBuild(prPayload));
     }
 
-    public void triggerFailedCI(JsonNode prPayload) {
+    public void triggerFailedCI(JsonObject prPayload) {
         continuousIntegrations.forEach(CI -> CI.triggerFailedBuild(prPayload));
     }
 
@@ -72,12 +73,12 @@ public class WhitelistProcessing {
         return userList.contains(username) || adminList.contains(username);
     }
 
-    String getCommentAuthor(JsonNode issuePayload) {
-        return issuePayload.get(Utils.COMMENT).get(Utils.USER).get(Utils.LOGIN).asText();
+    String getCommentAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.COMMENT).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 
-    String getPRAuthor(JsonNode issuePayload) {
-        return issuePayload.get(Utils.ISSUE).get(Utils.USER).get(Utils.LOGIN).asText();
+    String getPRAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 
     boolean isUserOnAdminList(String username) {

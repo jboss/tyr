@@ -2,6 +2,6 @@
   "pull_request": {
     "title": "Test PR",
     "body": "Test description\r\nNext line\r\n",
-    "commits": "1"
+    "commits": 1
   }
 }

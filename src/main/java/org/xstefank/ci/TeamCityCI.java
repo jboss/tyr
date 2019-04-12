@@ -15,11 +15,11 @@
  */
 package org.xstefank.ci;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -62,14 +62,14 @@ public class TeamCityCI implements ContinuousIntegration {
     }
 
     @Override
-    public void triggerBuild(JsonNode prPayload) {
-        String branch = prPayload.get(Utils.BASE).get(Utils.REF).asText();
+    public void triggerBuild(JsonObject prPayload) {
+        String branch = prPayload.getJsonObject(Utils.BASE).getString(Utils.REF);
         if (!branchMappings.containsKey(branch)) {
             return;
         }
 
-        String pull = prPayload.get(Utils.NUMBER).asText();
-        String sha = prPayload.get(Utils.HEAD).get(Utils.SHA).asText();
+        int pull = prPayload.getInt(Utils.NUMBER);
+        String sha = prPayload.getJsonObject(Utils.HEAD).getString(Utils.SHA);
         String buildId = branchMappings.get(branch);
 
         Client client = ClientBuilder.newClient();
@@ -79,9 +79,7 @@ public class TeamCityCI implements ContinuousIntegration {
                 .build();
 
         WebTarget target = client.target(statusUri);
-
-        Entity<BuildJson> json = Entity.json(new BuildJson("pull/" + pull, buildId,
-                sha, pull, branch));
+        Entity<BuildJson> json = Entity.json(new BuildJson("pull/" + pull, buildId, sha, pull, branch));
 
         Response response = null;
 
@@ -124,7 +122,7 @@ public class TeamCityCI implements ContinuousIntegration {
     }
 
     @Override
-    public void triggerFailedBuild(JsonNode prPayload) {
+    public void triggerFailedBuild(JsonObject prPayload) {
         throw new UnsupportedOperationException("Method is not implemented");
     }
 }

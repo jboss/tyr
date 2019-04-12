@@ -15,13 +15,13 @@
  */
 package org.xstefank.whitelist;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.api.GitHubAPI;
 
 public class AddUserCommand extends Command {
 
     @Override
-    public void process(JsonNode payload, WhitelistProcessing whitelistProcessing) {
+    public void process(JsonObject payload, WhitelistProcessing whitelistProcessing) {
         String pullRequestAuthor = whitelistProcessing.getPRAuthor(payload);
         String commentAuthor = whitelistProcessing.getCommentAuthor(payload);
 
@@ -29,7 +29,7 @@ public class AddUserCommand extends Command {
                 !whitelistProcessing.isUserOnUserList(pullRequestAuthor) &&
                 whitelistProcessing.addUserToUserList(pullRequestAuthor)) {
 
-            JsonNode prPayload = GitHubAPI.getPullRequestJSON(payload);
+            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
             whitelistProcessing.triggerCI(prPayload);
         }
     }

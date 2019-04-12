@@ -15,7 +15,7 @@
  */
 package org.xstefank.check;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.model.Utils;
 import org.xstefank.model.yaml.RegexDefinition;
 import java.util.regex.Matcher;
@@ -37,8 +37,8 @@ public class TitleCheck implements Check {
     }
 
     @Override
-    public String check(JsonNode payload) {
-        Matcher matcher = pattern.matcher(payload.get(Utils.PULL_REQUEST).get(Utils.TITLE).asText());
+    public String check(JsonObject payload) {
+        Matcher matcher = pattern.matcher(payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.TITLE));
         if (!matcher.matches()) {
             return message;
         }

@@ -15,7 +15,7 @@
  */
 package org.xstefank.whitelist;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 
 /**
  * Command that can process issue payload received from GitHub API
@@ -35,7 +35,7 @@ public abstract class Command {
      * @param whitelistProcessing class that offers some useful functionality
      *                            for working with Continuous Integration.
      */
-    public abstract void process(JsonNode payload, WhitelistProcessing whitelistProcessing);
+    public abstract void process(JsonObject payload, WhitelistProcessing whitelistProcessing);
 
     String getCommandRegex() {
         return commandRegex;

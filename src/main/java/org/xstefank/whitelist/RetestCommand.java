@@ -15,19 +15,19 @@
  */
 package org.xstefank.whitelist;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 import org.xstefank.api.GitHubAPI;
 
 public class RetestCommand extends Command {
 
     @Override
-    public void process(JsonNode payload, WhitelistProcessing whitelistProcessing) {
+    public void process(JsonObject payload, WhitelistProcessing whitelistProcessing) {
         String pullRequestAuthor = whitelistProcessing.getPRAuthor(payload);
         String commentAuthor = whitelistProcessing.getCommentAuthor(payload);
 
         if (whitelistProcessing.isUserOnUserList(pullRequestAuthor) &&
                 whitelistProcessing.isUserEligibleToRunCI(commentAuthor)) {
-            JsonNode prPayload = GitHubAPI.getPullRequestJSON(payload);
+            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
             whitelistProcessing.triggerCI(prPayload);
         }
     }

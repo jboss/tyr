@@ -15,7 +15,7 @@
  */
 package org.xstefank.ci;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.json.JsonObject;
 
 public class TestCI implements ContinuousIntegration {
 
@@ -28,12 +28,12 @@ public class TestCI implements ContinuousIntegration {
     }
 
     @Override
-    public void triggerBuild(JsonNode prPayload) {
+    public void triggerBuild(JsonObject prPayload) {
         triggered = true;
     }
 
     @Override
-    public void triggerFailedBuild(JsonNode prPayload) {
+    public void triggerFailedBuild(JsonObject prPayload) {
         triggeredFailed = true;
     }
 

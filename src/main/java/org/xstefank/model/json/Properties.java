@@ -24,7 +24,7 @@ public class Properties {
     @JsonProperty("property")
     private List<Property> properties;
 
-    public Properties(String sha, String pull, String gitBranch) {
+    public Properties(String sha, int pull, String gitBranch) {
         properties = new ArrayList<>();
         properties.add(new Property("hash", sha));
         properties.add(new Property("pull", pull));

@@ -67,7 +67,7 @@ public class AuthenticationTestIT {
     }
 
     private void testAuthentication(String endpointPath) {
-        GitHubAPI.getJSON(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
+        GitHubAPI.getJSONReader(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
     }
 
     @AfterClass

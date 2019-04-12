@@ -81,14 +81,14 @@ public class GitHubAPI {
     }
 
     public static JsonArray getCommitsJSON(JsonObject prPayload) {
-        return getJSON(getCommitsUri(prPayload)).readArray();
+        return getJSONReader(getCommitsUri(prPayload)).readArray();
     }
 
     public static JsonObject getPullRequestJSON(JsonObject issuePayload) {
-        return getJSON(getPullRequestUri(issuePayload)).readObject();
+        return getJSONReader(getPullRequestUri(issuePayload)).readObject();
     }
 
-    static JsonReader getJSON(URI uri) {
+    static JsonReader getJSONReader(URI uri) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(uri);
 

@@ -31,10 +31,10 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(GitHubAPI.class)
-public class LatestCommitCheckTest {
+public class CommitMessagesCheckTest {
 
     private RegexDefinition commitRegexDefinition;
-    private LatestCommitCheck latestCommitCheck;
+    private CommitMessagesCheck commitMessagesCheck;
 
     @Before
     public void before() {
@@ -45,29 +45,29 @@ public class LatestCommitCheckTest {
 
     @Test (expected=IllegalArgumentException.class)
     public void testNullCommitParameter() {
-        new LatestCommitCheck(null);
+        new CommitMessagesCheck(null);
     }
 
     @Test (expected=IllegalArgumentException.class)
     public void testNullCommitPatternParameter() {
         commitRegexDefinition.setPattern(null);
-        new LatestCommitCheck(commitRegexDefinition);
+        new CommitMessagesCheck(commitRegexDefinition);
     }
 
     @Test
     public void testCheckSimpleRegexMatch() {
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
-        latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
+        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
 
-        Assert.assertNull("Cannot match valid regex", latestCommitCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertNull("Cannot match valid regex", commitMessagesCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
     public void testCheckSimpleRegexNonMatchReturnsExpectedMessage() {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         commitRegexDefinition.setMessage("This is commitRegexDefinition message.");
-        latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
-        String result = latestCommitCheck.check(TestUtils.TEST_PAYLOAD);
+        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+        String result = commitMessagesCheck.check(TestUtils.TEST_PAYLOAD);
 
         Assert.assertNotNull("Matched invalid regex", result);
         Assert.assertEquals("Unexpected message returned", "This is commitRegexDefinition message.", result);
@@ -76,9 +76,9 @@ public class LatestCommitCheckTest {
     @Test
     public void testCheckSimpleRegexNonMatchReturnsDefaultMessage() {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
-        latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
+        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
 
-        Assert.assertEquals("Unexpected message returned", LatestCommitCheck.DEFAULT_MESSAGE, latestCommitCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertEquals("Unexpected message returned", CommitMessagesCheck.DEFAULT_MESSAGE, commitMessagesCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
     @Test
@@ -86,8 +86,8 @@ public class LatestCommitCheckTest {
         PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
 
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
-        latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
+        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
 
-        Assert.assertNull(latestCommitCheck.check(TestUtils.TEST_PAYLOAD));
+        Assert.assertNull(commitMessagesCheck.check(TestUtils.TEST_PAYLOAD));
     }
 }

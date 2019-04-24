@@ -75,7 +75,7 @@ public class TemplateChecker {
         }
 
         if (format.getCommit() != null) {
-            checks.add(new LatestCommitCheck(format.getCommit()));
+            checks.add(new CommitMessagesCheck(format.getCommit()));
         }
 
         if (format.getAdditionalChecks() != null) {

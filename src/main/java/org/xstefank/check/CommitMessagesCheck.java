@@ -23,14 +23,14 @@ import org.xstefank.model.yaml.RegexDefinition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LatestCommitCheck implements Check {
+public class CommitMessagesCheck implements Check {
 
-    static final String DEFAULT_MESSAGE = "Invalid commit message content";
+    static final String DEFAULT_MESSAGE = "One of the commit messages has wrong format";
 
     private Pattern pattern;
     private String message;
 
-    public LatestCommitCheck(RegexDefinition commit) {
+    public CommitMessagesCheck(RegexDefinition commit) {
         if (commit == null || commit.getPattern() == null) {
             throw new IllegalArgumentException("Input argument cannot be null");
         }
@@ -40,15 +40,17 @@ public class LatestCommitCheck implements Check {
 
     @Override
     public String check(JsonObject payload) {
-        JsonArray commitsJson = GitHubAPI.getCommitsJSON(payload);
-        String commitMessage = commitsJson.getJsonObject(commitsJson.size() - 1)
-                .getJsonObject(Utils.COMMIT)
-                .getString(Utils.MESSAGE);
+        JsonArray commitsJsonArray = GitHubAPI.getCommitsJSON(payload);
+        for (int i = 0; i < commitsJsonArray.size(); i++) {
+            String commitMessage = commitsJsonArray.getJsonObject(i)
+                    .getJsonObject(Utils.COMMIT)
+                    .getString(Utils.MESSAGE);
 
-        Matcher matcher = pattern.matcher(commitMessage.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
+            Matcher matcher = pattern.matcher(commitMessage.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
 
-        if (!matcher.matches()) {
-            return message;
+            if (!matcher.matches()) {
+                return message;
+            }
         }
 
         return null;

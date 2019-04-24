@@ -47,8 +47,8 @@ public class SkipCheck {
         if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
             commitRegexDefinition.setPattern(commitPattern);
-            LatestCommitCheck latestCommitCheck = new LatestCommitCheck(commitRegexDefinition);
-            return latestCommitCheck.check(payload) == null;
+            CommitMessagesCheck commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+            return commitMessagesCheck.check(payload) == null;
         }
         return false;
     }

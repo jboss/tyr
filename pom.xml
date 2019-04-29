@@ -15,7 +15,6 @@
         <linkXRef>false</linkXRef>
         <version.com.fasterxml.jackson>2.9.8</version.com.fasterxml.jackson>
         <version.thorntail>2.4.0.Final</version.thorntail>
-        <version.resteasy>3.6.3.Final</version.resteasy>
 
         <fabric8-maven-plugin.version>3.5.40</fabric8-maven-plugin.version>
         <fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
@@ -40,6 +39,11 @@
         <dependency>
             <groupId>io.thorntail</groupId>
             <artifactId>jaxrs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>jaxrs-jsonp</artifactId>
         </dependency>
 
         <dependency>
@@ -69,12 +73,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-json-p-provider</artifactId>
-            <version>${version.resteasy}</version>
         </dependency>
 
         <dependency>

@@ -18,6 +18,7 @@ package org.jboss.tyr.whitelist;
 import org.jboss.tyr.CIOperations;
 import org.jboss.tyr.Command;
 import org.jboss.logging.Logger;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.ci.CILoader;
 import org.jboss.tyr.ci.ContinuousIntegration;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
@@ -76,12 +77,24 @@ public class WhitelistProcessing implements CIOperations {
 
     @Override
     public void triggerCI(JsonObject prPayload) {
-        continuousIntegrations.forEach(CI -> CI.triggerBuild(prPayload));
+        continuousIntegrations.forEach(CI -> {
+            try {
+                CI.triggerBuild(prPayload);
+            } catch (InvalidPayloadException e) {
+                throw new IllegalArgumentException("Cannot load PR payload", e);
+            }
+        });
     }
 
     @Override
     public void triggerFailedCI(JsonObject prPayload) {
-        continuousIntegrations.forEach(CI -> CI.triggerFailedBuild(prPayload));
+        continuousIntegrations.forEach(CI -> {
+            try {
+                CI.triggerFailedBuild(prPayload);
+            } catch (InvalidPayloadException e) {
+                throw new IllegalArgumentException("Cannot load PR payload", e);
+            }
+        });
     }
 
     @Override

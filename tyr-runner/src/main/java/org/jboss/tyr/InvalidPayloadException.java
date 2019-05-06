@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2020 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.model.json;
+package org.jboss.tyr;
 
-public class Property {
+public class InvalidPayloadException extends Exception{
 
-    public String name;
-    public Object value;
-
-    public Property() {
-
-    }
-
-    public Property(String name, Object value) {
-        this.name = name;
-        this.value = value;
+    public InvalidPayloadException(String message) {
+        super(message);
     }
 }

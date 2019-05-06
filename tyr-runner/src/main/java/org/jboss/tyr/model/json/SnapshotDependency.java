@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2020 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
  */
 package org.jboss.tyr.model.json;
 
-public class Property {
+import javax.json.bind.annotation.JsonbProperty;
 
-    public String name;
-    public Object value;
+public class SnapshotDependency {
 
-    public Property() {
+    @JsonbProperty("source-buildType")
+    public SourceBuildType sourceBuildType;
 
-    }
+    public String id;
+    public String type;
+    public SnapshotDependencyProperties properties;
 
-    public Property(String name, Object value) {
-        this.name = name;
-        this.value = value;
-    }
 }

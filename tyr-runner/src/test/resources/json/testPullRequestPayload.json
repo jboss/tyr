@@ -1,0 +1,9 @@
+{
+  "number": -1,
+  "base": {
+    "ref": "testRef"
+  },
+  "head": {
+    "sha": "testSha"
+  }
+}

@@ -17,7 +17,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <linkXRef>false</linkXRef>
-    <version.com.fasterxml.jackson>2.9.8</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.9.9</version.com.fasterxml.jackson>
     <version.thorntail>2.4.0.Final</version.thorntail>
 
     <fabric8-maven-plugin.version>3.5.40</fabric8-maven-plugin.version>

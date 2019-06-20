@@ -1,4 +1,3 @@
-
 repository: "testuser/testrepo"
 statusUrl: "https://github.com/testuser/test-repo/blob/master/.github/pull_request_template.md"
 
@@ -8,10 +7,6 @@ format:
     description: "((.*)?NO JIRA REQUIRED(.*)\\s?)|(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
   title:
     pattern: "^Test.*PR$"
-
-  additionalChecks:
-    - TitleJIRAIssueLinkIncludedCheck
-    - OneCommitOnlyCheck
 
   CI:
     - TestCI

@@ -1,4 +1,3 @@
-
 repository: "jboss/test-repo"
 statusUrl: "https://github.com/jboss/test-repo/blob/master/.github/pull_request_template.md"
 
@@ -17,10 +16,6 @@ format:
     required rows:
       - pattern: "JIRA:\\s+https://issues.jboss.org/browse/WFLY-\\d+|https://issues.jboss.org/browse/WFLY-\\d+"
         message: "The PR description must contain a link to the JIRA issue"
-
-  additionalChecks:
-    - TitleJIRAIssueLinkIncludedCheck
-    - OneCommitOnlyCheck
 
   commands:
     AddUserCommand: "ok\\s+to\\s+test$"

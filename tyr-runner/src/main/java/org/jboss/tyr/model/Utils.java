@@ -32,6 +32,7 @@ public class Utils {
     public static final String WHITELIST_ENABLED = "whitelist.enabled";
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String GITHUB_LINE_SEPARATOR = "\\r\\n";
+    public static final String ADDITIONAL_RESOURCES_PROPERTY = "additional-resources";
 
     //PR payload
     public static final String PULL_REQUEST = "pull_request";

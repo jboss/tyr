@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr.additional.resource;
 
+import org.jboss.tyr.Command;
 import org.jboss.tyr.CIOperations;
-import org.jboss.tyr.api.GitHubAPI;
 
 import javax.json.JsonObject;
 
-public class AddUserCommand extends AbstractCommand {
+public class DummyAdditionalCommand implements Command {
+
+    private static boolean triggered = false;
 
     @Override
-    public void process(JsonObject payload, CIOperations operations) {
-        String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
-        String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
+    public void process(JsonObject jsonObject, CIOperations operations) {
+        triggered = true;
+    }
 
-        if (operations.isUserAdministrator(commentAuthor) &&
-                !operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
-                operations.addUserToUserList(pullRequestAuthor)) {
+    @Override
+    public String getRegex() {
+        return "dummy-command";
+    }
 
-            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
-            operations.triggerCI(prPayload);
-        }
+    public static boolean isTriggered() {
+        return triggered;
     }
 }

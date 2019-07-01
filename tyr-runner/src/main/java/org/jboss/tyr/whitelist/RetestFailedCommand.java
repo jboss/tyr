@@ -15,22 +15,23 @@
  */
 package org.jboss.tyr.whitelist;
 
+import org.jboss.tyr.CIOperations;
 import org.jboss.tyr.api.GitHubAPI;
 
 import javax.json.JsonObject;
 
-public class RetestFailedCommand extends Command {
+public class RetestFailedCommand extends AbstractCommand {
 
     @Override
-    public void process(JsonObject payload, WhitelistProcessing whitelistProcessing) {
-        String pullRequestAuthor = whitelistProcessing.getPRAuthor(payload);
-        String commentAuthor = whitelistProcessing.getCommentAuthor(payload);
+    public void process(JsonObject payload, CIOperations operations) {
+        String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
+        String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
 
-        if (whitelistProcessing.isUserOnUserList(pullRequestAuthor) &&
-                whitelistProcessing.isUserEligibleToRunCI(commentAuthor)) {
+        if (operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
+                operations.isUserEligibleToRunCI(commentAuthor)) {
 
             JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
-            whitelistProcessing.triggerFailedCI(prPayload);
+            operations.triggerFailedCI(prPayload);
         }
     }
 }

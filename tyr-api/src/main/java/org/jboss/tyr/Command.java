@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr;
 
 import javax.json.JsonObject;
 
 /**
  * Command that can process issue payload received from GitHub API
  */
-public abstract class Command {
-
-    private String commandRegex;
+public interface Command {
 
     /**
      * This method is used for command processing.
      * You can define your own functionality of new command
      * that you want to implement. Method is triggered automatically
-     * when the command regex is matched. You can set the regex
-     * in {@link CommandsLoader} class and use it in format.yaml.
+     * when the command regex is matched.
      *
      * @param payload json received from GitHub API.
-     * @param whitelistProcessing class that offers some useful functionality
+     * @param operation class that offers some useful functionality
      *                            for working with Continuous Integration.
      */
-    public abstract void process(JsonObject payload, WhitelistProcessing whitelistProcessing);
+    void process(JsonObject payload, CIOperations operations);
 
-    String getCommandRegex() {
-        return commandRegex;
-    }
-
-    void setCommandRegex(String commandRegex) {
-        this.commandRegex = commandRegex;
-    }
+    /**
+     * Method for getting regex for matching comment content.
+     * @return a command regex
+     */
+    String getRegex();
 }

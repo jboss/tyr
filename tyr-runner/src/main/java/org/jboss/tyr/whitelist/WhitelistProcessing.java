@@ -15,9 +15,12 @@
  */
 package org.jboss.tyr.whitelist;
 
+import org.jboss.tyr.CIOperations;
+import org.jboss.tyr.Command;
 import org.jboss.logging.Logger;
 import org.jboss.tyr.ci.CILoader;
 import org.jboss.tyr.ci.ContinuousIntegration;
+import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
 import org.jboss.tyr.model.TyrProperties;
 import org.jboss.tyr.model.Utils;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class WhitelistProcessing {
+public class WhitelistProcessing implements CIOperations {
 
     public static final boolean IS_WHITELISTING_ENABLED =
             TyrProperties.getBooleanProperty(Utils.WHITELIST_ENABLED);
@@ -46,7 +49,16 @@ public class WhitelistProcessing {
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
         commands = getCommands(config);
+        commands.addAll(AdditionalResourcesLoader.loadAdditionalCommands());
         continuousIntegrations = loadCIs(config);
+    }
+
+    static String getCommentAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.COMMENT).getJsonObject(Utils.USER).getString(Utils.LOGIN);
+    }
+
+    static String getPRAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 
     public void processPRComment(JsonObject issuePayload) {
@@ -55,42 +67,40 @@ public class WhitelistProcessing {
                 issuePayload.getString(Utils.ACTION).matches("created")) {
             String message = issuePayload.getJsonObject(Utils.COMMENT).getString(Utils.BODY);
             for (Command command : commands) {
-                if (message.matches(command.getCommandRegex())) {
+                if (message.matches(command.getRegex())) {
                     command.process(issuePayload, this);
                 }
             }
         }
     }
 
+    @Override
     public void triggerCI(JsonObject prPayload) {
         continuousIntegrations.forEach(CI -> CI.triggerBuild(prPayload));
     }
 
+    @Override
     public void triggerFailedCI(JsonObject prPayload) {
         continuousIntegrations.forEach(CI -> CI.triggerFailedBuild(prPayload));
     }
 
+    @Override
     public boolean isUserEligibleToRunCI(String username) {
         return userList.contains(username) || adminList.contains(username);
     }
 
-    String getCommentAuthor(JsonObject issuePayload) {
-        return issuePayload.getJsonObject(Utils.COMMENT).getJsonObject(Utils.USER).getString(Utils.LOGIN);
-    }
-
-    String getPRAuthor(JsonObject issuePayload) {
-        return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
-    }
-
-    boolean isUserOnAdminList(String username) {
+    @Override
+    public boolean isUserAdministrator(String username) {
         return adminList.contains(username);
     }
 
-    boolean isUserOnUserList(String username) {
+    @Override
+    public boolean isUserAlreadyWhitelisted(String username) {
         return userList.contains(username);
     }
 
-    boolean addUserToUserList(String username) {
+    @Override
+    public boolean addUserToUserList(String username) {
         if (userList.contains(username)) {
             return false;
         }
@@ -106,9 +116,9 @@ public class WhitelistProcessing {
         }
 
         for (String key : regexMap.keySet()) {
-            Command command = CommandsLoader.getCommand(key);
+            AbstractCommand command = CommandsLoader.getCommand(key);
             if (command != null) {
-                command.setCommandRegex(regexMap.get(key));
+                command.setRegex(regexMap.get(key));
                 commands.add(command);
             } else {
                 log.warnf("Command identified with \"%s\" does not exists", key);

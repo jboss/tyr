@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class CommandsLoader {
 
-    private static final Map<String, Command> commands = new HashMap<>();
+    private static final Map<String, AbstractCommand> commands = new HashMap<>();
 
     static {
         commands.put(AddUserCommand.class.getSimpleName(), new AddUserCommand());
@@ -28,7 +28,7 @@ public class CommandsLoader {
         commands.put(RetestFailedCommand.class.getSimpleName(), new RetestFailedCommand());
     }
 
-    public static Command getCommand(String key) {
+    public static AbstractCommand getCommand(String key) {
         return commands.get(key);
     }
 }

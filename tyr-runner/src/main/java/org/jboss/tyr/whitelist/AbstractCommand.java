@@ -15,22 +15,18 @@
  */
 package org.jboss.tyr.whitelist;
 
-import org.jboss.tyr.CIOperations;
-import org.jboss.tyr.api.GitHubAPI;
+import org.jboss.tyr.Command;
 
-import javax.json.JsonObject;
+public abstract class AbstractCommand implements Command {
 
-public class RetestCommand extends AbstractCommand {
+    private String regex;
 
     @Override
-    public void process(JsonObject payload, CIOperations operations) {
-        String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
-        String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
+    public String getRegex() {
+        return regex;
+    }
 
-        if (operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
-                operations.isUserEligibleToRunCI(commentAuthor)) {
-            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
-            operations.triggerCI(prPayload);
-        }
+    public void setRegex(String regex) {
+        this.regex = regex;
     }
 }

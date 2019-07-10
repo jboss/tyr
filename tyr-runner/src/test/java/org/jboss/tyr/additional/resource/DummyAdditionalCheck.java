@@ -13,24 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr.additional.resource;
 
-import org.jboss.tyr.CIOperations;
-import org.jboss.tyr.api.GitHubAPI;
+import org.jboss.tyr.Check;
 
 import javax.json.JsonObject;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class RetestCommand extends AbstractCommand {
+public class DummyAdditionalCheck implements Check {
+
+    private static final String MESSAGE = "Dummy check failure";
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     @Override
-    public void process(JsonObject payload, CIOperations operations) {
-        String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
-        String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
+    public String check(JsonObject payload) {
+        counter.incrementAndGet();
+        return MESSAGE;
+    }
 
-        if (operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
-                operations.isUserEligibleToRunCI(commentAuthor)) {
-            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
-            operations.triggerCI(prPayload);
-        }
+    public static int getCounterValue() {
+        return counter.intValue();
+    }
+
+    public static String getMessage() {
+        return MESSAGE;
     }
 }

@@ -17,18 +17,14 @@ package org.jboss.tyr.check;
 
 import org.jboss.logging.Logger;
 import org.jboss.tyr.Check;
+import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
 import org.jboss.tyr.model.yaml.FormatConfig;
 
 import javax.json.JsonObject;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 
 public class TemplateChecker {
 
@@ -84,46 +80,8 @@ public class TemplateChecker {
             checks.add(new CommitMessagesCheck(format.getCommit()));
         }
 
-        checks.addAll(loadAdditionalChecks());
+        checks.addAll(AdditionalResourcesLoader.loadAdditionalChecks());
 
         return checks;
-    }
-
-    private static List<Check> loadAdditionalChecks() {
-        List<Check> result = new ArrayList<>();
-        String additionalCheckPropertyValue = System.getProperty("additional-checks");
-
-        if (additionalCheckPropertyValue == null) {
-            return result;
-        }
-
-        String[] split = additionalCheckPropertyValue.split(",");
-        List<URL> jarURLs = new ArrayList<>();
-
-        for (String jar : split) {
-            File file = new File(jar);
-
-            if (!file.exists()) {
-                log.warn("File declared for additional checks does not exist: " + file.getPath());
-                continue;
-            }
-
-            if (!file.getPath().toLowerCase().endsWith(".jar")) {
-                log.warn("Invalid file included for additional checks, must be a jar archive: " + file.getPath());
-                continue;
-            }
-
-            try {
-                jarURLs.add(file.toURI().toURL());
-            } catch (MalformedURLException e) {
-                log.warn("Invalid file name value passed in additional checks", e);
-            }
-        }
-
-        ServiceLoader<Check> serviceLoader = ServiceLoader.load(Check.class,
-            new URLClassLoader(jarURLs.toArray(new URL[0]), Thread.currentThread().getContextClassLoader()));
-        serviceLoader.iterator().forEachRemaining(result::add);
-
-        return result;
     }
 }

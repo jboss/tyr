@@ -1,15 +1,14 @@
 package org.jboss.tyr.health;
 
-import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Liveness;
 
 import javax.enterprise.context.ApplicationScoped;
 
-@Health
+@Liveness
 @ApplicationScoped
 public class StatusHealthCheck implements HealthCheck {
-
     @Override
     public HealthCheckResponse call() {
         return HealthCheckResponse.named("tyr-status").up().build();

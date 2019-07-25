@@ -1,0 +1,22 @@
+1. get TeamCity e.g. `wget https://www.jetbrains.com/teamcity/download/download-thanks.html?platform=linux`
+2. in TeamCity/bin run `./runAll.sh start`
+3. you may enter TeamCity UI with localhost:8111 taped in your browser
+4. create e.g. Test Repo project with Root Project as parent project
+5. create Git VCS root attached to your Github repository e.g. test-repo
+    - Type of VCS: Git
+    - Default branch: refs/heads/master
+    - Branch specification: +:refs/*/head
+6. create Build Configuration e.g. Name: Build, Build configuration ID: TestRepo_Build in General Settings of your created project (e.g. Test Repo)
+7. attach VCS Root (same settings as before)
+8. add Maven Build Step
+    - Execute step: If all previous steps finished successfully
+    - Goals: clean test
+    - Path to POM file: pom.xml
+    - Additional Maven command line parameters: -Dmaven.test.failure.ignore=true
+9. create tyr/tyr-runner/tyr_config_dir
+10. Inside this directory create:
+    - admin-list.txt (add your TeamCity user name)
+    - user-list.txt (add your TeamCity user name)
+    - format.yaml
+    - config.properties
+11. run `mvn clean compile quarkus:dev -Dtyr.config.dir="/yourPath/tyr/tyr-runner/tyr_config_dir"`

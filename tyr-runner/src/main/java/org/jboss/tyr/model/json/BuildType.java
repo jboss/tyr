@@ -17,17 +17,9 @@ package org.jboss.tyr.model.json;
 
 public class BuildType {
 
-    private String id;
+    public String id;
 
     public BuildType(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
         this.id = id;
     }
 }

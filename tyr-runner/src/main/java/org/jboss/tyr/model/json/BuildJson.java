@@ -15,43 +15,19 @@
  */
 package org.jboss.tyr.model.json;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.json.bind.annotation.JsonbProperty;
 
 public class BuildJson {
 
-    @JsonProperty("branchName")
-    private String teamCityBranch;
+    @JsonbProperty("branchName")
+    public String teamCityBranch;
 
-    private BuildType buildType;
-    private Properties properties;
+    public BuildType buildType;
+    public Properties properties;
 
     public BuildJson(String teamCityBranch, String id, String sha, int pull, String gitBranch) {
         this.teamCityBranch = teamCityBranch;
         buildType = new BuildType(id);
         properties = new Properties(sha, pull, gitBranch);
-    }
-
-    public String getTeamCityBranch() {
-        return teamCityBranch;
-    }
-
-    public void setTeamCityBranch(String branchName) {
-        this.teamCityBranch = branchName;
-    }
-
-    public BuildType getBuildType() {
-        return buildType;
-    }
-
-    public void setBuildType(BuildType buildType) {
-        this.buildType = buildType;
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
     }
 }

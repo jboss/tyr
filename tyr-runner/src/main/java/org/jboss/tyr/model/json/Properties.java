@@ -15,28 +15,19 @@
  */
 package org.jboss.tyr.model.json;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Properties {
 
-    @JsonProperty("property")
-    private List<Property> properties;
+    @JsonbProperty("property")
+    public List<Property> properties;
 
     public Properties(String sha, int pull, String gitBranch) {
         properties = new ArrayList<>();
         properties.add(new Property("hash", sha));
         properties.add(new Property("pull", pull));
         properties.add(new Property("branch", gitBranch));
-    }
-
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
     }
 }

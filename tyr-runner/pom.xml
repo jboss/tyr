@@ -13,17 +13,17 @@
     <quarkus.version>0.19.1</quarkus.version>
     <fabric8-maven-plugin.version>3.5.40</fabric8-maven-plugin.version>
     <version.wildfly>16.0.0.Final</version.wildfly>
-    <version.com.fasterxml.jackson.databind>2.9.9.1</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson>2.9.9</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson.databind>2.9.9.3</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson.dataformat-yaml>2.9.9</version.com.fasterxml.jackson.dataformat-yaml>
     <fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift</fabric8.generator.from>
     <linkXRef>false</linkXRef>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <version.com.fasterxml.jackson>2.9.9</version.com.fasterxml.jackson>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <fabric8.skip.build.pom>true</fabric8.skip.build.pom>
     <version.arquillian>1.4.1.Final</version.arquillian>
     <fabric8.openshift.trimImageInContainerSpec>true</fabric8.openshift.trimImageInContainerSpec>
     <maven.compiler.source>1.8</maven.compiler.source>
-    <version.com.fasterxml.jackson.dataformat-yaml>2.9.9</version.com.fasterxml.jackson.dataformat-yaml>
   </properties>
   <dependencyManagement>
     <dependencies>

@@ -41,7 +41,6 @@ public class TestUtils {
     public static final String TARGET_DIR = "target";
 
     public static final JsonObject TEST_PAYLOAD = loadJson(JSON_DIR + "/testPayload.json");
-    public static final JsonObject BAD_TEST_PAYLOAD = loadJson(JSON_DIR + "/badTestPayload.json");
     public static final JsonObject ISSUE_PAYLOAD = loadJson(JSON_DIR + "/issuePayload.json");
     public static final JsonObject EMPTY_PAYLOAD = createEmptyJsonPayload();
 

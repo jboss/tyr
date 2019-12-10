@@ -1,7 +1,0 @@
-{
-  "pull_request": {
-    "title": "WFLY-45 Test PR",
-    "body": "WFLY-123 Test description",
-    "commits": 3
-  }
-}

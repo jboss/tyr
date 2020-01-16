@@ -15,13 +15,14 @@
  */
 package org.jboss.tyr.ci;
 
+import org.jboss.tyr.InvalidPayloadException;
 import javax.json.JsonObject;
 
 public interface ContinuousIntegration {
 
-    void triggerBuild(JsonObject prPayload);
+    void triggerBuild(JsonObject prPayload) throws InvalidPayloadException;
 
-    void triggerFailedBuild(JsonObject prPayload);
+    void triggerFailedBuild(JsonObject prPayload) throws InvalidPayloadException;
 
     void init();
 }

@@ -42,6 +42,7 @@ public class TestUtils {
 
     public static final JsonObject TEST_PAYLOAD = loadJson(JSON_DIR + "/testPayload.json");
     public static final JsonObject ISSUE_PAYLOAD = loadJson(JSON_DIR + "/issuePayload.json");
+    public static final JsonObject PULL_REQUEST_PAYLOAD = loadJson(JSON_DIR + "/testPullRequestPayload.json");
     public static final JsonObject EMPTY_PAYLOAD = createEmptyJsonPayload();
 
     public static final JsonArray TEST_COMMITS_PAYLOAD = loadJsonArray(JSON_DIR + "/testCommitsPayload.json");

@@ -16,6 +16,7 @@
 package org.jboss.tyr.check;
 
 import org.jboss.tyr.Check;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.RegexDefinition;
@@ -41,7 +42,7 @@ public class CommitMessagesCheck implements Check {
     }
 
     @Override
-    public String check(JsonObject payload) {
+    public String check(JsonObject payload) throws InvalidPayloadException {
         JsonArray commitsJsonArray = GitHubAPI.getCommitsJSON(payload);
         for (int i = 0; i < commitsJsonArray.size(); i++) {
             String commitMessage = commitsJsonArray.getJsonObject(i)

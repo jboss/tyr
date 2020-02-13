@@ -16,6 +16,7 @@
 package org.jboss.tyr.whitelist;
 
 import org.jboss.tyr.CIOperations;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.api.GitHubAPI;
 
 import javax.json.JsonObject;
@@ -23,7 +24,7 @@ import javax.json.JsonObject;
 public class RetestFailedCommand extends AbstractCommand {
 
     @Override
-    public void process(JsonObject payload, CIOperations operations) {
+    public void process(JsonObject payload, CIOperations operations) throws InvalidPayloadException {
         String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
         String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
 

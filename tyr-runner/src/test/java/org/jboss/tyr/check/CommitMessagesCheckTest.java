@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.check;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.model.yaml.RegexDefinition;
@@ -57,7 +58,7 @@ public class CommitMessagesCheckTest {
     }
 
     @Test
-    public void testCheckSimpleRegexMatch() {
+    public void testCheckSimpleRegexMatch() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
         commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
 
@@ -65,7 +66,7 @@ public class CommitMessagesCheckTest {
     }
 
     @Test
-    public void testCheckSimpleRegexNonMatchReturnsExpectedMessage() {
+    public void testCheckSimpleRegexNonMatchReturnsExpectedMessage() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         commitRegexDefinition.setMessage("This is commitRegexDefinition message.");
         commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
@@ -76,7 +77,7 @@ public class CommitMessagesCheckTest {
     }
 
     @Test
-    public void testCheckSimpleRegexNonMatchReturnsDefaultMessage() {
+    public void testCheckSimpleRegexNonMatchReturnsDefaultMessage() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
 
@@ -84,7 +85,7 @@ public class CommitMessagesCheckTest {
     }
 
     @Test
-    public void testMultipleCommitMessages() {
+    public void testMultipleCommitMessages() throws InvalidPayloadException {
         PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
 
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));

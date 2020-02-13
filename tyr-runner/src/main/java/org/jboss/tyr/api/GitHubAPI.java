@@ -16,6 +16,7 @@
 package org.jboss.tyr.api;
 
 import org.jboss.logging.Logger;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.CommitStatus;
 import org.jboss.tyr.model.StatusPayload;
 import org.jboss.tyr.model.TyrProperties;
@@ -80,11 +81,11 @@ public class GitHubAPI {
         }
     }
 
-    public static JsonArray getCommitsJSON(JsonObject prPayload) {
+    public static JsonArray getCommitsJSON(JsonObject prPayload) throws InvalidPayloadException {
         return getJSONReader(getCommitsUri(prPayload)).readArray();
     }
 
-    public static JsonObject getPullRequestJSON(JsonObject issuePayload) {
+    public static JsonObject getPullRequestJSON(JsonObject issuePayload) throws InvalidPayloadException {
         return getJSONReader(getPullRequestUri(issuePayload)).readObject();
     }
 
@@ -119,14 +120,22 @@ public class GitHubAPI {
         }
     }
 
-    private static URI getCommitsUri(JsonObject prPayload) {
-        String url = prPayload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.COMMITS_URL);
-        return URI.create(url);
+    private static URI getCommitsUri(JsonObject prPayload) throws InvalidPayloadException {
+        try {
+            String url = prPayload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.COMMITS_URL);
+            return URI.create(url);
+        } catch (NullPointerException e) {
+            throw new InvalidPayloadException("Invalid payload, can't retrieve URL. ", e);
+        }
     }
 
-    private static URI getPullRequestUri(JsonObject issuePayload) {
-        String url = issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.PULL_REQUEST).getString(Utils.URL);
-        return URI.create(url);
+    private static URI getPullRequestUri(JsonObject issuePayload) throws InvalidPayloadException {
+        try {
+            String url = issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.PULL_REQUEST).getString(Utils.URL);
+            return URI.create(url);
+        } catch (NullPointerException e) {
+            throw new InvalidPayloadException("Invalid payload, can't retrieve URL. ", e);
+        }
     }
 
     private static String readToken() {

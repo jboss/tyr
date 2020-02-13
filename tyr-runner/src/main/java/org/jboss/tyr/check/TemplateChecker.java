@@ -17,6 +17,7 @@ package org.jboss.tyr.check;
 
 import org.jboss.logging.Logger;
 import org.jboss.tyr.Check;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
@@ -45,7 +46,7 @@ public class TemplateChecker {
      * @param payload the PR paylaod JSON received from GitHub
      * @return error message or empty string if there is no failure found
      */
-    public String checkPR(JsonObject payload) {
+    public String checkPR(JsonObject payload) throws InvalidPayloadException {
         log.debug("checking PR" + Utils.LINE_SEPARATOR + payload);
         String errorMessage = "";
 

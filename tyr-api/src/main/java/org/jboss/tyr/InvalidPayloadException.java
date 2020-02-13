@@ -17,7 +17,7 @@ package org.jboss.tyr;
 
 public class InvalidPayloadException extends Exception{
 
-    public InvalidPayloadException(String message) {
-        super(message);
+    public InvalidPayloadException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

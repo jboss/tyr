@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.whitelist;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,14 +25,14 @@ public class AddUserCommandTest extends CommandTest {
     private final AddUserCommand addUserCommand = new AddUserCommand();
 
     @Test
-    public void testAddUserCommand() {
+    public void testAddUserCommand() throws InvalidPayloadException {
         addUserCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
         Assert.assertTrue(TestUtils.fileContainsLine(userListFile, PR_AUTHOR));
         Assert.assertTrue(testCI.isTriggered());
     }
 
     @Test(expected = NullPointerException.class)
-    public void testAddUserCommandNullParams() {
+    public void testAddUserCommandNullParams() throws InvalidPayloadException {
         addUserCommand.process(null, null);
     }
 }

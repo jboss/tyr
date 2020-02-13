@@ -62,7 +62,7 @@ public class WhitelistProcessing implements CIOperations {
         return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 
-    public void processPRComment(JsonObject issuePayload) {
+    public void processPRComment(JsonObject issuePayload) throws InvalidPayloadException {
         if (!commands.isEmpty() &&
                 issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.PULL_REQUEST) != null &&
                 issuePayload.getString(Utils.ACTION).matches("created")) {

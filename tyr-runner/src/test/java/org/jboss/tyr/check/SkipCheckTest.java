@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.check;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.model.yaml.Format;
@@ -48,17 +49,17 @@ public class SkipCheckTest {
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullConfigParameter() {
+    public void testNullConfigParameter() throws InvalidPayloadException {
         SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, null);
     }
 
     @Test (expected=IllegalArgumentException.class)
-    public void testNullPayloadParameter() {
+    public void testNullPayloadParameter() throws InvalidPayloadException {
         SkipCheck.shouldSkip(null, formatConfig);
     }
 
     @Test
-    public void testSkipByTitleRegexMatch(){
+    public void testSkipByTitleRegexMatch() throws InvalidPayloadException {
         skipPatterns.setTitle(Pattern.compile("Test PR"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -66,7 +67,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testSkipByTitleRegexNonMatch(){
+    public void testSkipByTitleRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setTitle(Pattern.compile("can't.*match.*this"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -74,7 +75,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testSkipByCommitRegexMatch(){
+    public void testSkipByCommitRegexMatch() throws InvalidPayloadException {
         skipPatterns.setCommit(Pattern.compile("Test commit"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -82,7 +83,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testSkipByCommitRegexNonMatch(){
+    public void testSkipByCommitRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setCommit(Pattern.compile("can't.*match.*this"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -90,7 +91,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testSkipByPullRequestDescriptionRegexMatch(){
+    public void testSkipByPullRequestDescriptionRegexMatch() throws InvalidPayloadException {
         skipPatterns.setDescription(Pattern.compile("Test description"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -98,7 +99,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testSkipByPullRequestDescriptionRegexNonMatch(){
+    public void testSkipByPullRequestDescriptionRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setDescription(Pattern.compile("can't.*match.*this"));
         formatConfig = setUpFormatConfig(skipPatterns);
 
@@ -106,7 +107,7 @@ public class SkipCheckTest {
     }
 
     @Test
-    public void testShouldSkipEmptySkipPatterns() {
+    public void testShouldSkipEmptySkipPatterns() throws InvalidPayloadException {
         formatConfig = setUpFormatConfig(skipPatterns);
 
         Assert.assertFalse("Invalid result after empty skipping patterns",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));

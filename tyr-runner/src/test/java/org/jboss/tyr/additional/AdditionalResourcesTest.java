@@ -19,6 +19,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.additional.resource.DummyAdditionalCheck;
 import org.jboss.tyr.additional.resource.DummyAdditionalCommand;
@@ -54,7 +55,7 @@ public class AdditionalResourcesTest {
     }
 
     @Test
-    public void additionalChecksInvokedTest() {
+    public void additionalChecksInvokedTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/custom-resources.jar");
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
 
@@ -68,7 +69,7 @@ public class AdditionalResourcesTest {
     }
 
     @Test
-    public void additionalCommandsInvokedTest() {
+    public void additionalCommandsInvokedTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/custom-resources.jar");
 
         WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
@@ -79,7 +80,7 @@ public class AdditionalResourcesTest {
 
 
     @Test
-    public void invalidPathAdditionalResourcesTest() {
+    public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/invalid-path.jar");
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
         WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
@@ -93,7 +94,7 @@ public class AdditionalResourcesTest {
     }
 
     @Test
-    public void emptyAdditionalResourcesPropertyTest() {
+    public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
         System.clearProperty(ADDITIONAL_RESOURCES_PROPERTY);
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
         WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);

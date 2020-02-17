@@ -29,10 +29,10 @@ public interface Command {
      * when the command regex is matched.
      *
      * @param payload json received from GitHub API.
-     * @param operation class that offers some useful functionality
+     * @param operations class that offers some useful functionality
      *                            for working with Continuous Integration.
      */
-    void process(JsonObject payload, CIOperations operations);
+    void process(JsonObject payload, CIOperations operations) throws InvalidPayloadException;
 
     /**
      * Method for getting regex for matching comment content.

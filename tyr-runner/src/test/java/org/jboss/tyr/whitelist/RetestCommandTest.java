@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.whitelist;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,14 +25,14 @@ public class RetestCommandTest extends CommandTest {
     private RetestCommand retestCommand = new RetestCommand();
 
     @Test
-    public void testIfRetestCommandTriggersCI() {
+    public void testIfRetestCommandTriggersCI() throws InvalidPayloadException {
         whitelistProcessing.addUserToUserList(PR_AUTHOR);
         retestCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
         Assert.assertTrue(testCI.isTriggered());
     }
 
     @Test(expected = NullPointerException.class)
-    public void testRetestCommandNullParams() {
+    public void testRetestCommandNullParams() throws InvalidPayloadException {
         retestCommand.process(null, null);
     }
 }

@@ -17,6 +17,7 @@ package org.jboss.tyr.webhook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.check.SkipCheck;
 import org.jboss.tyr.check.TemplateChecker;
@@ -50,7 +51,7 @@ public class WebHookEndpoint {
     @POST
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void processRequest(JsonObject payload) {
+    public void processRequest(JsonObject payload) throws InvalidPayloadException {
         if (whitelistProcessing != null) {
             processPRWithWhitelisting(payload);
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
@@ -80,7 +81,7 @@ public class WebHookEndpoint {
         }
     }
 
-    private void processPullRequest(JsonObject prPayload) {
+    private void processPullRequest(JsonObject prPayload) throws InvalidPayloadException {
         if (!SkipCheck.shouldSkip(prPayload, config)) {
             String errorMessage = templateChecker.checkPR(prPayload);
             if (errorMessage != null) {
@@ -92,7 +93,7 @@ public class WebHookEndpoint {
             }
         }
     }
-    private void processPRWithWhitelisting(JsonObject payload) {
+    private void processPRWithWhitelisting(JsonObject payload) throws InvalidPayloadException {
         if (payload.getJsonObject(Utils.ISSUE) != null) {
             whitelistProcessing.processPRComment(payload);
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {

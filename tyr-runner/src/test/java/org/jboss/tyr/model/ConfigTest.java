@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.model;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.check.TemplateChecker;
 import org.junit.Assert;
@@ -34,7 +35,7 @@ public class ConfigTest {
 
 
     @Test
-    public void testValidTemplateConfig() {
+    public void testValidTemplateConfig() throws InvalidPayloadException {
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
         Assert.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
     }

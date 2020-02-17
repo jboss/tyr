@@ -124,7 +124,7 @@ public class TeamCityCI implements ContinuousIntegration {
             sha = prPayload.getJsonObject(Utils.HEAD).getString(Utils.SHA);
             buildId = branchMappings.get(branch);
         } catch (NullPointerException e) {
-            throw new InvalidPayloadException("Invalid payload, can't retrieve all elements. Message was: " + e.getMessage());
+            throw new InvalidPayloadException("Invalid payload, can't retrieve all elements. ", e);
         }
 
         setSnapshotDependencies(buildId, retestOnlyFailed);

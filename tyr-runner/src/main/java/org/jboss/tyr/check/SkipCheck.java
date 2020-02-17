@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.check;
 
+import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatConfig;
 import org.jboss.tyr.model.yaml.RegexDefinition;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class SkipCheck {
 
-    public static boolean shouldSkip(JsonObject payload, FormatConfig config) {
+    public static boolean shouldSkip(JsonObject payload, FormatConfig config) throws InvalidPayloadException {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
@@ -42,7 +43,7 @@ public class SkipCheck {
     }
 
 
-    private static boolean skipByCommit(JsonObject payload, FormatConfig config) {
+    private static boolean skipByCommit(JsonObject payload, FormatConfig config) throws InvalidPayloadException {
         Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
         if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();

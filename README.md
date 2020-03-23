@@ -16,17 +16,19 @@ you can create your own :)
     - PRs needs to be created to YOUR repository, you need to specify it 
     under the base fork field in the Open a Pull Request page
 1. The project requires two properties to be set up to run correctly
-    - GitHub OAuth token - the setup will be described later
+    - GitHub OAuth token - 
+        - in `config.properties` file (will be described later)
+        - or by the `GITHUB_OAUTH_TOKEN` environment property
     - Configuration file specifying the format of the PR - the example can 
-    be found in src/main/resources/format.yaml, there are two ways how to 
-    specify to the server where is this file located
+    be found in `tyr-runner/src/main/resources/format-example.yaml`, there are
+    two ways how to specify to the application where is this file located
         - System property **template.format.url** - url of the configuration file
         - System property **template.format.file** -  path to the configuration file
-1. start Tyr - `java -jar tyr-thorntail.jar` with above system properties set
+1. start Tyr - `java -jar tyr-runner.jar` with above system properties set
 1. Expose local server instance with ngrok - https://ngrok.com/
-    - Here you need to expose **http** port **8080** as the default application interface where the WFLY/JBOSS 
-    applications run, consult the ngrok documentation for the information of 
-    how to specify these arguments
+    - Here you need to expose **http** port **8080** as the default application
+    interface where the application runs, consult the ngrok documentation for the
+    information of how to specify these arguments
 1. Now you should have everything prepared locally, next step is to let 
 GitHub know where your Tyr instance runs
 1. Add a webhook for Tyr
@@ -43,18 +45,18 @@ GitHub know where your Tyr instance runs
 you should already see some output in the server logs
     - Be careful to which repository and branch you are doing the PR!!! 
     You need to specify your repository, the point is to try to set up Tyr 
-    on your repository
+    on your repository.
 1. However, you will still probably see problems with the custom PR check 
 which the app is trying to send to GitHub as there is a requirement to 
-provide a oauth token to the GH API
+provide an oauth token to the GitHub API
 1. Go to your profile -> settings (top right) -> Developer Settings -> 
 Personal access tokens
 1. Generate new token
 1. Tick repo:status
 1. Generate token
 1. The last step is to let Tyr know what is the token value
-    - add the token to **config.properties** file (example is provided in 
-    the src/main/resources folder) and copy this file to the same directory
+    - add the token to **config.properties** file (the example is provided in 
+    the `tyr-runner/src/main/resources` folder) and copy this file to the same directory
     where Tyr is running
 1. Restart Tyr
 1. Rerun (update existing or create new PR) - everything should be working now
@@ -64,7 +66,9 @@ green color, and in terminal where the server runs you’ll see
 
 ## OpenShift deployment
 
-This project contains an openshift profile to be easily deployable to [Openshift platform](https://www.openshift.com/). 
+This project contains an openshift profile to be easily deployable to
+[Openshift platform](https://www.openshift.com/). 
+
 To deploy to Openshift:
 
 1. login to your OS account (`oc login`)

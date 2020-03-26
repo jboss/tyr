@@ -25,7 +25,7 @@ import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
 import org.jboss.tyr.model.TyrProperties;
 import org.jboss.tyr.model.Utils;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 import javax.json.JsonObject;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class WhitelistProcessing implements CIOperations {
     private final List<Command> commands;
     private final List<ContinuousIntegration> continuousIntegrations;
 
-    public WhitelistProcessing(FormatConfig config) {
+    public WhitelistProcessing(FormatYaml config) {
         String dirName = Utils.getConfigDirectory();
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
@@ -120,7 +120,7 @@ public class WhitelistProcessing implements CIOperations {
         return userList.add(username);
     }
 
-    private List<Command> getCommands(FormatConfig config) {
+    private List<Command> getCommands(FormatYaml config) {
         List<Command> commands = new ArrayList<>();
 
         Map<String, String> regexMap = config.getFormat().getCommands();
@@ -141,7 +141,7 @@ public class WhitelistProcessing implements CIOperations {
         return commands;
     }
 
-    private List<ContinuousIntegration> loadCIs(FormatConfig config) {
+    private List<ContinuousIntegration> loadCIs(FormatYaml config) {
         List<ContinuousIntegration> continuousIntegrations = new ArrayList<>();
         List<String> CIConfigList = config.getFormat().getCI();
 

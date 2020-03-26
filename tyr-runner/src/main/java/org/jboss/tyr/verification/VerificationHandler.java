@@ -15,7 +15,7 @@
  */
 package org.jboss.tyr.verification;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,9 @@ public class VerificationHandler {
 
     private static final List<Verification> verifications = registerVerifications();
 
-    public static void verifyConfiguration(FormatConfig formatConfig) throws InvalidConfigurationException {
+    public static void verifyConfiguration(FormatYaml formatYaml) throws InvalidConfigurationException {
         for (Verification verification : verifications) {
-            verification.verify(formatConfig);
+            verification.verify(formatYaml);
         }
     }
 

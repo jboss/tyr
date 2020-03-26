@@ -15,13 +15,13 @@
  */
 package org.jboss.tyr.verification;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 public class FormatElementVerification implements Verification {
 
     @Override
-    public void verify(FormatConfig formatConfig) throws InvalidConfigurationException {
-        if (formatConfig.getFormat() == null)
+    public void verify(FormatYaml formatYaml) throws InvalidConfigurationException {
+        if (formatYaml.getFormat() == null)
             throw new InvalidConfigurationException("Element 'format' is not specified");
     }
 }

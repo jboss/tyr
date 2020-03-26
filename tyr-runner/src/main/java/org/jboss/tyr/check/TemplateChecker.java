@@ -21,7 +21,7 @@ import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 import javax.json.JsonObject;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class TemplateChecker {
 
     private List<Check> checks;
 
-    public TemplateChecker(FormatConfig config) {
+    public TemplateChecker(FormatYaml config) {
         if (config == null || config.getFormat() == null) {
             throw new IllegalArgumentException("Input argument cannot be null");
         }

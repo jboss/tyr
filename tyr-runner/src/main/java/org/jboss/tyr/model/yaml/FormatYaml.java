@@ -15,7 +15,7 @@
  */
 package org.jboss.tyr.model.yaml;
 
-public class FormatConfig {
+public class FormatYaml {
 
     private String repository;
     private String statusUrl;

@@ -17,7 +17,7 @@ package org.jboss.tyr.check;
 
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.Utils;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 import org.jboss.tyr.model.yaml.RegexDefinition;
 
 import javax.json.JsonObject;
@@ -26,14 +26,14 @@ import java.util.regex.Pattern;
 
 public class SkipCheck {
 
-    public static boolean shouldSkip(JsonObject payload, FormatConfig config) throws InvalidPayloadException {
+    public static boolean shouldSkip(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
 
-    private static boolean skipByTitle(JsonObject payload, FormatConfig config) {
+    private static boolean skipByTitle(JsonObject payload, FormatYaml config) {
         Pattern titlePattern = config.getFormat().getSkipPatterns().getTitle();
         if (titlePattern != null) {
             Matcher titleMatcher = titlePattern.matcher(payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.TITLE));
@@ -43,7 +43,7 @@ public class SkipCheck {
     }
 
 
-    private static boolean skipByCommit(JsonObject payload, FormatConfig config) throws InvalidPayloadException {
+    private static boolean skipByCommit(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
         if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
@@ -54,7 +54,7 @@ public class SkipCheck {
         return false;
     }
 
-    private static boolean skipByDescriptionFirstRow(JsonObject payload, FormatConfig config) {
+    private static boolean skipByDescriptionFirstRow(JsonObject payload, FormatYaml config) {
         Pattern descriptionPattern = config.getFormat().getSkipPatterns().getDescription();
         if (descriptionPattern != null) {
             String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);

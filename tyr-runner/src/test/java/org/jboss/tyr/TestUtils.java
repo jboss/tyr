@@ -17,7 +17,7 @@ package org.jboss.tyr;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -50,13 +50,13 @@ public class TestUtils {
 
     public static final String READ_TOKEN = "readToken";
     public static final String GET_JSON_WITH_COMMITS = "getCommitsJSON";
-    public static final FormatConfig FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
+    public static final FormatYaml FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
     public static final Path TEST_CONFIG_PATH = getFilePath("testConfig.properties");
 
-    public static FormatConfig loadFormatFromYamlFile(String fileName) {
+    public static FormatYaml loadFormatFromYamlFile(String fileName) {
         try {
             File file = getFile(fileName);
-            return new ObjectMapper(new YAMLFactory()).readValue(file, FormatConfig.class);
+            return new ObjectMapper(new YAMLFactory()).readValue(file, FormatYaml.class);
         } catch (IOException e) {
             throw new RuntimeException("Cannot load file " + fileName);
         }

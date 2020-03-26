@@ -22,12 +22,16 @@ import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.check.SkipCheck;
 import org.jboss.tyr.check.TemplateChecker;
 import org.jboss.tyr.model.CommitStatus;
+import org.jboss.tyr.model.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 import org.jboss.tyr.verification.InvalidConfigurationException;
 import org.jboss.tyr.verification.VerificationHandler;
 import org.jboss.tyr.whitelist.WhitelistProcessing;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -37,16 +41,23 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static org.jboss.tyr.model.Utils.TEMPLATE_FORMAT_FILE;
-
 @Path("/")
+@ApplicationScoped
 public class WebHookEndpoint {
 
-    private static final FormatConfig config = readConfig();
-    private static final WhitelistProcessing whitelistProcessing =
-            WhitelistProcessing.IS_WHITELISTING_ENABLED ? new WhitelistProcessing(config) : null;
+    @Inject
+    TyrConfiguration configuration;
 
-    private TemplateChecker templateChecker = new TemplateChecker(config);
+    private FormatYaml format;
+    private WhitelistProcessing whitelistProcessing;
+    private TemplateChecker templateChecker;
+
+    @PostConstruct
+    public void init() {
+        format = readConfig();
+        whitelistProcessing = WhitelistProcessing.IS_WHITELISTING_ENABLED ? new WhitelistProcessing(format) : null;
+        templateChecker = new TemplateChecker(format);
+    }
 
     @POST
     @Path("/pull-request")
@@ -59,36 +70,31 @@ public class WebHookEndpoint {
         }
     }
 
-    private static FormatConfig readConfig() {
+    private FormatYaml readConfig() {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        FormatConfig formatConfig;
+        FormatYaml formatYaml;
         try {
-            URL formatFileUrl = Utils.getFormatUrl();
-            if (formatFileUrl != null)
-                formatConfig = mapper.readValue(formatFileUrl.openStream(), FormatConfig.class);
+            if (configuration.formatFileUrl().isPresent())
+                formatYaml = mapper.readValue(new URL(configuration.formatFileUrl().get()).openStream(), FormatYaml.class);
             else {
-                String configFileName = System.getProperty(TEMPLATE_FORMAT_FILE);
-                if (configFileName == null) {
-                    configFileName = Utils.getConfigDirectory() + "/format.yaml";
-                }
-                File configFile = new File(configFileName);
-                formatConfig = mapper.readValue(configFile, FormatConfig.class);
+                File configFile = new File(configuration.configFileName().orElse(Utils.getConfigDirectory() + "/format.yaml"));
+                formatYaml = mapper.readValue(configFile, FormatYaml.class);
             }
-            VerificationHandler.verifyConfiguration(formatConfig);
-            return formatConfig;
+            VerificationHandler.verifyConfiguration(formatYaml);
+            return formatYaml;
         } catch (IOException | InvalidConfigurationException e) {
             throw new IllegalArgumentException("Cannot load configuration file", e);
         }
     }
 
     private void processPullRequest(JsonObject prPayload) throws InvalidPayloadException {
-        if (!SkipCheck.shouldSkip(prPayload, config)) {
+        if (!SkipCheck.shouldSkip(prPayload, format)) {
             String errorMessage = templateChecker.checkPR(prPayload);
             if (errorMessage != null) {
-                GitHubAPI.updateCommitStatus(config.getRepository(),
+                GitHubAPI.updateCommitStatus(format.getRepository(),
                         prPayload.getJsonObject(Utils.PULL_REQUEST).getJsonObject(Utils.HEAD).getString(Utils.SHA),
                         errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
-                        config.getStatusUrl(),
+                        format.getStatusUrl(),
                         errorMessage.isEmpty() ? "valid" : errorMessage, "PR format");
             }
         }

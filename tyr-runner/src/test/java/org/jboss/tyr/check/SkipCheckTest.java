@@ -19,7 +19,7 @@ import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.model.yaml.Format;
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 import org.jboss.tyr.model.yaml.SkipPatterns;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +38,7 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
 @PrepareForTest(GitHubAPI.class)
 public class SkipCheckTest {
 
-    private static FormatConfig formatConfig;
+    private static FormatYaml formatYaml;
     private SkipPatterns skipPatterns;
 
     @Before
@@ -55,69 +55,69 @@ public class SkipCheckTest {
 
     @Test (expected=IllegalArgumentException.class)
     public void testNullPayloadParameter() throws InvalidPayloadException {
-        SkipCheck.shouldSkip(null, formatConfig);
+        SkipCheck.shouldSkip(null, formatYaml);
     }
 
     @Test
     public void testSkipByTitleRegexMatch() throws InvalidPayloadException {
         skipPatterns.setTitle(Pattern.compile("Test PR"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertTrue("Method cannot match valid title regex", SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertTrue("Method cannot match valid title regex", SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testSkipByTitleRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setTitle(Pattern.compile("can't.*match.*this"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertFalse("Method matched invalid title regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertFalse("Method matched invalid title regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testSkipByCommitRegexMatch() throws InvalidPayloadException {
         skipPatterns.setCommit(Pattern.compile("Test commit"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertTrue("Method cannot match valid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertTrue("Method cannot match valid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testSkipByCommitRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setCommit(Pattern.compile("can't.*match.*this"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertFalse("Method matched invalid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertFalse("Method matched invalid commit regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testSkipByPullRequestDescriptionRegexMatch() throws InvalidPayloadException {
         skipPatterns.setDescription(Pattern.compile("Test description"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertTrue("Method cannot match valid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertTrue("Method cannot match valid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testSkipByPullRequestDescriptionRegexNonMatch() throws InvalidPayloadException {
         skipPatterns.setDescription(Pattern.compile("can't.*match.*this"));
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertFalse("Method matched invalid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertFalse("Method matched invalid description regex",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
     @Test
     public void testShouldSkipEmptySkipPatterns() throws InvalidPayloadException {
-        formatConfig = setUpFormatConfig(skipPatterns);
+        formatYaml = setUpFormatConfig(skipPatterns);
 
-        Assert.assertFalse("Invalid result after empty skipping patterns",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatConfig));
+        Assert.assertFalse("Invalid result after empty skipping patterns",SkipCheck.shouldSkip(TestUtils.TEST_PAYLOAD, formatYaml));
     }
 
-    private static FormatConfig setUpFormatConfig(SkipPatterns testSkipPatterns) {
+    private static FormatYaml setUpFormatConfig(SkipPatterns testSkipPatterns) {
         Format testFormat = new Format();
         testFormat.setSkipPatterns(testSkipPatterns);
-        FormatConfig testFormatConfig = new FormatConfig();
-        testFormatConfig.setFormat(testFormat);
-        return testFormatConfig;
+        FormatYaml testFormatYaml = new FormatYaml();
+        testFormatYaml.setFormat(testFormat);
+        return testFormatYaml;
     }
 }

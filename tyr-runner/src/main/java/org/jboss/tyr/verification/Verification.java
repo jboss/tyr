@@ -15,7 +15,7 @@
  */
 package org.jboss.tyr.verification;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 /**
  * Verifies structure of the format.yaml configuration file
@@ -25,8 +25,8 @@ public interface Verification {
     /**
      * Verify the provided format.yaml structure
      *
-     * @param formatConfig object representing format.yaml file
+     * @param formatYaml object representing format.yaml file
      * @throws InvalidConfigurationException if any validation error is encountered
      */
-    void verify(FormatConfig formatConfig) throws InvalidConfigurationException;
+    void verify(FormatYaml formatYaml) throws InvalidConfigurationException;
 }

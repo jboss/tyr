@@ -15,7 +15,7 @@
  */
 package org.jboss.tyr.verification;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,11 +25,11 @@ import static org.jboss.tyr.TestUtils.loadFormatFromYamlFile;
 
 public class VerificationsTest {
 
-    private static FormatConfig badFormatConfig;
+    private static FormatYaml badFormatYaml;
 
     @BeforeClass
     public static void beforeClass() {
-        badFormatConfig = loadFormatFromYamlFile(YAML_DIR + "/wrongTemplate.yaml");
+        badFormatYaml = loadFormatFromYamlFile(YAML_DIR + "/wrongTemplate.yaml");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class VerificationsTest {
 
     @Test(expected = InvalidConfigurationException.class)
     public void testReadInvalidFormatConfiguration() throws InvalidConfigurationException {
-        VerificationHandler.verifyConfiguration(badFormatConfig);
+        VerificationHandler.verifyConfiguration(badFormatYaml);
     }
 
     @Test(expected = NullPointerException.class)

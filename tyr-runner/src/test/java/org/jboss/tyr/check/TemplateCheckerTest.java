@@ -15,7 +15,7 @@
  */
 package org.jboss.tyr.check;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.Test;
 
 public class TemplateCheckerTest {
@@ -27,7 +27,7 @@ public class TemplateCheckerTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testNullFormatParameter() {
-        FormatConfig testConfig = new FormatConfig();
+        FormatYaml testConfig = new FormatYaml();
         testConfig.setFormat(null);
         new TemplateChecker(testConfig);
     }

@@ -15,13 +15,13 @@
  */
 package org.jboss.tyr.verification;
 
-import org.jboss.tyr.model.yaml.FormatConfig;
+import org.jboss.tyr.model.yaml.FormatYaml;
 
 public class RepositoryFormatVerification implements Verification {
 
     @Override
-    public void verify(FormatConfig formatConfig) throws InvalidConfigurationException {
-        if (!formatConfig.getRepository().matches("^[a-zA-Z0-9_]*/[a-zA-Z0-9_-]*$"))
+    public void verify(FormatYaml formatYaml) throws InvalidConfigurationException {
+        if (!formatYaml.getRepository().matches("^[a-zA-Z0-9_]*/[a-zA-Z0-9_-]*$"))
             throw new InvalidConfigurationException("Wrong repository format in configuration file");
     }
 }

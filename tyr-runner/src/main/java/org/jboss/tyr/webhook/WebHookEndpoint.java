@@ -48,14 +48,16 @@ public class WebHookEndpoint {
     @Inject
     TyrConfiguration configuration;
 
+    @Inject
+    WhitelistProcessing whitelistProcessing;
+
     private FormatYaml format;
-    private WhitelistProcessing whitelistProcessing;
     private TemplateChecker templateChecker;
 
     @PostConstruct
     public void init() {
         format = readConfig();
-        whitelistProcessing = WhitelistProcessing.IS_WHITELISTING_ENABLED ? new WhitelistProcessing(format) : null;
+        whitelistProcessing.init(format);
         templateChecker = new TemplateChecker(format);
     }
 
@@ -63,7 +65,7 @@ public class WebHookEndpoint {
     @Path("/pull-request")
     @Consumes(MediaType.APPLICATION_JSON)
     public void processRequest(JsonObject payload) throws InvalidPayloadException {
-        if (whitelistProcessing != null) {
+        if (configuration.whitelistEnabled()) {
             processPRWithWhitelisting(payload);
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
             processPullRequest(payload);

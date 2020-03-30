@@ -25,29 +25,32 @@ import org.jboss.tyr.command.AbstractCommand;
 import org.jboss.tyr.command.CommandsLoader;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
-import org.jboss.tyr.model.TyrProperties;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@ApplicationScoped
 public class WhitelistProcessing implements CIOperations {
-
-    public static final boolean IS_WHITELISTING_ENABLED =
-            TyrProperties.getBooleanProperty(Utils.WHITELIST_ENABLED);
 
     private static final Logger log = Logger.getLogger(WhitelistProcessing.class);
 
-    private final List<String> userList;
-    private final List<String> adminList;
+    private List<String> userList;
+    private List<String> adminList;
 
-    private final List<Command> commands;
-    private final List<ContinuousIntegration> continuousIntegrations;
+    private List<Command> commands;
+    private List<ContinuousIntegration> continuousIntegrations;
 
-    public WhitelistProcessing(FormatYaml config) {
+    @Inject
+    CommandsLoader commandsLoader;
+
+    public void init(FormatYaml config) {
         String dirName = Utils.getConfigDirectory();
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
@@ -123,10 +126,11 @@ public class WhitelistProcessing implements CIOperations {
         }
 
         for (String key : regexMap.keySet()) {
-            AbstractCommand command = CommandsLoader.getCommand(key);
-            if (command != null) {
-                command.setRegex(regexMap.get(key));
-                commands.add(command);
+            Optional<AbstractCommand> command = commandsLoader.getCommand(key);
+            if (command.isPresent()) {
+                AbstractCommand instance = command.get();
+                instance.setRegex(regexMap.get(key));
+                commands.add(instance);
             } else {
                 log.warnf("Command identified with \"%s\" does not exists", key);
             }

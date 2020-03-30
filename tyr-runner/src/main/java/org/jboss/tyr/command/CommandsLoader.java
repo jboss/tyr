@@ -15,20 +15,20 @@
  */
 package org.jboss.tyr.command;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import java.util.Optional;
 
+@ApplicationScoped
 public class CommandsLoader {
 
-    private static final Map<String, AbstractCommand> commands = new HashMap<>();
+    @Inject
+    @Any
+    Instance<AbstractCommand> commands;
 
-    static {
-        commands.put(AddUserCommand.class.getSimpleName(), new AddUserCommand());
-        commands.put(RetestCommand.class.getSimpleName(), new RetestCommand());
-        commands.put(RetestFailedCommand.class.getSimpleName(), new RetestFailedCommand());
-    }
-
-    public static AbstractCommand getCommand(String key) {
-        return commands.get(key);
+    public Optional<AbstractCommand> getCommand(String key) {
+        return commands.stream().filter(command -> command.getClass().getSimpleName().contains(key)).findFirst();
     }
 }

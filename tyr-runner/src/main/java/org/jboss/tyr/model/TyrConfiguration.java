@@ -14,4 +14,7 @@ public interface TyrConfiguration {
     @ConfigProperty(name = "template.format.file")
     Optional<String> configFileName();
 
+    @ConfigProperty(name = "whitelist.enabled", defaultValue = "false")
+    boolean whitelistEnabled();
+
 }

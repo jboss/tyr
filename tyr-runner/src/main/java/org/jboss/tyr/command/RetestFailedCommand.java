@@ -20,8 +20,10 @@ import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.api.GitHubAPI;
 import org.jboss.tyr.model.Utils;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 
+@ApplicationScoped
 public class RetestFailedCommand extends AbstractCommand {
 
     @Override

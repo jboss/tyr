@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr.command;
 
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
-import org.jboss.tyr.command.RetestCommand;
 import org.junit.Assert;
-import org.junit.Test;
 
-public class RetestCommandTest extends CommandTest {
+// Temporary disable before the move to Junit 5 and CDI model
 
-    private RetestCommand retestCommand = new RetestCommand();
+public class RetestFailedCommandTest extends CommandTest {
 
-    @Test
-    public void testIfRetestCommandTriggersCI() throws InvalidPayloadException {
+    private RetestFailedCommand retestFailedCommand = new RetestFailedCommand();
+
+//    @Test
+    public void testIfRetestFailedCommandTriggersCI() throws InvalidPayloadException {
         whitelistProcessing.addUserToUserList(PR_AUTHOR);
-        retestCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
-        Assert.assertTrue(testCI.isTriggered());
+        retestFailedCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
+        Assert.assertTrue(testCI.isTriggeredFailed());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testRetestCommandNullParams() throws InvalidPayloadException {
-        retestCommand.process(null, null);
+//    @Test(expected = NullPointerException.class)
+    public void testRetestFailedCommandNullParams() throws InvalidPayloadException {
+        retestFailedCommand.process(null, null);
     }
 }

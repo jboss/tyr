@@ -21,6 +21,8 @@ import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.ci.CILoader;
 import org.jboss.tyr.ci.ContinuousIntegration;
+import org.jboss.tyr.command.AbstractCommand;
+import org.jboss.tyr.command.CommandsLoader;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
 import org.jboss.tyr.model.TyrProperties;
@@ -52,14 +54,6 @@ public class WhitelistProcessing implements CIOperations {
         commands = getCommands(config);
         commands.addAll(AdditionalResourcesLoader.loadAdditionalCommands());
         continuousIntegrations = loadCIs(config);
-    }
-
-    static String getCommentAuthor(JsonObject issuePayload) {
-        return issuePayload.getJsonObject(Utils.COMMENT).getJsonObject(Utils.USER).getString(Utils.LOGIN);
-    }
-
-    static String getPRAuthor(JsonObject issuePayload) {
-        return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 
     public void processPRComment(JsonObject issuePayload) throws InvalidPayloadException {

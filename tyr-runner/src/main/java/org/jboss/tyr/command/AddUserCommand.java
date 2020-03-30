@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr.command;
 
 import org.jboss.tyr.CIOperations;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.api.GitHubAPI;
+import org.jboss.tyr.model.Utils;
 
 import javax.json.JsonObject;
 
-public class RetestCommand extends AbstractCommand {
+public class AddUserCommand extends AbstractCommand {
 
     @Override
     public void process(JsonObject payload, CIOperations operations) throws InvalidPayloadException {
-        String pullRequestAuthor = WhitelistProcessing.getPRAuthor(payload);
-        String commentAuthor = WhitelistProcessing.getCommentAuthor(payload);
+        String pullRequestAuthor = Utils.getPRAuthor(payload);
+        String commentAuthor = Utils.getCommentAuthor(payload);
 
-        if (operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
-                operations.isUserEligibleToRunCI(commentAuthor)) {
+        if (operations.isUserAdministrator(commentAuthor) &&
+                !operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
+                operations.addUserToUserList(pullRequestAuthor)) {
+
             JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
             operations.triggerCI(prPayload);
         }

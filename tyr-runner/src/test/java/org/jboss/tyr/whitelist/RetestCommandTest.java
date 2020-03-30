@@ -17,6 +17,7 @@ package org.jboss.tyr.whitelist;
 
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
+import org.jboss.tyr.command.RetestCommand;
 import org.junit.Assert;
 import org.junit.Test;
 

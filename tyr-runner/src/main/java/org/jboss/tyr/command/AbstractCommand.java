@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.whitelist;
+package org.jboss.tyr.command;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.jboss.tyr.Command;
 
-public class CommandsLoader {
+public abstract class AbstractCommand implements Command {
 
-    private static final Map<String, AbstractCommand> commands = new HashMap<>();
+    private String regex;
 
-    static {
-        commands.put(AddUserCommand.class.getSimpleName(), new AddUserCommand());
-        commands.put(RetestCommand.class.getSimpleName(), new RetestCommand());
-        commands.put(RetestFailedCommand.class.getSimpleName(), new RetestFailedCommand());
+    @Override
+    public String getRegex() {
+        return regex;
     }
 
-    public static AbstractCommand getCommand(String key) {
-        return commands.get(key);
+    public void setRegex(String regex) {
+        this.regex = regex;
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.model;
 
+import javax.json.JsonObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -71,5 +72,13 @@ public class Utils {
             return System.getProperty("user.dir");
         }
         return path;
+    }
+
+    public static String getCommentAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.COMMENT).getJsonObject(Utils.USER).getString(Utils.LOGIN);
+    }
+
+    public static String getPRAuthor(JsonObject issuePayload) {
+        return issuePayload.getJsonObject(Utils.ISSUE).getJsonObject(Utils.USER).getString(Utils.LOGIN);
     }
 }

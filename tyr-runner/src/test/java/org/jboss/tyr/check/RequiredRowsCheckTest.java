@@ -17,10 +17,10 @@ package org.jboss.tyr.check;
 
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.model.yaml.RegexDefinition;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -32,38 +32,38 @@ public class RequiredRowsCheckTest {
     private static RegexDefinition row;
     private RequiredRowsCheck requiredRowsCheck;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         row = new RegexDefinition();
         row.setPattern(Pattern.compile("^Test.*description$"));
         row.setMessage("Does not match");
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         requiredRowsCheck = new RequiredRowsCheck(singletonList(row));
     }
 
     @Test
     public void checkSimpleRegexMatch() {
-        Assert.assertNull("Cannot match valid description", requiredRowsCheck.check(TestUtils.TEST_PAYLOAD));
+        Assertions.assertNull(requiredRowsCheck.check(TestUtils.TEST_PAYLOAD), "Cannot match valid description");
     }
 
     @Test
     public void checkSimpleRegexNonMatch() {
         row.setPattern(Pattern.compile("can't.*match.*this"));
-        Assert.assertNotNull("Matched invalid description", requiredRowsCheck.check(TestUtils.TEST_PAYLOAD));
+        Assertions.assertNotNull(requiredRowsCheck.check(TestUtils.TEST_PAYLOAD), "Matched invalid description");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testIfNullParameterThrowsException() {
         RequiredRowsCheck requiredRowsCheck = new RequiredRowsCheck(null);
-        requiredRowsCheck.check(TestUtils.TEST_PAYLOAD);
+        Assertions.assertThrows(NullPointerException.class, () -> requiredRowsCheck.check(TestUtils.TEST_PAYLOAD));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testIfEmptyPayloadThrowsException() {
-        requiredRowsCheck.check(TestUtils.EMPTY_PAYLOAD);
+        Assertions.assertThrows(NullPointerException.class, () -> requiredRowsCheck.check(TestUtils.EMPTY_PAYLOAD));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class RequiredRowsCheckTest {
         requiredRowsCheck = new RequiredRowsCheck(Arrays.asList(row, secondRow));
         String errorMessage = requiredRowsCheck.check(TestUtils.TEST_PAYLOAD);
 
-        Assert.assertNotNull(errorMessage);
-        Assert.assertEquals(expectedErrorMessage, errorMessage);
+        Assertions.assertNotNull(errorMessage);
+        Assertions.assertEquals(expectedErrorMessage, errorMessage);
     }
 }

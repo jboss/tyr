@@ -1,17 +1,19 @@
 package org.jboss.tyr.api;
 
 import org.jboss.tyr.InvalidPayloadException;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GitHubAPITest {
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testUpdateCommitStatusNullParameters() {
-        GitHubAPI.updateCommitStatus(null, null, null, null, null, null);
+        Assertions.assertThrows(NullPointerException.class,
+            () -> GitHubAPI.updateCommitStatus(null, null, null, null, null, null));
     }
 
-    @Test(expected = InvalidPayloadException.class)
+    @Test
     public void testGetJsonWithCommitsNullParameter() throws InvalidPayloadException {
-        GitHubAPI.getCommitsJSON(null);
+        Assertions.assertThrows(InvalidPayloadException.class, () -> GitHubAPI.getCommitsJSON(null));
     }
 }

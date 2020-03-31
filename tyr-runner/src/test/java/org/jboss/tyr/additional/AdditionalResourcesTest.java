@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.additional;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -25,17 +26,25 @@ import org.jboss.tyr.additional.resource.DummyAdditionalCheck;
 import org.jboss.tyr.additional.resource.DummyAdditionalCommand;
 import org.jboss.tyr.check.TemplateChecker;
 import org.jboss.tyr.model.Utils;
-import org.junit.Assert;
+import org.jboss.tyr.whitelist.WhitelistProcessing;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
 import java.io.File;
 
 import static org.jboss.tyr.model.Utils.ADDITIONAL_RESOURCES_PROPERTY;
 
-// Temporary disable before the move to Junit 5 and CDI model
-
+@QuarkusTest
 public class AdditionalResourcesTest {
 
-//    @BeforeClass
+    @Inject
+    WhitelistProcessing whitelistProcessing;
+
+    @BeforeAll
     public static void beforeClass() {
         // create custom user jar
         JavaArchive customJar = ShrinkWrap.create(JavaArchive.class, "custom-resources.jar")
@@ -51,64 +60,64 @@ public class AdditionalResourcesTest {
         System.setProperty(Utils.TYR_CONFIG_DIR, TestUtils.TARGET_DIR);
     }
 
-//    @Test
+    @Test
     public void additionalChecksInvokedTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/custom-resources.jar");
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
 
-        Assert.assertEquals("Additional check should have failed the validation",
-                DummyAdditionalCheck.getMessage(), result);
+        Assertions.assertEquals(DummyAdditionalCheck.getMessage(), result,
+            "Additional check should have failed the validation");
 
-        Assert.assertEquals("Additional check from custom jar should have been invoked",
-                1, DummyAdditionalCheck.getCounterValue());
+        Assertions.assertEquals(1, DummyAdditionalCheck.getCounterValue(),
+            "Additional check from custom jar should have been invoked");
     }
 
-//    @Test
+    @Test
     public void additionalCommandsInvokedTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/custom-resources.jar");
 
-//        WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
-//        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
+        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
+        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
 
-        Assert.assertTrue(DummyAdditionalCommand.isTriggered());
+        Assertions.assertTrue(DummyAdditionalCommand.isTriggered());
     }
 
 
-//    @Test
+    @Test
     public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/invalid-path.jar");
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
-//        WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
+        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         // should not fail, logs warning
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
-//        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
+        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
 
-        Assert.assertTrue(result.isEmpty());
-        Assert.assertFalse(DummyAdditionalCommand.isTriggered());
+        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertFalse(DummyAdditionalCommand.isTriggered());
     }
 
-//    @Test
+    @Test
     public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
         System.clearProperty(ADDITIONAL_RESOURCES_PROPERTY);
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
-//        WhitelistProcessing whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
+        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
-//        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
+        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
 
-        Assert.assertTrue(result.isEmpty());
-        Assert.assertFalse(DummyAdditionalCommand.isTriggered());
+        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertFalse(DummyAdditionalCommand.isTriggered());
     }
 
-//    @After
+    @AfterEach
     public void after() {
         System.clearProperty(ADDITIONAL_RESOURCES_PROPERTY);
     }
 
-//    @AfterClass
+    @AfterAll
     public static void afterClass() {
         TestUtils.deleteFileIfExists(new File("target/custom-resources.jar"));
         System.clearProperty(Utils.TYR_CONFIG_DIR);

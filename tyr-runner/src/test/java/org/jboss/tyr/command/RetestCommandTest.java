@@ -17,23 +17,25 @@ package org.jboss.tyr.command;
 
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
-import org.junit.Assert;
-
-// Temporary disable before the move to Junit 5 and CDI model
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class RetestCommandTest extends CommandTest {
 
     private RetestCommand retestCommand = new RetestCommand();
 
-//    @Test
+    @Test
+    @Disabled("powermock")
     public void testIfRetestCommandTriggersCI() throws InvalidPayloadException {
         whitelistProcessing.addUserToUserList(PR_AUTHOR);
         retestCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
-        Assert.assertTrue(testCI.isTriggered());
+        Assertions.assertTrue(testCI.isTriggered());
     }
 
-//    @Test(expected = NullPointerException.class)
-    public void testRetestCommandNullParams() throws InvalidPayloadException {
-        retestCommand.process(null, null);
+    @Test
+    @Disabled("powermock")
+    public void testRetestCommandNullParams() {
+        Assertions.assertThrows(NullPointerException.class, () -> retestCommand.process(null, null));
     }
 }

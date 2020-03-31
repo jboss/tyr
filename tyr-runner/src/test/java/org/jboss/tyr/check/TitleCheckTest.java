@@ -17,9 +17,9 @@ package org.jboss.tyr.check;
 
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.model.yaml.RegexDefinition;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
@@ -28,20 +28,20 @@ public class TitleCheckTest {
     private RegexDefinition titleRegexDefinition;
     private TitleCheck titleCheck;
 
-    @Before
+    @BeforeEach
     public void before() {
         titleRegexDefinition = new RegexDefinition();
     }
 
-    @Test (expected=IllegalArgumentException.class)
+    @Test
     public void testNullTitleParameter() {
-        new TitleCheck(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new TitleCheck(null));
     }
 
-    @Test (expected=IllegalArgumentException.class)
+    @Test
     public void testNullCommitPatternParameter() {
         titleRegexDefinition.setPattern(null);
-        new TitleCheck(titleRegexDefinition);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new TitleCheck(titleRegexDefinition));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class TitleCheckTest {
         titleRegexDefinition.setPattern(Pattern.compile("^Test.*PR$"));
         titleCheck = new TitleCheck(titleRegexDefinition);
 
-        Assert.assertNull("Cannot match valid regex", titleCheck.check(TestUtils.TEST_PAYLOAD));
+        Assertions.assertNull(titleCheck.check(TestUtils.TEST_PAYLOAD), "Cannot match valid regex");
     }
 
     @Test
@@ -58,9 +58,9 @@ public class TitleCheckTest {
         titleRegexDefinition.setMessage("This is titleRegexDefinition message");
         titleCheck = new TitleCheck(titleRegexDefinition);
 
-        Assert.assertNotNull("Matched invalid regex", titleCheck.check(TestUtils.TEST_PAYLOAD));
-        Assert.assertEquals("Unexpected message returned",
-                titleRegexDefinition.getMessage(), titleCheck.check(TestUtils.TEST_PAYLOAD));
+        Assertions.assertNotNull(titleCheck.check(TestUtils.TEST_PAYLOAD), "Matched invalid regex");
+        Assertions.assertEquals(titleRegexDefinition.getMessage(), titleCheck.check(TestUtils.TEST_PAYLOAD),
+            "Unexpected message returned");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TitleCheckTest {
         titleRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         titleCheck = new TitleCheck(titleRegexDefinition);
 
-        Assert.assertEquals("Unexpected message returned",
-                TitleCheck.DEFAULT_MESSAGE, titleCheck.check(TestUtils.TEST_PAYLOAD));
+        Assertions.assertEquals(TitleCheck.DEFAULT_MESSAGE, titleCheck.check(TestUtils.TEST_PAYLOAD),
+            "Unexpected message returned");
     }
 }

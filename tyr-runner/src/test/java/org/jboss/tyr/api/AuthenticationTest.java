@@ -1,11 +1,8 @@
 package org.jboss.tyr.api;
 
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.tyr.JaxRsApplication;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -25,29 +22,29 @@ public class AuthenticationTest {
     private static final String RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH = "/fakeGithub/ReturnStatusInternalServerError";
 
 //    @Deployment(testable = false)
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap
-                .create(JavaArchive.class, AuthenticationTest.class.getSimpleName() + ".jar")
-                .addClasses(FakeGitHub.class, JaxRsApplication.class);
-    }
+//    public static JavaArchive createDeployment() {
+//        return ShrinkWrap
+//                .create(JavaArchive.class, AuthenticationTest.class.getSimpleName() + ".jar")
+//                .addClasses(FakeGitHub.class, JaxRsApplication.class);
+//    }
 
 //    @ArquillianResource
     private URL deploymentUrl;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         restClient = ClientBuilder.newClient();
     }
 
 //    @Test (expected=IllegalArgumentException.class)
     public void testAuthenticationStatusUnauthorized() {
-        Assert.assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), getEndPointResponse(RETURN_STATUS_UNAUTHORIZED_PATH).getStatus());
+        Assertions.assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), getEndPointResponse(RETURN_STATUS_UNAUTHORIZED_PATH).getStatus());
         testAuthentication(RETURN_STATUS_UNAUTHORIZED_PATH);
     }
 
 //    @Test (expected=IllegalArgumentException.class)
     public void testAuthenticationStatusInternalServerError() {
-        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), getEndPointResponse(RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH).getStatus());
+        Assertions.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), getEndPointResponse(RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH).getStatus());
         testAuthentication(RETURN_STATUS_INTERNAL_SERVER_ERROR_PATH);
     }
 
@@ -64,7 +61,7 @@ public class AuthenticationTest {
         GitHubAPI.getJSONReader(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         if (restClient != null) {
             restClient.close();

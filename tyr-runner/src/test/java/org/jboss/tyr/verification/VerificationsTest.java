@@ -16,8 +16,9 @@
 package org.jboss.tyr.verification;
 
 import org.jboss.tyr.model.yaml.FormatYaml;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.jboss.tyr.TestUtils.FORMAT_CONFIG;
 import static org.jboss.tyr.TestUtils.YAML_DIR;
@@ -27,7 +28,7 @@ public class VerificationsTest {
 
     private static FormatYaml badFormatYaml;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         badFormatYaml = loadFormatFromYamlFile(YAML_DIR + "/wrongTemplate.yaml");
     }
@@ -37,13 +38,13 @@ public class VerificationsTest {
         VerificationHandler.verifyConfiguration(FORMAT_CONFIG);
     }
 
-    @Test(expected = InvalidConfigurationException.class)
-    public void testReadInvalidFormatConfiguration() throws InvalidConfigurationException {
-        VerificationHandler.verifyConfiguration(badFormatYaml);
+    @Test
+    public void testReadInvalidFormatConfiguration() {
+        Assertions.assertThrows(InvalidConfigurationException.class, () -> VerificationHandler.verifyConfiguration(badFormatYaml));
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNullParameterToVerify() throws InvalidConfigurationException {
-        VerificationHandler.verifyConfiguration(null);
+    @Test
+    public void testNullParameterToVerify() {
+        Assertions.assertThrows(NullPointerException.class, () -> VerificationHandler.verifyConfiguration(null));
     }
 }

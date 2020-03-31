@@ -16,11 +16,11 @@
 package org.jboss.tyr.model;
 
 import org.jboss.tyr.TestUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,19 +35,19 @@ public class PersistentListTest {
 
     private PersistentList persistentList;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         TestUtils.deleteFileIfExists(persistentListFile);
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         persistentList = new PersistentList(persistentListFile);
     }
 
     @Test
     public void testIfFileWasCreated() {
-        Assert.assertTrue(persistentListFile.exists());
+        Assertions.assertTrue(persistentListFile.exists());
     }
 
     @Test
@@ -57,18 +57,18 @@ public class PersistentListTest {
         fw.close();
 
         persistentList = new PersistentList(persistentListFile);
-        Assert.assertTrue(persistentList.contains(ELEMENT));
+        Assertions.assertTrue(persistentList.contains(ELEMENT));
     }
 
     @Test
     public void testAddElement() {
         persistentList.add(ELEMENT);
 
-        Assert.assertTrue(persistentList.contains(ELEMENT));
-        Assert.assertTrue(TestUtils.fileContainsLine(persistentListFile, ELEMENT));
+        Assertions.assertTrue(persistentList.contains(ELEMENT));
+        Assertions.assertTrue(TestUtils.fileContainsLine(persistentListFile, ELEMENT));
     }
 
-    @After
+    @AfterEach
     public void after() {
         TestUtils.deleteFileIfExists(persistentListFile);
     }

@@ -18,8 +18,8 @@ package org.jboss.tyr.model;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.check.TemplateChecker;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
@@ -37,25 +37,25 @@ public class ConfigTest {
     @Test
     public void testValidTemplateConfig() throws InvalidPayloadException {
         TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
-        Assert.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
+        Assertions.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
     }
 
     @Test
     public void readTokenTest() {
-        Assert.assertEquals("351wa351d38aw4c97w98f7987ew98f987we97gs4",
+        Assertions.assertEquals("351wa351d38aw4c97w98f7987ew98f987we97gs4",
                 properties.getProperty(Utils.TOKEN_PROPERTY));
     }
 
     @Test
     public void readUrlTest() {
-        Assert.assertEquals("https://www.someniceurlhere.org/",
+        Assertions.assertEquals("https://www.someniceurlhere.org/",
                 properties.getProperty(Utils.TEMPLATE_FORMAT_URL));
     }
 
     @Test
     public void testConfigPath() {
-        Assert.assertEquals(currentDir, Utils.getConfigDirectory());
+        Assertions.assertEquals(currentDir, Utils.getConfigDirectory());
         System.setProperty(Utils.TYR_CONFIG_DIR, TestUtils.TARGET_DIR);
-        Assert.assertEquals(TestUtils.TARGET_DIR, Utils.getConfigDirectory());
+        Assertions.assertEquals(TestUtils.TARGET_DIR, Utils.getConfigDirectory());
     }
 }

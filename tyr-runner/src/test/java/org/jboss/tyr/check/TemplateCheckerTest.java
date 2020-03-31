@@ -16,19 +16,20 @@
 package org.jboss.tyr.check;
 
 import org.jboss.tyr.model.yaml.FormatYaml;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateCheckerTest {
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testNullConfigParameter() {
-        new TemplateChecker(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new TemplateChecker(null));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testNullFormatParameter() {
         FormatYaml testConfig = new FormatYaml();
         testConfig.setFormat(null);
-        new TemplateChecker(testConfig);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new TemplateChecker(testConfig));
     }
 }

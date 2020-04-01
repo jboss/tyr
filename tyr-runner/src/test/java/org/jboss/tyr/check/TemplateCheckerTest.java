@@ -15,21 +15,28 @@
  */
 package org.jboss.tyr.check;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
+
+@QuarkusTest
 public class TemplateCheckerTest {
+
+    @Inject
+    TemplateChecker templateChecker;
 
     @Test
     public void testNullConfigParameter() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new TemplateChecker(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> templateChecker.init(null));
     }
 
     @Test
     public void testNullFormatParameter() {
         FormatYaml testConfig = new FormatYaml();
         testConfig.setFormat(null);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new TemplateChecker(testConfig));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> templateChecker.init(testConfig));
     }
 }

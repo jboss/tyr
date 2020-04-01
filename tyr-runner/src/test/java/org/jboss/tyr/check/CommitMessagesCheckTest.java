@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.check;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.model.yaml.RegexDefinition;
@@ -23,46 +24,46 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
 import java.util.regex.Pattern;
 
+@QuarkusTest
 public class CommitMessagesCheckTest {
 
+    @Inject
+    CommitMessagesCheck commitMessagesCheck;
+
     private RegexDefinition commitRegexDefinition;
-    private CommitMessagesCheck commitMessagesCheck;
 
     @BeforeEach
     public void before() {
         commitRegexDefinition = new RegexDefinition();
-//        PowerMockito.suppress(method(GitHubAPI.class, TestUtils.READ_TOKEN));
-//        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.TEST_COMMITS_PAYLOAD);
     }
 
     @Test
     public void testNullCommitParameter() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new CommitMessagesCheck(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> commitMessagesCheck.setRegex(null));
     }
 
     @Test
     public void testNullCommitPatternParameter() {
         commitRegexDefinition.setPattern(null);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new CommitMessagesCheck(commitRegexDefinition));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> commitMessagesCheck.setRegex(commitRegexDefinition));
     }
 
     @Test
-    @Disabled("powermock")
     public void testCheckSimpleRegexMatch() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
-        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+        commitMessagesCheck.setRegex(commitRegexDefinition);
 
         Assertions.assertNull(commitMessagesCheck.check(TestUtils.TEST_PAYLOAD), "Cannot match valid regex");
     }
 
     @Test
-    @Disabled("powermock")
     public void testCheckSimpleRegexNonMatchReturnsExpectedMessage() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
         commitRegexDefinition.setMessage("This is commitRegexDefinition message.");
-        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+        commitMessagesCheck.setRegex(commitRegexDefinition);
         String result = commitMessagesCheck.check(TestUtils.TEST_PAYLOAD);
 
         Assertions.assertNotNull(result, "Matched invalid regex");
@@ -70,21 +71,20 @@ public class CommitMessagesCheckTest {
     }
 
     @Test
-    @Disabled("powermock")
     public void testCheckSimpleRegexNonMatchReturnsDefaultMessage() throws InvalidPayloadException {
         commitRegexDefinition.setPattern(Pattern.compile("can't.*match.*this"));
-        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+        commitMessagesCheck.setRegex(commitRegexDefinition);
 
         Assertions.assertEquals(CommitMessagesCheck.DEFAULT_MESSAGE, commitMessagesCheck.check(TestUtils.TEST_PAYLOAD), "Unexpected message returned");
     }
 
     @Test
-    @Disabled("powermock")
+    @Disabled("multiple mocks support in quarkus (1.4 or 1.3.x)")
     public void testMultipleCommitMessages() throws InvalidPayloadException {
 //        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
 
         commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
-        commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+        commitMessagesCheck.setRegex(commitRegexDefinition);
 
         Assertions.assertNull(commitMessagesCheck.check(TestUtils.TEST_PAYLOAD));
     }

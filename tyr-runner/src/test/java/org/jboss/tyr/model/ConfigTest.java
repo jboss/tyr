@@ -15,17 +15,23 @@
  */
 package org.jboss.tyr.model;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.check.TemplateChecker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
 import java.util.Properties;
 
 import static org.jboss.tyr.TestUtils.TEST_CONFIG_PATH;
 
+@QuarkusTest
 public class ConfigTest {
+
+    @Inject
+    TemplateChecker templateChecker;
 
     private final String currentDir = System.getProperty("user.dir");
 
@@ -36,7 +42,7 @@ public class ConfigTest {
 
     @Test
     public void testValidTemplateConfig() throws InvalidPayloadException {
-        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
+        templateChecker.init(TestUtils.FORMAT_CONFIG);
         Assertions.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
     }
 

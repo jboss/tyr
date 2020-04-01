@@ -18,7 +18,7 @@ package org.jboss.tyr.webhook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.tyr.InvalidPayloadException;
-import org.jboss.tyr.api.GitHubAPI;
+import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.check.SkipCheck;
 import org.jboss.tyr.check.TemplateChecker;
 import org.jboss.tyr.model.CommitStatus;
@@ -51,14 +51,22 @@ public class WebHookEndpoint {
     @Inject
     WhitelistProcessing whitelistProcessing;
 
+    @Inject
+    GitHubService gitHubService;
+
+    @Inject
+    TemplateChecker templateChecker;
+
+    @Inject
+    SkipCheck skipCheck;
+
     private FormatYaml format;
-    private TemplateChecker templateChecker;
 
     @PostConstruct
     public void init() {
         format = readConfig();
         whitelistProcessing.init(format);
-        templateChecker = new TemplateChecker(format);
+        templateChecker.init(format);
     }
 
     @POST
@@ -90,10 +98,10 @@ public class WebHookEndpoint {
     }
 
     private void processPullRequest(JsonObject prPayload) throws InvalidPayloadException {
-        if (!SkipCheck.shouldSkip(prPayload, format)) {
+        if (!skipCheck.shouldSkip(prPayload, format)) {
             String errorMessage = templateChecker.checkPR(prPayload);
             if (errorMessage != null) {
-                GitHubAPI.updateCommitStatus(format.getRepository(),
+                gitHubService.updateCommitStatus(format.getRepository(),
                         prPayload.getJsonObject(Utils.PULL_REQUEST).getJsonObject(Utils.HEAD).getString(Utils.SHA),
                         errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
                         format.getStatusUrl(),

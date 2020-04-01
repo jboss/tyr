@@ -23,17 +23,25 @@ import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
 import org.jboss.tyr.model.yaml.FormatYaml;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApplicationScoped
 public class TemplateChecker {
 
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
+    @Inject
+    @New
+    CommitMessagesCheck commitMessagesCheck;
+
     private List<Check> checks;
 
-    public TemplateChecker(FormatYaml config) {
+    public void init(FormatYaml config) {
         if (config == null || config.getFormat() == null) {
             throw new IllegalArgumentException("Input argument cannot be null");
         }
@@ -66,7 +74,7 @@ public class TemplateChecker {
         return errorMessage;
     }
 
-    private static List<Check> registerChecks(Format format) {
+    private List<Check> registerChecks(Format format) {
         List<Check> checks = new ArrayList<>();
 
         if (format.getTitle() != null) {
@@ -78,7 +86,8 @@ public class TemplateChecker {
         }
 
         if (format.getCommit() != null) {
-            checks.add(new CommitMessagesCheck(format.getCommit()));
+            commitMessagesCheck.setRegex(format.getCommit());
+            checks.add(commitMessagesCheck);
         }
 
         checks.addAll(AdditionalResourcesLoader.loadAdditionalChecks());

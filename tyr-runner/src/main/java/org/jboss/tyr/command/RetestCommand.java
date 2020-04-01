@@ -17,14 +17,18 @@ package org.jboss.tyr.command;
 
 import org.jboss.tyr.CIOperations;
 import org.jboss.tyr.InvalidPayloadException;
-import org.jboss.tyr.api.GitHubAPI;
+import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.model.Utils;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 
 @ApplicationScoped
 public class RetestCommand extends AbstractCommand {
+
+    @Inject
+    GitHubService gitHubService;
 
     @Override
     public void process(JsonObject payload, CIOperations operations) throws InvalidPayloadException {
@@ -33,7 +37,7 @@ public class RetestCommand extends AbstractCommand {
 
         if (operations.isUserAlreadyWhitelisted(pullRequestAuthor) &&
                 operations.isUserEligibleToRunCI(commentAuthor)) {
-            JsonObject prPayload = GitHubAPI.getPullRequestJSON(payload);
+            JsonObject prPayload = gitHubService.getPullRequestJSON(payload);
             operations.triggerCI(prPayload);
         }
     }

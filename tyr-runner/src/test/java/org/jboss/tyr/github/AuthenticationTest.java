@@ -1,4 +1,4 @@
-package org.jboss.tyr.api;
+package org.jboss.tyr.github;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -58,7 +58,7 @@ public class AuthenticationTest {
     }
 
     private void testAuthentication(String endpointPath) {
-        GitHubAPI.getJSONReader(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
+        GitHubService.getJSONReader(UriBuilder.fromPath(deploymentUrl.toString()).path(endpointPath).build());
     }
 
     @AfterAll

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tyr.api;
+package org.jboss.tyr.github;
 
 import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
@@ -22,6 +22,8 @@ import org.jboss.tyr.model.StatusPayload;
 import org.jboss.tyr.model.TyrProperties;
 import org.jboss.tyr.model.Utils;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -39,12 +41,14 @@ import java.net.URI;
 
 import static org.jboss.tyr.model.Utils.TOKEN_PROPERTY;
 
-public class GitHubAPI {
+@Named("default")
+@ApplicationScoped
+public class GitHubService {
 
     private static final String oauthToken = readToken();
-    private static final Logger log = Logger.getLogger(GitHubAPI.class);
+    private static final Logger log = Logger.getLogger(GitHubService.class);
 
-    public static void updateCommitStatus(String repository, String sha, CommitStatus status,
+    public void updateCommitStatus(String repository, String sha, CommitStatus status,
                                           String targetUrl, String description, String context) {
 
         Client client = ClientBuilder.newClient();
@@ -81,11 +85,11 @@ public class GitHubAPI {
         }
     }
 
-    public static JsonArray getCommitsJSON(JsonObject prPayload) throws InvalidPayloadException {
+    public JsonArray getCommitsJSON(JsonObject prPayload) throws InvalidPayloadException {
         return getJSONReader(getCommitsUri(prPayload)).readArray();
     }
 
-    public static JsonObject getPullRequestJSON(JsonObject issuePayload) throws InvalidPayloadException {
+    public JsonObject getPullRequestJSON(JsonObject issuePayload) throws InvalidPayloadException {
         return getJSONReader(getPullRequestUri(issuePayload)).readObject();
     }
 

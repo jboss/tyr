@@ -20,20 +20,28 @@ import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 import org.jboss.tyr.model.yaml.RegexDefinition;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.New;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ApplicationScoped
 public class SkipCheck {
 
-    public static boolean shouldSkip(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
+    @Inject
+    @New
+    CommitMessagesCheck commitMessagesCheck;
+
+    public boolean shouldSkip(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
 
-    private static boolean skipByTitle(JsonObject payload, FormatYaml config) {
+    private boolean skipByTitle(JsonObject payload, FormatYaml config) {
         Pattern titlePattern = config.getFormat().getSkipPatterns().getTitle();
         if (titlePattern != null) {
             Matcher titleMatcher = titlePattern.matcher(payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.TITLE));
@@ -43,18 +51,18 @@ public class SkipCheck {
     }
 
 
-    private static boolean skipByCommit(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
+    private boolean skipByCommit(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
         if (commitPattern != null) {
             RegexDefinition commitRegexDefinition = new RegexDefinition();
             commitRegexDefinition.setPattern(commitPattern);
-            CommitMessagesCheck commitMessagesCheck = new CommitMessagesCheck(commitRegexDefinition);
+            commitMessagesCheck.setRegex(commitRegexDefinition);
             return commitMessagesCheck.check(payload) == null;
         }
         return false;
     }
 
-    private static boolean skipByDescriptionFirstRow(JsonObject payload, FormatYaml config) {
+    private boolean skipByDescriptionFirstRow(JsonObject payload, FormatYaml config) {
         Pattern descriptionPattern = config.getFormat().getSkipPatterns().getDescription();
         if (descriptionPattern != null) {
             String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);

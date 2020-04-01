@@ -15,18 +15,21 @@
  */
 package org.jboss.tyr.command;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
+
+@QuarkusTest
 public class RetestFailedCommandTest extends CommandTest {
 
-    private RetestFailedCommand retestFailedCommand = new RetestFailedCommand();
+    @Inject
+    RetestFailedCommand retestFailedCommand;
 
     @Test
-    @Disabled("powermock")
     public void testIfRetestFailedCommandTriggersCI() throws InvalidPayloadException {
         whitelistProcessing.addUserToUserList(PR_AUTHOR);
         retestFailedCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
@@ -34,7 +37,6 @@ public class RetestFailedCommandTest extends CommandTest {
     }
 
     @Test
-    @Disabled("powermock")
     public void testRetestFailedCommandNullParams() {
         Assertions.assertThrows(NullPointerException.class, () -> retestFailedCommand.process(null, null));
     }

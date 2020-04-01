@@ -15,18 +15,21 @@
  */
 package org.jboss.tyr.command;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
+
+@QuarkusTest
 public class AddUserCommandTest extends CommandTest {
 
-    private final AddUserCommand addUserCommand = new AddUserCommand();
+    @Inject
+    AddUserCommand addUserCommand;
 
     @Test
-    @Disabled("powermock")
     public void testAddUserCommand() throws InvalidPayloadException {
         addUserCommand.process(TestUtils.ISSUE_PAYLOAD, whitelistProcessing);
         Assertions.assertTrue(TestUtils.fileContainsLine(userListFile, PR_AUTHOR));
@@ -34,7 +37,6 @@ public class AddUserCommandTest extends CommandTest {
     }
 
     @Test
-    @Disabled("powermock")
     public void testAddUserCommandNullParams() {
         Assertions.assertThrows(NullPointerException.class, () -> addUserCommand.process(null, null));
     }

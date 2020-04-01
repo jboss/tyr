@@ -44,8 +44,11 @@ public class AdditionalResourcesTest {
     @Inject
     WhitelistProcessing whitelistProcessing;
 
+    @Inject
+    TemplateChecker templateChecker;
+
     @BeforeAll
-    public static void beforeClass() {
+    public static void beforeAll() {
         // create custom user jar
         JavaArchive customJar = ShrinkWrap.create(JavaArchive.class, "custom-resources.jar")
                 .addClass(DummyAdditionalCheck.class)
@@ -63,7 +66,7 @@ public class AdditionalResourcesTest {
     @Test
     public void additionalChecksInvokedTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/custom-resources.jar");
-        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
+        templateChecker.init(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
 
@@ -88,7 +91,7 @@ public class AdditionalResourcesTest {
     @Test
     public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
         System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/invalid-path.jar");
-        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
+        templateChecker.init(TestUtils.FORMAT_CONFIG);
         whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         // should not fail, logs warning
@@ -102,7 +105,7 @@ public class AdditionalResourcesTest {
     @Test
     public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
         System.clearProperty(ADDITIONAL_RESOURCES_PROPERTY);
-        TemplateChecker templateChecker = new TemplateChecker(TestUtils.FORMAT_CONFIG);
+        templateChecker.init(TestUtils.FORMAT_CONFIG);
         whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);

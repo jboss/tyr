@@ -1,4 +1,4 @@
-package org.jboss.tyr.api;
+package org.jboss.tyr.github;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

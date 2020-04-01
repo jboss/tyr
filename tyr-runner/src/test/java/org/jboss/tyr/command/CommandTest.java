@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.command;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.ci.TestCI;
 import org.jboss.tyr.model.Utils;
@@ -24,10 +25,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import javax.inject.Inject;
 import java.io.File;
 
-// Temporary disable before the move to Junit 5 and CDI model
-
+@QuarkusTest
 public abstract class CommandTest {
 
     public static final String PR_AUTHOR = "prUser";
@@ -37,10 +38,11 @@ public abstract class CommandTest {
     static File userListFile;
     private static File adminListFile;
 
+    @Inject
     WhitelistProcessing whitelistProcessing;
 
     @BeforeAll
-    public static void beforeClass() {
+    public static void beforeAll() {
         userListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.USERLIST_FILE_NAME);
         adminListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.ADMINLIST_FILE_NAME);
 
@@ -52,12 +54,12 @@ public abstract class CommandTest {
     }
 
     @BeforeEach
-    public void before() {
+    public void beforeEach() {
         // It is required to stub each method again for each invocation
 //        PowerMockito.stub(method(GitHubAPI.class, "getPullRequestJSON", JsonObject.class))
 //                .toReturn(TestUtils.TEST_PAYLOAD);
 
-//        whitelistProcessing = new WhitelistProcessing(TestUtils.FORMAT_CONFIG);
+        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
         testCI.init();
     }
 

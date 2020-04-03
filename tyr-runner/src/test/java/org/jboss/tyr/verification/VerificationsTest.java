@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.jboss.tyr.TestUtils.FORMAT_CONFIG;
+import static org.jboss.tyr.TestUtils.FORMAT_CONFIG_CI;
 import static org.jboss.tyr.TestUtils.YAML_DIR;
 import static org.jboss.tyr.TestUtils.loadFormatFromYamlFile;
 
@@ -35,7 +35,7 @@ public class VerificationsTest {
 
     @Test
     public void testReadValidFormatConfiguration() throws InvalidConfigurationException {
-        VerificationHandler.verifyConfiguration(FORMAT_CONFIG);
+        VerificationHandler.verifyConfiguration(FORMAT_CONFIG_CI);
     }
 
     @Test

@@ -55,11 +55,7 @@ public abstract class CommandTest {
 
     @BeforeEach
     public void beforeEach() {
-        // It is required to stub each method again for each invocation
-//        PowerMockito.stub(method(GitHubAPI.class, "getPullRequestJSON", JsonObject.class))
-//                .toReturn(TestUtils.TEST_PAYLOAD);
-
-        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
+        whitelistProcessing.init(TestUtils.FORMAT_CONFIG_CI);
         testCI.init();
     }
 

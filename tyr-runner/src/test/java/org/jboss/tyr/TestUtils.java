@@ -46,11 +46,9 @@ public class TestUtils {
     public static final JsonObject EMPTY_PAYLOAD = createEmptyJsonPayload();
 
     public static final JsonArray TEST_COMMITS_PAYLOAD = loadJsonArray(JSON_DIR + "/testCommitsPayload.json");
-    public static final JsonArray MULTIPLE_COMMIT_MESSAGES_PAYLOAD = loadJsonArray(JSON_DIR + "/multipleCommitMessagesPayload.json");
 
-    public static final String READ_TOKEN = "readToken";
-    public static final String GET_JSON_WITH_COMMITS = "getCommitsJSON";
     public static final FormatYaml FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
+    public static final FormatYaml FORMAT_CONFIG_CI = loadFormatFromYamlFile(YAML_DIR + "/testTemplateCI.yaml");
     public static final Path TEST_CONFIG_PATH = getFilePath("testConfig.properties");
 
     public static FormatYaml loadFormatFromYamlFile(String fileName) {

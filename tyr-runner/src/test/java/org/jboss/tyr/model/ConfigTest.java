@@ -42,7 +42,7 @@ public class ConfigTest {
 
     @Test
     public void testValidTemplateConfig() throws InvalidPayloadException {
-        templateChecker.init(TestUtils.FORMAT_CONFIG);
+        templateChecker.init(TestUtils.FORMAT_CONFIG_CI);
         Assertions.assertTrue(templateChecker.checkPR(TestUtils.TEST_PAYLOAD).isEmpty());
     }
 

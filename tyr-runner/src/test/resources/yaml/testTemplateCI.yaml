@@ -7,3 +7,6 @@ format:
     description: "((.*)?NO JIRA REQUIRED(.*)\\s?)|(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
   title:
     pattern: "^Test.*PR$"
+
+  CI:
+    - TestCI

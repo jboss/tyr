@@ -49,7 +49,6 @@ public class TestUtils {
 
     public static final FormatYaml FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
     public static final FormatYaml FORMAT_CONFIG_CI = loadFormatFromYamlFile(YAML_DIR + "/testTemplateCI.yaml");
-    public static final Path TEST_CONFIG_PATH = getFilePath("testConfig.properties");
 
     public static FormatYaml loadFormatFromYamlFile(String fileName) {
         try {

@@ -17,4 +17,9 @@ public interface TyrConfiguration {
     @ConfigProperty(name = "whitelist.enabled", defaultValue = "false")
     boolean whitelistEnabled();
 
+    @ConfigProperty(name = "github.oauth.token")
+    String oauthToken();
+
+    @ConfigProperty(name = "users.dir")
+    Optional<String> whitelistDir();
 }

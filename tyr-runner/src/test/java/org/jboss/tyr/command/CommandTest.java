@@ -34,23 +34,23 @@ public abstract class CommandTest {
     public static final String PR_AUTHOR = "prUser";
     public static final String COMMENT_USER = "commentUser";
 
-    static TestCI testCI;
     static File userListFile;
     private static File adminListFile;
 
     @Inject
     WhitelistProcessing whitelistProcessing;
 
+    @Inject
+    TestCI testCI;
+
     @BeforeAll
     public static void beforeAll() {
-        userListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.USERLIST_FILE_NAME);
-        adminListFile = new File(System.getProperty(Utils.TYR_CONFIG_DIR), Utils.ADMINLIST_FILE_NAME);
+        userListFile = new File(TestUtils.TARGET_DIR, Utils.USERLIST_FILE_NAME);
+        adminListFile = new File(TestUtils.TARGET_DIR, Utils.ADMINLIST_FILE_NAME);
 
         TestUtils.deleteFileIfExists(userListFile);
         TestUtils.deleteFileIfExists(adminListFile);
         TestUtils.writeLineToFile(COMMENT_USER, adminListFile);
-
-        testCI = new TestCI();
     }
 
     @BeforeEach

@@ -19,10 +19,11 @@ import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.CommitStatus;
 import org.jboss.tyr.model.StatusPayload;
-import org.jboss.tyr.model.TyrProperties;
+import org.jboss.tyr.model.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -39,14 +40,14 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.StringReader;
 import java.net.URI;
 
-import static org.jboss.tyr.model.Utils.TOKEN_PROPERTY;
-
 @Named("default")
 @ApplicationScoped
 public class GitHubService {
 
-    private static final String oauthToken = readToken();
     private static final Logger log = Logger.getLogger(GitHubService.class);
+
+    @Inject
+    TyrConfiguration configuration;
 
     public void updateCommitStatus(String repository, String sha, CommitStatus status,
                                           String targetUrl, String description, String context) {
@@ -71,7 +72,7 @@ public class GitHubService {
         try {
             response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
+                .header(HttpHeaders.AUTHORIZATION, "token " + configuration.oauthToken())
                 .post(json);
 
             log.info("Github status update: " + response.getStatus());
@@ -93,7 +94,7 @@ public class GitHubService {
         return getJSONReader(getPullRequestUri(issuePayload)).readObject();
     }
 
-    static JsonReader getJSONReader(URI uri) {
+    JsonReader getJSONReader(URI uri) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(uri);
 
@@ -102,7 +103,7 @@ public class GitHubService {
         try {
             response = target.request()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "token " + oauthToken)
+                .header(HttpHeaders.AUTHORIZATION, "token " + configuration.oauthToken())
                 .get();
 
             if (response.getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
@@ -140,10 +141,5 @@ public class GitHubService {
         } catch (NullPointerException e) {
             throw new InvalidPayloadException("Invalid payload, can't retrieve URL. ", e);
         }
-    }
-
-    private static String readToken() {
-        String token = TyrProperties.getProperty(TOKEN_PROPERTY);
-        return token == null ? System.getenv(Utils.TOKEN_ENV) : token;
     }
 }

@@ -15,17 +15,14 @@
  */
 package org.jboss.tyr.ci;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonObject;
 
+@ApplicationScoped
 public class TestCI implements ContinuousIntegration {
 
-    public static final String NAME = "TestCI";
     private boolean triggered;
     private boolean triggeredFailed;
-
-    public TestCI() {
-        CILoader.addCI(NAME, this);
-    }
 
     @Override
     public void triggerBuild(JsonObject prPayload) {

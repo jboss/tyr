@@ -22,4 +22,7 @@ public interface TyrConfiguration {
 
     @ConfigProperty(name = "users.dir")
     Optional<String> whitelistDir();
+
+    @ConfigProperty(name = "additional-resources")
+    Optional<String> additionalResources();
 }

@@ -57,12 +57,15 @@ public class WhitelistProcessing implements CIOperations {
     @Inject
     TyrConfiguration configuration;
 
+    @Inject
+    AdditionalResourcesLoader additionalResourcesLoader;
+
     public void init(FormatYaml config) {
         String dirName = configuration.whitelistDir().orElse(System.getProperty("user.dir"));
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
         commands = getCommands(config);
-        commands.addAll(AdditionalResourcesLoader.loadAdditionalCommands());
+        commands.addAll(additionalResourcesLoader.getAdditionalCommands());
         continuousIntegrations = loadCIs(config);
     }
 

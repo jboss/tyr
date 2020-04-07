@@ -19,6 +19,9 @@ import org.jboss.logging.Logger;
 import org.jboss.tyr.Check;
 import org.jboss.tyr.Command;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,53 +30,70 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import static org.jboss.tyr.model.Utils.ADDITIONAL_RESOURCES_PROPERTY;
-
+@ApplicationScoped
 public class AdditionalResourcesLoader {
 
     private static final Logger log = Logger.getLogger(AdditionalResourcesLoader.class);
 
-    public static List<Check> loadAdditionalChecks() {
-        return loadAdditionalResource(Check.class);
+    private URL[] jarURLs;
+    private List<Check> additionalChecks;
+    private List<Command> additionaCommands;
+
+    @Inject
+    TyrConfiguration configuration;
+
+    @PostConstruct
+    public void init() {
+        System.out.println(configuration.additionalResources().orElse("no found"));
+        jarURLs = loadAdditionalJars();
+        additionalChecks = loadAdditionalResource(Check.class);
+        additionaCommands = loadAdditionalResource(Command.class);
     }
 
-    public static List<Command> loadAdditionalCommands() {
-        return loadAdditionalResource(Command.class);
+    public List<Check> getAdditionalChecks() {
+        return additionalChecks;
     }
 
-    private static <S> List<S> loadAdditionalResource(Class<S> clazz) {
-        String additionalCheckPropertyValue = System.getProperty(ADDITIONAL_RESOURCES_PROPERTY);
-        List<S> result = new ArrayList<>();
+    public List<Command> getAdditionalCommands() {
+        return additionaCommands;
+    }
 
-        if (additionalCheckPropertyValue == null) {
-            return result;
+    private URL[] loadAdditionalJars() {
+        if (!configuration.additionalResources().isPresent()) {
+            return new URL[0];
         }
 
-        String[] split = additionalCheckPropertyValue.split(",");
+        String[] split = configuration.additionalResources().get().split(",");
 
         List<URL> jarURLs = new ArrayList<>();
         for (String jar : split) {
             File file = new File(jar);
 
             if (!file.exists()) {
-                log.warn("File declared for " + ADDITIONAL_RESOURCES_PROPERTY + " does not exist: " + file.getPath());
+                log.warn("File declared for additional resources does not exist: " + file.getPath());
                 continue;
             }
 
             if (!file.getPath().toLowerCase().endsWith(".jar")) {
-                log.warn("Invalid file included for " + ADDITIONAL_RESOURCES_PROPERTY + ", must be a jar archive: " + file.getPath());
+                log.warn("Invalid file included for additional resources must be a jar archive: " + file.getPath());
                 continue;
             }
 
             try {
                 jarURLs.add(file.toURI().toURL());
             } catch (MalformedURLException e) {
-                log.warn("Invalid file name value passed in " + ADDITIONAL_RESOURCES_PROPERTY, e);
+                log.warn("Invalid file name value passed in additional resources", e);
             }
         }
 
+        return jarURLs.toArray(new URL[0]);
+    }
+
+    private <S> List<S> loadAdditionalResource(Class<S> clazz) {
+        List<S> result = new ArrayList<>();
+
         ServiceLoader<S> serviceLoader = ServiceLoader.load(clazz,
-                new URLClassLoader(jarURLs.toArray(new URL[0]), Thread.currentThread().getContextClassLoader()));
+            new URLClassLoader(jarURLs, Thread.currentThread().getContextClassLoader()));
         serviceLoader.iterator().forEachRemaining(result::add);
 
         return result;

@@ -39,6 +39,9 @@ public class TemplateChecker {
     @New
     CommitMessagesCheck commitMessagesCheck;
 
+    @Inject
+    AdditionalResourcesLoader additionalResourcesLoader;
+
     private List<Check> checks;
 
     public void init(FormatYaml config) {
@@ -90,7 +93,7 @@ public class TemplateChecker {
             checks.add(commitMessagesCheck);
         }
 
-        checks.addAll(AdditionalResourcesLoader.loadAdditionalChecks());
+        checks.addAll(additionalResourcesLoader.getAdditionalChecks());
 
         return checks;
     }

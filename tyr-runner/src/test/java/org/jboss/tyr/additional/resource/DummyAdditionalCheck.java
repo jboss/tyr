@@ -23,7 +23,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DummyAdditionalCheck implements Check {
 
     private static final String MESSAGE = "Dummy check failure";
-    private static final AtomicInteger counter = new AtomicInteger(0);
+    private static AtomicInteger counter = new AtomicInteger(0);
+
+    public static void clearCounter() {
+        counter = new AtomicInteger(0);
+    }
 
     @Override
     public String check(JsonObject payload) {

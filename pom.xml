@@ -7,8 +7,8 @@
     <name>Tyr</name>
 
     <properties>
-        <quarkus-plugin.version>1.3.0.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.3.0.Final</quarkus.platform.version>
+        <quarkus-plugin.version>1.3.1.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.3.1.Final</quarkus.platform.version>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>

@@ -16,21 +16,13 @@
 package org.jboss.tyr.model;
 
 import javax.json.JsonObject;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class Utils {
 
     public static final String GITHUB_BASE = "https://api.github.com";
-    public static final String CONFIG_FILE = "config.properties";
-    public static final String TOKEN_PROPERTY = "github.oauth.token";
-    public static final String TOKEN_ENV = "GITHUB_OAUTH_TOKEN";
     public static final String TYR_CONFIG_DIR = "tyr.config.dir";
-    public static final String TEMPLATE_FORMAT_URL = "template.format.url";
-    public static final String TEMPLATE_FORMAT_FILE = "template.format.file";
     public static final String USERLIST_FILE_NAME = "user-list.txt";
     public static final String ADMINLIST_FILE_NAME = "admin-list.txt";
-    public static final String WHITELIST_ENABLED = "whitelist.enabled";
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String GITHUB_LINE_SEPARATOR = "\\r\\n";
     public static final String ADDITIONAL_RESOURCES_PROPERTY = "additional-resources";
@@ -58,13 +50,6 @@ public class Utils {
     public static final String COMMIT = "commit";
     public static final String MESSAGE = "message";
     public static final String URL = "url";
-
-    public static URL getFormatUrl() throws MalformedURLException {
-        String target = System.getProperty(TEMPLATE_FORMAT_URL);
-        if (target == null)
-            target = TyrProperties.getProperty(TEMPLATE_FORMAT_URL);
-        return target != null ? new URL(target) : null;
-    }
 
     public static String getConfigDirectory() {
         String path = System.getProperty(TYR_CONFIG_DIR);

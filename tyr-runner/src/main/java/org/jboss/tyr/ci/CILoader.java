@@ -15,22 +15,20 @@
  */
 package org.jboss.tyr.ci;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import java.util.Optional;
 
+@ApplicationScoped
 public class CILoader {
 
-    private static final Map<String, ContinuousIntegration> CIs = new HashMap<>();
+    @Inject
+    @Any
+    Instance<ContinuousIntegration> CIs;
 
-    static {
-        addCI(TeamCityCI.NAME, new TeamCityCI());
-    }
-
-    public static ContinuousIntegration getCI(String key) {
-        return CIs.get(key);
-    }
-
-    static void addCI(String key, ContinuousIntegration continuousIntegration) {
-        CIs.put(key, continuousIntegration);
+    public Optional<ContinuousIntegration> getCI(String key) {
+        return CIs.stream().filter(ci -> ci.getClass().getSimpleName().contains(key)).findFirst();
     }
 }

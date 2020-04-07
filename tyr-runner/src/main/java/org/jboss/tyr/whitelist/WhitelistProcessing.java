@@ -25,6 +25,7 @@ import org.jboss.tyr.command.AbstractCommand;
 import org.jboss.tyr.command.CommandsLoader;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
+import org.jboss.tyr.model.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 
@@ -50,8 +51,14 @@ public class WhitelistProcessing implements CIOperations {
     @Inject
     CommandsLoader commandsLoader;
 
+    @Inject
+    CILoader ciLoader;
+
+    @Inject
+    TyrConfiguration configuration;
+
     public void init(FormatYaml config) {
-        String dirName = Utils.getConfigDirectory();
+        String dirName = configuration.whitelistDir().orElse(System.getProperty("user.dir"));
         userList = new PersistentList(dirName, Utils.USERLIST_FILE_NAME);
         adminList = new PersistentList(dirName, Utils.ADMINLIST_FILE_NAME);
         commands = getCommands(config);
@@ -148,10 +155,11 @@ public class WhitelistProcessing implements CIOperations {
         }
 
         for (String key : CIConfigList) {
-            ContinuousIntegration CI = CILoader.getCI(key);
-            if (CI != null) {
-                CI.init();
-                continuousIntegrations.add(CI);
+            Optional<ContinuousIntegration> CI = ciLoader.getCI(key);
+            if (CI.isPresent()) {
+                ContinuousIntegration instance = CI.get();
+                instance.init();
+                continuousIntegrations.add(instance);
             } else {
                 log.warnf("CI identified with \"%s\" does not exists", key);
             }

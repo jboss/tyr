@@ -17,12 +17,14 @@ package org.jboss.tyr.ci;
 
 import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
-import org.jboss.tyr.model.TyrProperties;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.json.BuildJson;
 import org.jboss.tyr.model.json.Property;
 import org.jboss.tyr.model.json.SnapshotDependencies;
 import org.jboss.tyr.model.json.SnapshotDependency;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -41,21 +43,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TeamCityCI implements ContinuousIntegration {
+@ApplicationScoped
+public class TeamCity implements ContinuousIntegration {
 
-    public static final String NAME = "TeamCity";
-    public static final String HOST_PROPERTY = "teamcity.host";
-    public static final String PORT_PROPERTY = "teamcity.port";
-    public static final String USER_PROPERTY = "teamcity.user";
-    public static final String PASSWORD_PROPERTY = "teamcity.password";
-    public static final String BUILD_CONFIG = "teamcity.branch.mapping";
     public static final String BUILD_PATH = "/app/rest/buildQueue";
     public static final String SNAPSHOTDEPENDENCIES_PATH_PREFIX = "app/rest/buildTypes/id:";
     public static final String SNAPSHOTDEPENDENCIES_PATH_SUFFIX = "/snapshot-dependencies";
     public static final String BUILD_WITH_SAME_REVISIONS_PROPERTY = "take-started-build-with-same-revisions";
     public static final String SUCCESSFUL_BUILDS_ONLY_PROPERTY = "take-successful-builds-only";
 
-    private static final Logger log = Logger.getLogger(TeamCityCI.class);
+    private static final Logger log = Logger.getLogger(TeamCity.class);
+
+    @Inject
+    TeamCityProperties properties;
 
     private String baseUrl;
     private String encryptedCredentials;
@@ -65,13 +65,15 @@ public class TeamCityCI implements ContinuousIntegration {
 
     @Override
     public void init() {
-        this.baseUrl = getBaseUrl(TyrProperties.getProperty(HOST_PROPERTY),
-                TyrProperties.getIntProperty(PORT_PROPERTY));
+        this.baseUrl = getBaseUrl(
+                properties.host().orElseThrow(IllegalArgumentException::new),
+                properties.port().orElseThrow(IllegalArgumentException::new));
 
-        this.encryptedCredentials = encryptCredentials(TyrProperties.getProperty(USER_PROPERTY),
-                TyrProperties.getProperty(PASSWORD_PROPERTY));
+        this.encryptedCredentials = encryptCredentials(
+                properties.user().orElseThrow(IllegalArgumentException::new),
+                properties.password().orElseThrow(IllegalArgumentException::new));
 
-        this.branchMappings = parseBranchMapping(TyrProperties.getProperty(BUILD_CONFIG));
+        this.branchMappings = parseBranchMapping(properties.mapping().orElseThrow(IllegalArgumentException::new));
 
         this.client = ClientBuilder.newClient();
 

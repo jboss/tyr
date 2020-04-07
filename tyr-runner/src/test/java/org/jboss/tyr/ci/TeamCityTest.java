@@ -15,45 +15,52 @@
  */
 package org.jboss.tyr.ci;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TeamCityCITest {
+import javax.inject.Inject;
+
+@QuarkusTest
+public class TeamCityTest {
+
+    @Inject
+    TeamCity teamCity;
 
     @Test
     public void testTCInitWithoutPropertiesSet() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new TeamCityCI().init());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> teamCity.init());
     }
 
     @Test
     public void testTriggerBuildNullParameters() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerBuild(null));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerBuild(null));
     }
 
     @Test
     public void testTriggerFailedBuildNullParameters() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerFailedBuild(null));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerFailedBuild(null));
     }
 
     @Test
     public void testTriggerBuildPrPayloadMissingPullRequestParameter() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerBuild(TestUtils.EMPTY_PAYLOAD));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerBuild(TestUtils.EMPTY_PAYLOAD));
     }
 
     @Test
     public void testTriggerFailedBuildPrPayloadMissingPullRequestParameter() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerFailedBuild(TestUtils.EMPTY_PAYLOAD));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerFailedBuild(TestUtils.EMPTY_PAYLOAD));
     }
 
     @Test
     public void testTriggerBuildConfigFileMissing() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerFailedBuild(TestUtils.PULL_REQUEST_PAYLOAD));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerFailedBuild(TestUtils.PULL_REQUEST_PAYLOAD));
     }
 
     @Test
     public void testTriggerFailedBuildConfigFileMissing() {
-        Assertions.assertThrows(InvalidPayloadException.class, () -> new TeamCityCI().triggerFailedBuild(TestUtils.PULL_REQUEST_PAYLOAD));
+        Assertions.assertThrows(InvalidPayloadException.class, () -> teamCity.triggerFailedBuild(TestUtils.PULL_REQUEST_PAYLOAD));
     }
 }

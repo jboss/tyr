@@ -16,6 +16,8 @@
 package org.jboss.tyr.check;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.jboss.tyr.InvalidPayloadException;
+import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,13 @@ public class TemplateCheckerTest {
 
     @Inject
     TemplateChecker templateChecker;
+
+    @Test
+    public void testValidTemplateConfig() throws InvalidPayloadException {
+        templateChecker.init(TestUtils.FORMAT_CONFIG_CI);
+        Assertions.assertEquals("Dummy check failure", templateChecker.checkPR(TestUtils.TEST_PAYLOAD),
+            "Valid PR should only fail with included additional check");
+    }
 
     @Test
     public void testNullConfigParameter() {

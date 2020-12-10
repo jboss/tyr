@@ -16,13 +16,13 @@
 package org.jboss.tyr.check;
 
 import org.jboss.tyr.InvalidPayloadException;
+import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
-import org.jboss.tyr.model.yaml.RegexDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.New;
 import javax.inject.Inject;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +31,7 @@ import java.util.regex.Pattern;
 public class SkipCheck {
 
     @Inject
-    @New
-    CommitMessagesCheck commitMessagesCheck;
+    GitHubService gitHubService;
 
     public boolean shouldSkip(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         if (payload == null || config == null) {
@@ -54,10 +53,19 @@ public class SkipCheck {
     private boolean skipByCommit(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         Pattern commitPattern = config.getFormat().getSkipPatterns().getCommit();
         if (commitPattern != null) {
-            RegexDefinition commitRegexDefinition = new RegexDefinition();
-            commitRegexDefinition.setPattern(commitPattern);
-            commitMessagesCheck.setRegex(commitRegexDefinition);
-            return commitMessagesCheck.check(payload) == null;
+            JsonArray commitsJsonArray = gitHubService.getCommitsJSON(payload);
+            for (int i = 0; i < commitsJsonArray.size(); i++) {
+                String commitMessage = commitsJsonArray.getJsonObject(i)
+                        .getJsonObject(Utils.COMMIT)
+                        .getString(Utils.MESSAGE);
+
+                Matcher matcher = commitPattern.matcher(commitMessage.split(Utils.GITHUB_LINE_SEPARATOR, 2)[0]);
+
+                if (!matcher.matches()) {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
     }

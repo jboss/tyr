@@ -14,15 +14,15 @@ you can create your own :)
     - PRs needs to be created to YOUR repository, you need to specify it 
     under the base fork field in the Open a Pull Request page
 1. The project requires two properties to be set up to run correctly
-    - GitHub OAuth token - 
-        - in `config.properties` file (will be described later)
-        - or by the `GITHUB_OAUTH_TOKEN` environment property
+    - GitHub OAuth token - can be passed as a 
+      [MicroProfile Config](https://github.com/eclipse/microprofile-config)
+      property `tyr.github.oauth.token`
     - Configuration file specifying the format of the PR - the example can 
-    be found in `tyr-runner/src/main/resources/format-example.yaml`, there are
-    two ways how to specify to the application where is this file located
-        - System property **template.format.url** - url of the configuration file
-        - System property **template.format.file** -  path to the configuration file
-1. start Tyr - `java -jar tyr-runner.jar` with above system properties set
+    be found in `tyr-runner/src/main/resources/format-example.yaml`, the supported
+      MicroProfile Config properties are `tyr.template.format.file` or
+      `tyr.template.format.url`
+1. start Tyr - `java -jar tyr-runner.jar` with above MP config properties set 
+   (as for instance system properties, e.g. `-Dtyr.template.format.file=/path/to/file`)
 1. Expose local server instance with ngrok - https://ngrok.com/
     - Here you need to expose **http** port **8080** as the default application
     interface where the application runs, consult the ngrok documentation for the

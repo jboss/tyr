@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2019-2021 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class TemplateChecker {
     /**
      * Verifies the pull request payload against a set of defined checks
      *
-     * @param payload the PR paylaod JSON received from GitHub
+     * @param payload the PR payload JSON received from GitHub
      * @return error message or empty string if there is no failure found
      */
     public String checkPR(JsonObject payload) throws InvalidPayloadException {
@@ -85,7 +85,8 @@ public class TemplateChecker {
         }
 
         if (format.getDescription() != null) {
-            checks.add(new RequiredRowsCheck(format.getDescription().getRequiredRows()));
+            checks.add(new DescriptionCheck(format.getDescription().getRequiredRows(),
+                    format.getDescription().getOptionalRows()));
         }
 
         if (format.getCommit() != null) {

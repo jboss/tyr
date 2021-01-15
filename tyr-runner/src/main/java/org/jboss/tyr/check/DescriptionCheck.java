@@ -22,6 +22,7 @@ import org.jboss.tyr.model.yaml.RegexDefinition;
 
 import javax.json.JsonObject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -41,27 +42,26 @@ public class DescriptionCheck implements Check {
         List<RegexDefinition> requiredRows = new ArrayList<>(rows);
         List<OptionalPattern> optionalRows = new ArrayList<>(optionalPatterns);
         String description = payload.getJsonObject(Utils.PULL_REQUEST).getString(Utils.BODY);
+        RegexDefinition regexDefinition;
+        OptionalPattern optionalPattern;
 
         try (Scanner scanner = new Scanner(description)) {
             while (scanner.hasNextLine() && (!requiredRows.isEmpty() || !optionalRows.isEmpty())) {
                 String line = scanner.nextLine();
-                for (RegexDefinition row : requiredRows) {
-                    Matcher matcher = row.getPattern().matcher(line);
+                for (Iterator<RegexDefinition> iter = requiredRows.iterator(); iter.hasNext(); ) {
+                    regexDefinition = iter.next();
+                    Matcher matcher = regexDefinition.getPattern().matcher(line);
                     if (matcher.matches()) {
-                        requiredRows.remove(row);
-                        break;
+                        iter.remove();
                     }
                 }
-                for (OptionalPattern optionalRow : optionalRows){
-                    Matcher preconditionMatcher = optionalRow.getPrecondition().matcher(line);
+                for (Iterator<OptionalPattern> iter = optionalRows.iterator(); iter.hasNext(); ){
+                    optionalPattern = iter.next();
+                    Matcher preconditionMatcher = optionalPattern.getPrecondition().matcher(line);
                     if (preconditionMatcher.matches()){
-                        Matcher patternMatcher = optionalRow.getPattern().matcher(line);
+                        Matcher patternMatcher = optionalPattern.getPattern().matcher(line);
                         if (!patternMatcher.matches()){
-                            return optionalRow.getMessage();
-                        }
-                        else {
-                            optionalRows.remove(optionalRow);
-                            break;
+                            return optionalPattern.getMessage();
                         }
                     }
                 }

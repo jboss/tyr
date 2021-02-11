@@ -5,14 +5,21 @@
     <artifactId>tyr</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Tyr</name>
+    <packaging>pom</packaging>
 
     <properties>
-        <quarkus-plugin.version>1.3.1.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.3.1.Final</quarkus.platform.version>
-        <surefire-plugin.version>2.22.1</surefire-plugin.version>
+        <quarkus.version>1.11.2.Final</quarkus.version>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <quarkus-plugin.version>${quarkus.version}</quarkus-plugin.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        
+        <quarkus.platform.version>${quarkus.version}</quarkus.platform.version>
+        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
         <checkstyle.version>3.1.0</checkstyle.version>
         <com.fasterxml.jackson.version>2.10.0</com.fasterxml.jackson.version>
         <arquillian.version>1.4.1.Final</arquillian.version>
@@ -69,8 +76,4 @@
         <module>tyr-api</module>
       <module>webhook</module>
     </modules>
-    <packaging>pom</packaging>
-
-
-    
 </project>

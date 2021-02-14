@@ -23,10 +23,10 @@ import java.util.List;
 public class Description {
 
     @JsonProperty("required rows")
-    private List<RegexDefinition> requiredRows;
+    private List<RegexDefinition> requiredRows = new ArrayList<>();
 
     @JsonProperty("optional rows")
-    private List<OptionalPattern> optionalRows;
+    private List<OptionalPattern> optionalRows = new ArrayList<>();
 
     public List<RegexDefinition> getRequiredRows() {
         return new ArrayList<>(requiredRows);

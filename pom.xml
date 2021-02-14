@@ -72,8 +72,9 @@
     </build>
 
     <modules>
-        <module>tyr-runner</module>
         <module>tyr-api</module>
-      <module>webhook</module>
+        <module>tyr-core</module>
+        <module>tyr-webhook</module>
+        <module>webhook-load-balancer</module>
     </modules>
 </project>

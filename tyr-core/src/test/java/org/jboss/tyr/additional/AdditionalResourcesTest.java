@@ -84,7 +84,6 @@ public class AdditionalResourcesTest {
     @Test
     @Disabled("Quarkus support for different config values")
     public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
-//        System.setProperty(ADDITIONAL_RESOURCES_PROPERTY, "target/invalid-path.jar");
         templateChecker.init(TestUtils.FORMAT_CONFIG);
         whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
@@ -99,7 +98,6 @@ public class AdditionalResourcesTest {
     @Test
     @Disabled("Quarkus support for different config values")
     public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
-//        System.clearProperty(ADDITIONAL_RESOURCES_PROPERTY);
         templateChecker.init(TestUtils.FORMAT_CONFIG);
         whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 

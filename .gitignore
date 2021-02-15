@@ -25,6 +25,6 @@ target
 .idea
 *.iml
 
-config.properties
 tyr-secret.json
-
+**/admin-list.txt
+**/user-list.txt

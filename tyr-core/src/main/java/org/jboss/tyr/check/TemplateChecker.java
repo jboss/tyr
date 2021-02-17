@@ -15,18 +15,30 @@
  */
 package org.jboss.tyr.check;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.jboss.logging.Logger;
 import org.jboss.tyr.Check;
 import org.jboss.tyr.InvalidPayloadException;
+import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
+import org.jboss.tyr.model.CommitStatus;
+import org.jboss.tyr.model.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
 import org.jboss.tyr.model.yaml.FormatYaml;
+import org.jboss.tyr.verification.InvalidConfigurationException;
+import org.jboss.tyr.verification.VerificationHandler;
+import org.jboss.tyr.whitelist.WhitelistProcessing;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.New;
 import javax.inject.Inject;
 import javax.json.JsonObject;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,19 +48,44 @@ public class TemplateChecker {
     private static final Logger log = Logger.getLogger(TemplateChecker.class);
 
     @Inject
+    TyrConfiguration configuration;
+
+    @Inject
+    WhitelistProcessing whitelistProcessing;
+
+    @Inject
+    GitHubService gitHubService;
+
+    @Inject
     @New
     CommitMessagesCheck commitMessagesCheck;
 
     @Inject
     AdditionalResourcesLoader additionalResourcesLoader;
 
+    @Inject
+    SkipCheck skipCheck;
+
+    private FormatYaml format;
     private List<Check> checks;
 
-    public void init(FormatYaml config) {
-        if (config == null || config.getFormat() == null) {
-            throw new IllegalArgumentException("Input argument cannot be null");
+    @PostConstruct
+    public void init() {
+        format = readConfig();
+        if (format == null || format.getFormat() == null) {
+            throw new IllegalArgumentException("Input format yaml cannot be null");
         }
-        checks = registerChecks(config.getFormat());
+
+        whitelistProcessing.init(format);
+        checks = registerChecks(format.getFormat());
+    }
+
+    public void processPullRequest(JsonObject payload) throws InvalidPayloadException {
+        if (configuration.whitelistEnabled()) {
+            processPRWithWhitelisting(payload);
+        } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
+            processPR(payload);
+        }
     }
 
     /**
@@ -97,5 +134,51 @@ public class TemplateChecker {
         checks.addAll(additionalResourcesLoader.getAdditionalChecks());
 
         return checks;
+    }
+
+    private FormatYaml readConfig() {
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        FormatYaml formatYaml;
+        try {
+            if (configuration.formatFileUrl().isPresent())
+                formatYaml = mapper.readValue(new URL(configuration.formatFileUrl().get()).openStream(), FormatYaml.class);
+            else {
+                File configFile = new File(configuration.configFileName().orElse(Utils.getConfigDirectory() + "/format.yaml"));
+                formatYaml = mapper.readValue(configFile, FormatYaml.class);
+            }
+            VerificationHandler.verifyConfiguration(formatYaml);
+            return formatYaml;
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new IllegalArgumentException("Cannot load configuration file", e);
+        }
+    }
+
+    private void processPR(JsonObject prPayload) throws InvalidPayloadException {
+        if (!skipCheck.shouldSkip(prPayload, format)) {
+            String errorMessage = checkPR(prPayload);
+            if (errorMessage != null) {
+                gitHubService.updateCommitStatus(format.getRepository(),
+                    prPayload.getJsonObject(Utils.PULL_REQUEST).getJsonObject(Utils.HEAD).getString(Utils.SHA),
+                    errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,
+                    format.getStatusUrl(),
+                    errorMessage.isEmpty() ? "valid" : errorMessage, "PR format");
+            }
+        }
+    }
+    private void processPRWithWhitelisting(JsonObject payload) throws InvalidPayloadException {
+        if (payload.getJsonObject(Utils.ISSUE) != null) {
+            whitelistProcessing.processPRComment(payload);
+        } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
+            processPullRequest(payload);
+            if (!payload.getString(Utils.ACTION).matches("opened")) {
+                return;
+            }
+            String username = payload.getJsonObject(Utils.PULL_REQUEST)
+                .getJsonObject(Utils.USER)
+                .getString(Utils.LOGIN);
+            if (whitelistProcessing.isUserEligibleToRunCI(username)) {
+                whitelistProcessing.triggerCI(payload.getJsonObject(Utils.PULL_REQUEST));
+            }
+        }
     }
 }

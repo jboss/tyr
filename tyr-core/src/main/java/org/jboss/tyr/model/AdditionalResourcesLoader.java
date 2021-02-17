@@ -44,7 +44,6 @@ public class AdditionalResourcesLoader {
 
     @PostConstruct
     public void init() {
-        System.out.println(configuration.additionalResources().orElse("no found"));
         jarURLs = loadAdditionalJars();
         additionalChecks = loadAdditionalResource(Check.class);
         additionaCommands = loadAdditionalResource(Command.class);

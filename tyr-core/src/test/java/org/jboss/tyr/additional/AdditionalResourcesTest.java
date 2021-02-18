@@ -58,9 +58,10 @@ public class AdditionalResourcesTest {
     TemplateChecker templateChecker;
 
     @Test
+    @Disabled("templateChecker.init(TestUtils.FORMAT_CONFIG)")
     public void additionalChecksInvokedTest() throws InvalidPayloadException {
         DummyAdditionalCheck.clearCounter(); // incremented by different test checking the valid PR check invocation
-        templateChecker.init(TestUtils.FORMAT_CONFIG);
+//        templateChecker.init(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
 
@@ -82,9 +83,9 @@ public class AdditionalResourcesTest {
 
 
     @Test
-    @Disabled("Quarkus support for different config values")
+    @Disabled("Quarkus support for different config values,templateChecker.init(TestUtils.FORMAT_CONFIG)")
     public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
-        templateChecker.init(TestUtils.FORMAT_CONFIG);
+//        templateChecker.init(TestUtils.FORMAT_CONFIG);
         whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         // should not fail, logs warning
@@ -96,10 +97,10 @@ public class AdditionalResourcesTest {
     }
 
     @Test
-    @Disabled("Quarkus support for different config values")
+    @Disabled("Quarkus support for different config values,templateChecker.init(TestUtils.FORMAT_CONFIG)")
     public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
-        templateChecker.init(TestUtils.FORMAT_CONFIG);
-        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
+//        templateChecker.init(TestUtils.FORMAT_CONFIG);
+//        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
 
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
         whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);

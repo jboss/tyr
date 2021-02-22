@@ -80,12 +80,14 @@ public class TemplateChecker {
         checks = registerChecks(format.getFormat());
     }
 
-    public void processPullRequest(JsonObject payload) throws InvalidPayloadException {
+    public String processPullRequest(JsonObject payload) throws InvalidPayloadException {
         if (configuration.whitelistEnabled()) {
-            processPRWithWhitelisting(payload);
+            return processPRWithWhitelisting(payload);
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
-            processPR(payload);
+            return processPR(payload);
         }
+
+        return "Received an invalid Pull Request JSON";
     }
 
     /**
@@ -153,7 +155,7 @@ public class TemplateChecker {
         }
     }
 
-    private void processPR(JsonObject prPayload) throws InvalidPayloadException {
+    private String processPR(JsonObject prPayload) throws InvalidPayloadException {
         if (!skipCheck.shouldSkip(prPayload, format)) {
             String errorMessage = checkPR(prPayload);
             if (errorMessage != null) {
@@ -163,22 +165,31 @@ public class TemplateChecker {
                     format.getStatusUrl(),
                     errorMessage.isEmpty() ? "valid" : errorMessage, "PR format");
             }
+
+            return errorMessage;
         }
+
+        return "";
     }
-    private void processPRWithWhitelisting(JsonObject payload) throws InvalidPayloadException {
+
+    private String processPRWithWhitelisting(JsonObject payload) throws InvalidPayloadException {
         if (payload.getJsonObject(Utils.ISSUE) != null) {
             whitelistProcessing.processPRComment(payload);
+            return "";
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
-            processPullRequest(payload);
-            if (!payload.getString(Utils.ACTION).matches("opened")) {
-                return;
+            String errorMessage = processPullRequest(payload);
+            if (payload.getString(Utils.ACTION).matches("opened")) {
+                String username = payload.getJsonObject(Utils.PULL_REQUEST)
+                    .getJsonObject(Utils.USER)
+                    .getString(Utils.LOGIN);
+                if (whitelistProcessing.isUserEligibleToRunCI(username)) {
+                    whitelistProcessing.triggerCI(payload.getJsonObject(Utils.PULL_REQUEST));
+                }
             }
-            String username = payload.getJsonObject(Utils.PULL_REQUEST)
-                .getJsonObject(Utils.USER)
-                .getString(Utils.LOGIN);
-            if (whitelistProcessing.isUserEligibleToRunCI(username)) {
-                whitelistProcessing.triggerCI(payload.getJsonObject(Utils.PULL_REQUEST));
-            }
+
+            return errorMessage;
         }
+
+        return "Received an invalid JSON not representing a valid Pull Request or Issue format";
     }
 }

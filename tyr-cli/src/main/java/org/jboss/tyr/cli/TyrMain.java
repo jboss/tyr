@@ -20,7 +20,7 @@ public class TyrMain implements QuarkusApplication {
     public int run(String... args) throws Exception {
         JsonReader reader = Json.createReader(new StringReader(args[0]));
         JsonObject prJson = reader.readObject();
-        String result = templateChecker.checkPR(prJson);
+        String result = templateChecker.processPullRequest(prJson);
         System.out.println(">>> " + result);
         return result.isEmpty() ? 0 : 1;
     }

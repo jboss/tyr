@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.CommitStatus;
 import org.jboss.tyr.model.StatusPayload;
-import org.jboss.tyr.model.TyrConfiguration;
+import org.jboss.tyr.config.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -18,6 +18,7 @@ package org.jboss.tyr.model;
 import org.jboss.logging.Logger;
 import org.jboss.tyr.Check;
 import org.jboss.tyr.Command;
+import org.jboss.tyr.config.TyrConfiguration;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

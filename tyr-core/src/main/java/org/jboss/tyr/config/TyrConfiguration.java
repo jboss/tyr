@@ -1,4 +1,4 @@
-package org.jboss.tyr.model;
+package org.jboss.tyr.config;
 
 import io.quarkus.arc.config.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;

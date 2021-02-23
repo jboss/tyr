@@ -177,7 +177,7 @@ public class TemplateChecker {
             whitelistProcessing.processPRComment(payload);
             return "";
         } else if (payload.getJsonObject(Utils.PULL_REQUEST) != null) {
-            String errorMessage = processPullRequest(payload);
+            String errorMessage = processPR(payload);
             if (payload.getString(Utils.ACTION).matches("opened")) {
                 String username = payload.getJsonObject(Utils.PULL_REQUEST)
                     .getJsonObject(Utils.USER)

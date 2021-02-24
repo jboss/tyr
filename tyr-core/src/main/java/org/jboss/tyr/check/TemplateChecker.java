@@ -23,7 +23,7 @@ import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.CommitStatus;
-import org.jboss.tyr.model.TyrConfiguration;
+import org.jboss.tyr.config.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.Format;
 import org.jboss.tyr.model.yaml.FormatYaml;

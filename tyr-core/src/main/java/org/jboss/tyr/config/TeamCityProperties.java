@@ -1,4 +1,4 @@
-package org.jboss.tyr.ci;
+package org.jboss.tyr.config;
 
 import io.quarkus.arc.config.ConfigProperties;
 

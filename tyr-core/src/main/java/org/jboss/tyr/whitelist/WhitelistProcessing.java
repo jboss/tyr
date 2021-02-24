@@ -25,7 +25,7 @@ import org.jboss.tyr.command.AbstractCommand;
 import org.jboss.tyr.command.CommandsLoader;
 import org.jboss.tyr.model.AdditionalResourcesLoader;
 import org.jboss.tyr.model.PersistentList;
-import org.jboss.tyr.model.TyrConfiguration;
+import org.jboss.tyr.config.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 

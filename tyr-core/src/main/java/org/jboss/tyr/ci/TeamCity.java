@@ -17,6 +17,7 @@ package org.jboss.tyr.ci;
 
 import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
+import org.jboss.tyr.config.TeamCityProperties;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.json.BuildJson;
 import org.jboss.tyr.model.json.Property;

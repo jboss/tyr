@@ -21,7 +21,7 @@ public class TyrMain implements QuarkusApplication {
         JsonReader reader = Json.createReader(new StringReader(args[0]));
         JsonObject prJson = reader.readObject();
         String result = templateChecker.processPullRequest(prJson);
-        System.out.println(">>> " + result);
+        System.out.println(">>> " + (result.isEmpty() ? "The PR is valid" : result));
         return result.isEmpty() ? 0 : 1;
     }
 }

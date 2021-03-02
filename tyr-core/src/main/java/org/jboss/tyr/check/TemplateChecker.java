@@ -158,7 +158,7 @@ public class TemplateChecker {
     private String processPR(JsonObject prPayload) throws InvalidPayloadException {
         if (!skipCheck.shouldSkip(prPayload, format)) {
             String errorMessage = checkPR(prPayload);
-            if (errorMessage != null) {
+            if (errorMessage != null && configuration.statusPush()) {
                 gitHubService.updateCommitStatus(format.getRepository(),
                     prPayload.getJsonObject(Utils.PULL_REQUEST).getJsonObject(Utils.HEAD).getString(Utils.SHA),
                     errorMessage.isEmpty() ? CommitStatus.SUCCESS : CommitStatus.ERROR,

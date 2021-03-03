@@ -167,6 +167,8 @@ public class TemplateChecker {
             }
 
             return errorMessage;
+        } else {
+            log.info("The skip check pattern was matched. Skipping Tyr processing.");
         }
 
         return "";

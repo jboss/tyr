@@ -38,7 +38,7 @@ public class AdditionalResourcesLoader {
 
     private URL[] jarURLs;
     private List<Check> additionalChecks;
-    private List<Command> additionaCommands;
+    private List<Command> additionalCommands;
 
     @Inject
     TyrConfiguration configuration;
@@ -47,7 +47,7 @@ public class AdditionalResourcesLoader {
     public void init() {
         jarURLs = loadAdditionalJars();
         additionalChecks = loadAdditionalResource(Check.class);
-        additionaCommands = loadAdditionalResource(Command.class);
+        additionalCommands = loadAdditionalResource(Command.class);
     }
 
     public List<Check> getAdditionalChecks() {
@@ -55,7 +55,7 @@ public class AdditionalResourcesLoader {
     }
 
     public List<Command> getAdditionalCommands() {
-        return additionaCommands;
+        return additionalCommands;
     }
 
     private URL[] loadAdditionalJars() {

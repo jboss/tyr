@@ -20,6 +20,9 @@ public interface TyrConfiguration {
     @ConfigProperty(name = "github.oauth.token")
     String oauthToken();
 
+    @ConfigProperty(name = "github.status.push", defaultValue = "true")
+    boolean statusPush();
+
     @ConfigProperty(name = "users.dir")
     Optional<String> whitelistDir();
 

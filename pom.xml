@@ -7,28 +7,32 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.11.3.Final</quarkus.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <version.checkstyle>3.1.1</version.checkstyle>
+        <version.org.wildfly.checkstyle>1.0.8.Final</version.org.wildfly.checkstyle>
+        <version.com.fasterxml.jackson>2.12.1</version.com.fasterxml.jackson>
+
+        <!-- Quarkus -->
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus-plugin.version>${quarkus.version}</quarkus-plugin.version>
+        <quarkus.version>1.12.1.Final</quarkus.version>
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>${quarkus.version}</quarkus.platform.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <checkstyle.version>3.1.0</checkstyle.version>
-        <com.fasterxml.jackson.version>2.10.0</com.fasterxml.jackson.version>
-        <arquillian.version>1.4.1.Final</arquillian.version>
     </properties>
     
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle.version}</version>
+                <version>${version.checkstyle}</version>
                 <executions>
                     <execution>
                         <id>check-style</id>
@@ -42,18 +46,7 @@
                     <dependency>
                         <groupId>org.wildfly.checkstyle</groupId>
                         <artifactId>wildfly-checkstyle-config</artifactId>
-                        <version>1.0.8.Final</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.29</version>
-                        <exclusions>
-                            <exclusion>
-                                <artifactId>tools</artifactId>
-                                <groupId>com.sun</groupId>
-                            </exclusion>
-                        </exclusions>
+                        <version>${version.org.wildfly.checkstyle}</version>
                     </dependency>
                 </dependencies>
                 <configuration>

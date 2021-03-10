@@ -1,10 +1,45 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.jboss.tyr</groupId>
     <artifactId>tyr-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
+
     <name>Tyr: Parent</name>
     <packaging>pom</packaging>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/jboss/tyr/issues/</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:jboss/tyr.git</connection>
+        <developerConnection>scm:git:git@github.com:jboss/tyr.git</developerConnection>
+        <url>https://github.com/jboss/tyr</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>jboss.org</id>
+            <name>JBoss.org Community</name>
+            <organization>JBoss.org</organization>
+            <organizationUrl>http://www.jboss.org</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>JBoss by Red Hat</name>
+        <url>http://www.jboss.org</url>
+    </organization>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -26,8 +61,31 @@
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+
+        <!-- Releases -->
+        <jboss.releases.repo.id>jboss-releases-repository</jboss.releases.repo.id>
+        <jboss.releases.repo.url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</jboss.releases.repo.url>
+        <jboss.snapshots.repo.id>jboss-snapshots-repository</jboss.snapshots.repo.id>
+        <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
+
+        <!-- maven-release-plugin -->
+        <useReleaseProfile>false</useReleaseProfile>
     </properties>
-    
+
+    <distributionManagement>
+        <repository>
+            <id>${jboss.releases.repo.id}</id>
+            <name>JBoss Releases Repository</name>
+            <url>${jboss.releases.repo.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>${jboss.snapshots.repo.id}</id>
+            <name>JBoss Snapshots Repository</name>
+            <url>${jboss.snapshots.repo.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
     <build>
         <plugins>
             <plugin>

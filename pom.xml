@@ -3,7 +3,7 @@
 
     <groupId>org.jboss.tyr</groupId>
     <artifactId>tyr-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>Tyr: Parent</name>
     <description>Provides a GitHub pull requests format verification tool.</description>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2019-2021 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class TestUtils {
     public static final JsonObject EMPTY_PAYLOAD = createEmptyJsonPayload();
 
     public static final JsonArray TEST_COMMITS_PAYLOAD = loadJsonArray(JSON_DIR + "/testCommitsPayload.json");
+    public static final JsonArray MULTIPLE_COMMIT_MESSAGES_PAYLOAD = loadJsonArray(JSON_DIR + "/multipleCommitMessagesPayload.json");
 
     public static final FormatYaml FORMAT_CONFIG = loadFormatFromYamlFile(YAML_DIR + "/testTemplate.yaml");
     public static final FormatYaml FORMAT_CONFIG_CI = loadFormatFromYamlFile(YAML_DIR + "/testTemplateCI.yaml");
@@ -67,7 +68,7 @@ public class TestUtils {
 
     public static boolean fileContainsLine(File file, String line) {
         try (FileReader fileReader = new FileReader(file);
-             BufferedReader br = new BufferedReader(fileReader)) {
+            BufferedReader br = new BufferedReader(fileReader)) {
             String fileLine;
             while ((fileLine = br.readLine()) != null) {
                 if (fileLine.equals(line)) {
@@ -116,7 +117,7 @@ public class TestUtils {
         }
     }
 
-    private static File getFile(String fileName) {
+    public static File getFile(String fileName) {
         try {
             String path = TestUtils.class.getClassLoader().getResource(fileName).getFile();
             return new File(URLDecoder.decode(path, "UTF-8"));

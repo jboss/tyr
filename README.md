@@ -28,8 +28,9 @@ you can create your own.
         a. application properties - set once in `tyr-core/src/main/resources/application.properties`. Necessary to rebuild Tyr after every adjustment of the file.\
         b. system properties - passed as a parameter when starting Tyr. e.g. `-Dtyr.template.format.file=/path/to/file` (preferred option)\
         c. as environment property TYR_TEMPLATE_FORMAT_FILE=/path/to/file
-1. start Tyr - `java -jar tyr-webhook-runner.jar` with above MP config properties set.\
-   (as for instance with system properties, e.g. `java -Dtyr.template.format.file="/path/to/file" -Dtyr.github.oauth.token="afegxh64hnxh4646..." -jar tyr-webhook-runner.jar`)
+1. start Tyr - `java -jar tyr-webhook/target/quarkus-app/quarkus-run.jar
+   ` with above MP config properties set.\
+   (as for instance with system properties, e.g. `java -Dtyr.template.format.file="/path/to/file" -Dtyr.github.oauth.token="afegxh64hnxh4646..." -jar quarkus-run.jar`)
 1. Expose local server instance with ngrok - https://ngrok.com/
     > Here you need to expose **http** port **8080** as the default application
     interface where the application runs. Consult the ngrok documentation for the
@@ -42,10 +43,10 @@ you can create your own.
     1. Set *Let me select individual events* and check only *Pull requests* 
     and *Pull request review comments*
     1. Leave Active set and click “Add webhook”
-    1 Don’t worry about the error - the first JSON differs from what the 
+    > Don’t worry about the error - the first JSON differs from what the 
     subsequent PR JSONs will look like.
 1. Last thing is to edit your format template file.  
-    1. Open `format-template.yaml` which path you've set in a 3rd step.
+    1. Open `format-example.yaml` which path you've set in a 3rd step.
     1. Edit value of the variable `repository` so it points to __your__ test-repo.
     1. Edit value of the variable `statusUrl` so it points to __your__ test-repo or leave it default.
     1. Now you have to set if you want Tyr to use any CI. 

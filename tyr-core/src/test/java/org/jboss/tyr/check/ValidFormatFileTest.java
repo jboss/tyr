@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2019-2021 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,20 @@ package org.jboss.tyr.check;
 import io.quarkus.test.junit.QuarkusTest;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.TestUtils;
-import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-@QuarkusTest
-public class TemplateCheckerTest {
 
+@QuarkusTest
+class ValidFormatFileTest {
     @Inject
     TemplateChecker templateChecker;
 
     @Test
-    @Disabled("templateChecker.init(TestUtils.FORMAT_CONFIG_CI)")
-    public void testValidTemplateConfig() throws InvalidPayloadException {
-//        templateChecker.init(TestUtils.FORMAT_CONFIG_CI);
+    public void testConfigSetValidFormatFilePath() throws InvalidPayloadException {
         Assertions.assertEquals("Dummy check failure", templateChecker.checkPR(TestUtils.TEST_PAYLOAD),
-            "Valid PR should only fail with included additional check");
-    }
-
-    @Test
-    @Disabled("templateChecker.init(null)")
-    public void testNullConfigParameter() {
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> templateChecker.init(null));
-    }
-
-    @Test
-    @Disabled("templateChecker.init(testConfig)")
-    public void testNullFormatParameter() {
-        FormatYaml testConfig = new FormatYaml();
-        testConfig.setFormat(null);
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> templateChecker.init(testConfig));
+                "Valid PR should only fail with included additional check");
     }
 }

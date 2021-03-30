@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2019-2021 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import org.jboss.tyr.additional.resource.DummyAdditionalCommand;
 import org.jboss.tyr.check.TemplateChecker;
 import org.jboss.tyr.whitelist.WhitelistProcessing;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -58,11 +57,8 @@ public class AdditionalResourcesTest {
     TemplateChecker templateChecker;
 
     @Test
-    @Disabled("templateChecker.init(TestUtils.FORMAT_CONFIG)")
     public void additionalChecksInvokedTest() throws InvalidPayloadException {
         DummyAdditionalCheck.clearCounter(); // incremented by different test checking the valid PR check invocation
-//        templateChecker.init(TestUtils.FORMAT_CONFIG);
-
         String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
 
         Assertions.assertEquals(DummyAdditionalCheck.getMessage(), result,
@@ -79,33 +75,5 @@ public class AdditionalResourcesTest {
         whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
 
         Assertions.assertTrue(DummyAdditionalCommand.isTriggered());
-    }
-
-
-    @Test
-    @Disabled("Quarkus support for different config values,templateChecker.init(TestUtils.FORMAT_CONFIG)")
-    public void invalidPathAdditionalResourcesTest() throws InvalidPayloadException {
-//        templateChecker.init(TestUtils.FORMAT_CONFIG);
-        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
-
-        // should not fail, logs warning
-        String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
-        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
-
-        Assertions.assertTrue(result.isEmpty());
-        Assertions.assertFalse(DummyAdditionalCommand.isTriggered());
-    }
-
-    @Test
-    @Disabled("Quarkus support for different config values,templateChecker.init(TestUtils.FORMAT_CONFIG)")
-    public void emptyAdditionalResourcesPropertyTest() throws InvalidPayloadException {
-//        templateChecker.init(TestUtils.FORMAT_CONFIG);
-//        whitelistProcessing.init(TestUtils.FORMAT_CONFIG);
-
-        String result = templateChecker.checkPR(TestUtils.TEST_PAYLOAD);
-        whitelistProcessing.processPRComment(TestUtils.ISSUE_PAYLOAD);
-
-        Assertions.assertTrue(result.isEmpty());
-        Assertions.assertFalse(DummyAdditionalCommand.isTriggered());
     }
 }

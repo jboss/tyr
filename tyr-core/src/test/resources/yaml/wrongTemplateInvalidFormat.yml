@@ -1,0 +1,3 @@
+repository: "testuser/testrepo"
+statusUrl: "https://github.com/testuser/test-repo/blob/master/.github/pull_request_template.md"
+

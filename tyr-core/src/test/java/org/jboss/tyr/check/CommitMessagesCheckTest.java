@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc, and individual contributors.
+ * Copyright 2019-2021 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.jboss.tyr.TestUtils;
 import org.jboss.tyr.model.yaml.RegexDefinition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -76,16 +75,5 @@ public class CommitMessagesCheckTest {
         commitMessagesCheck.setRegex(commitRegexDefinition);
 
         Assertions.assertEquals(CommitMessagesCheck.DEFAULT_MESSAGE, commitMessagesCheck.check(TestUtils.TEST_PAYLOAD), "Unexpected message returned");
-    }
-
-    @Test
-    @Disabled("multiple mocks support in quarkus (1.4 or 1.3.x)")
-    public void testMultipleCommitMessages() throws InvalidPayloadException {
-//        PowerMockito.stub(method(GitHubAPI.class, TestUtils.GET_JSON_WITH_COMMITS, JsonObject.class)).toReturn(TestUtils.MULTIPLE_COMMIT_MESSAGES_PAYLOAD);
-
-        commitRegexDefinition.setPattern(Pattern.compile("Test commit"));
-        commitMessagesCheck.setRegex(commitRegexDefinition);
-
-        Assertions.assertNull(commitMessagesCheck.check(TestUtils.TEST_PAYLOAD));
     }
 }

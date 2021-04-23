@@ -63,6 +63,25 @@ green color, and in terminal where the server runs you’ll see
 **Status update: 201**. 
    > If not, check Tyr output for any Exceptions. Also check incoming ngrok HTTP requests to determine error code. Try to rebuild and rerun Tyr. Check GitHub if token was used by Tyr. Check latest info at the bottom of your test-repo webhook settings.
 
+### Is your repository private?
+If yes, some changes have to done in the configuration. 
+This is needed because Tyr is working not just with PRs. 
+Current scope **"repo:status"** of the token grants read/write access to public and private repository commit statuses. 
+This scope is only necessary to grant other users or services access to private repository commit statuses without granting access to the code. 
+If the repository is public, Tyr is able to read all the necessary data, but when it's private, the scope of the permissions has to be expanded to allow full access to private repository.
+If you don't like this option, you can use Tyr with limited functionality where commit checks will be disabled.
+
+For the full functionality of Tyr follow these steps:
+1. Repeat the **3rd step**, point **i.** of the Development Guide, but tick the "repo" instead of "repo:status".
+1. Generate this new token and use it.
+> Because GitHub has a different set of OAuth token permissions for private repos vs. public repos, we have to extend the scope of permissions for the private repos, so the whole functionality of Tyr can be guaranteed.
+
+For the limited functionality (disabled commit checks) follow these steps:
+1. Repeat the **3rd step** of the Development Guide but use also the property `tyr.github.commit.checks.disabled` with its value set to true.   
+Alternatively:
+1. Repeat the **7th step** of the development Guide. There you will use file `format-example-without-commits.yaml` instead of the on mentioned in **7th step**.
+> This way the scope of the oauth token permission will be limited, but functionality of commit checks will be disabled.
+
 ## OpenShift deployment
 
 This project contains an openshift profile to be easily deployable to

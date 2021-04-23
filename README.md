@@ -63,6 +63,21 @@ green color, and in terminal where the server runs you’ll see
 **Status update: 201**. 
    > If not, check Tyr output for any Exceptions. Also check incoming ngrok HTTP requests to determine error code. Try to rebuild and rerun Tyr. Check GitHub if token was used by Tyr. Check latest info at the bottom of your test-repo webhook settings.
 
+### Is your test repository private?
+If yes, some changes have to done in the configuration.  
+
+1. Repeat the **3rd step**, point **i.** of the Development Guide, but tick the "repo" instead of "repo:status".
+1. Generate this new token and use it.
+> Because GitHub has improperly set OAuth token permissions for private repos vs. public repos, we have to extend the scope of permissions for the private repos, so the whole functionality of Tyr can be guaranteed.
+
+If this is not suitable for you, then you can use the alternative configuration of Tyr. 
+This means that Tyr will work on your private repo with default permissions, but with limited functionality.
+
+1. Repeat the **3rd step** of the Development Guide but use also property `tyr.github.commit.check.disable` with its value set to true.   
+Alternatively:
+1. Repeat the **7th step** of the development Guide and delete all the parts of the file where commit occurs.
+> This way the scope of the oauth token permission will be limited, but functionality of commit checks will be disabled.
+
 ## OpenShift deployment
 
 This project contains an openshift profile to be easily deployable to

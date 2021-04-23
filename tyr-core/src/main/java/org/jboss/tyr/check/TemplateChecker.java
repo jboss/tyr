@@ -128,9 +128,11 @@ public class TemplateChecker {
                     format.getDescription().getOptionalRows()));
         }
 
-        if (format.getCommit() != null) {
-            commitMessagesCheck.setRegex(format.getCommit());
-            checks.add(commitMessagesCheck);
+        if (!configuration.disableCommitCheck()){
+            if (format.getCommit() != null) {
+                commitMessagesCheck.setRegex(format.getCommit());
+                checks.add(commitMessagesCheck);
+            }
         }
 
         checks.addAll(additionalResourcesLoader.getAdditionalChecks());

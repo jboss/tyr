@@ -37,6 +37,9 @@ public class SkipCheck {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
+        if (gitHubService.commitCheckDisabled()) {
+            return skipByTitle(payload, config) || skipByDescriptionFirstRow(payload, config);
+        }
         return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
     }
 

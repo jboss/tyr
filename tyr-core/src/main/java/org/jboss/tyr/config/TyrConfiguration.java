@@ -23,7 +23,7 @@ public interface TyrConfiguration {
     @ConfigProperty(name = "github.status.push", defaultValue = "true")
     boolean statusPush();
 
-    @ConfigProperty(name = "github.commit.check.disable", defaultValue = "false")
+    @ConfigProperty(name = "github.commit.check.disabled", defaultValue = "false")
     boolean disableCommitCheck();
 
     @ConfigProperty(name = "users.dir")

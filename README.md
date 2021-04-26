@@ -68,7 +68,7 @@ If yes, some changes have to done in the configuration.
 
 1. Repeat the **3rd step**, point **i.** of the Development Guide, but tick the "repo" instead of "repo:status".
 1. Generate this new token and use it.
-> Because GitHub has improperly set OAuth token permissions for private repos vs. public repos, we have to extend the scope of permissions for the private repos, so the whole functionality of Tyr can be guaranteed.
+> Because GitHub has a different set of OAuth token permissions for private repos vs. public repos, we have to extend the scope of permissions for the private repos, so the whole functionality of Tyr can be guaranteed.
 
 If this is not suitable for you, then you can use the alternative configuration of Tyr. 
 This means that Tyr will work on your private repo with default permissions, but with limited functionality.

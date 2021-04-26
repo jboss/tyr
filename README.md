@@ -73,7 +73,7 @@ If yes, some changes have to done in the configuration.
 If this is not suitable for you, then you can use the alternative configuration of Tyr. 
 This means that Tyr will work on your private repo with default permissions, but with limited functionality.
 
-1. Repeat the **3rd step** of the Development Guide but use also property `tyr.github.commit.check.disable` with its value set to true.   
+1. Repeat the **3rd step** of the Development Guide but use also the property `tyr.github.commit.check.disabled` with its value set to true.   
 Alternatively:
 1. Repeat the **7th step** of the development Guide and delete all the parts of the file where commit occurs.
 > This way the scope of the oauth token permission will be limited, but functionality of commit checks will be disabled.

@@ -49,10 +49,6 @@ public class GitHubService {
     @Inject
     TyrConfiguration configuration;
 
-    public boolean commitCheckDisabled() {
-        return configuration.disableCommitCheck();
-    }
-
     public void updateCommitStatus(String repository, String sha, CommitStatus status,
                                           String targetUrl, String description, String context) {
 

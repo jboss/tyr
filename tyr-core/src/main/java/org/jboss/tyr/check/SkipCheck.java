@@ -16,6 +16,7 @@
 package org.jboss.tyr.check;
 
 import org.jboss.tyr.InvalidPayloadException;
+import org.jboss.tyr.config.TyrConfiguration;
 import org.jboss.tyr.github.GitHubService;
 import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
@@ -33,14 +34,15 @@ public class SkipCheck {
     @Inject
     GitHubService gitHubService;
 
+    @Inject
+    TyrConfiguration configuration;
+
     public boolean shouldSkip(JsonObject payload, FormatYaml config) throws InvalidPayloadException {
         if (payload == null || config == null) {
             throw new IllegalArgumentException("Input arguments cannot be null");
         }
-        if (gitHubService.commitCheckDisabled()) {
-            return skipByTitle(payload, config) || skipByDescriptionFirstRow(payload, config);
-        }
-        return skipByTitle(payload, config) || skipByCommit(payload, config) || skipByDescriptionFirstRow(payload, config);
+
+        return skipByTitle(payload, config) || (!configuration.commitChecksDisabled() && skipByCommit(payload, config)) || skipByDescriptionFirstRow(payload, config);
     }
 
     private boolean skipByTitle(JsonObject payload, FormatYaml config) {

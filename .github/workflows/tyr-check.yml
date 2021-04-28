@@ -1,0 +1,19 @@
+name: Tyr check
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tyr PR verification
+        uses: xstefank/tyr-action@main
+        with:
+          formatUrl: https://raw.githubusercontent.com/jboss/tyr/master/.github/tyr-format.yaml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pushStatus: false

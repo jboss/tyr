@@ -24,6 +24,7 @@ import org.jboss.tyr.model.json.Property;
 import org.jboss.tyr.model.json.SnapshotDependencies;
 import org.jboss.tyr.model.json.SnapshotDependency;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
@@ -79,6 +80,13 @@ public class TeamCity implements ContinuousIntegration {
         this.client = ClientBuilder.newClient();
 
         this.jsonb = JsonbBuilder.create();
+    }
+
+    @PreDestroy
+    public void closeClient() {
+        if (client != null) {
+            client.close();
+        }
     }
 
     @Override

@@ -83,6 +83,7 @@ public class GitHubService {
             if (response != null) {
                 response.close();
             }
+            client.close();
         }
     }
 
@@ -122,6 +123,7 @@ public class GitHubService {
             if (response != null) {
                 response.close();
             }
+            client.close();
         }
     }
 

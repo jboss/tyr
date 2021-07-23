@@ -61,6 +61,9 @@ public class TemplateChecker {
     CommitMessagesCheck commitMessagesCheck;
 
     @Inject
+    AddTargetBranchLabelCheck addTargetBranchLabelCheck;
+
+    @Inject
     AdditionalResourcesLoader additionalResourcesLoader;
 
     @Inject
@@ -122,6 +125,13 @@ public class TemplateChecker {
     private List<Check> registerChecks(Format format) {
         List<Check> checks = new ArrayList<>();
 
+        if (format.getLabel() != null) {
+            if (format.getLabel().getTargetBranch() != null) {
+                addTargetBranchLabelCheck.initCheck(format.getLabel().getTargetBranch());
+            }
+            checks.add(addTargetBranchLabelCheck);
+        }
+
         if (format.getTitle() != null) {
             checks.add(new TitleCheck(format.getTitle()));
         }
@@ -131,7 +141,7 @@ public class TemplateChecker {
                     format.getDescription().getOptionalRows()));
         }
 
-        if (!configuration.commitChecksDisabled() && format.getCommit() != null){
+        if (!configuration.commitChecksDisabled() && format.getCommit() != null) {
             commitMessagesCheck.setRegex(format.getCommit());
             checks.add(commitMessagesCheck);
 

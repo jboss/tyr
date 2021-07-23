@@ -6,5 +6,5 @@ format:
     description: "(([^do not|don't]\\s)?skip.*template.*check(.*)\\s?)|(([^do not|don't]\\s)?bypass.*template.*check(.*)\\s?)"
   description:
     required rows:
-      - pattern: "(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\\s#\\d+"
+      - pattern: "\\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\\b\\s#\\d+\\s*"
         message: "The PR description must contain a link to the GitHub issue it is resolving"

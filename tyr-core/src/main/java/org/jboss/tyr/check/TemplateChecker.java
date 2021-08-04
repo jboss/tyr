@@ -66,6 +66,9 @@ public class TemplateChecker {
     @Inject
     SkipCheck skipCheck;
 
+    @Inject
+    CommitsQuantityCheck commitsQuantityCheck;
+
     private FormatYaml format;
     private List<Check> checks;
 
@@ -131,6 +134,9 @@ public class TemplateChecker {
         if (!configuration.commitChecksDisabled() && format.getCommit() != null){
             commitMessagesCheck.setRegex(format.getCommit());
             checks.add(commitMessagesCheck);
+
+            commitsQuantityCheck.initCheck(format.getCommitsQuantity());
+            checks.add(commitsQuantityCheck);
         }
 
         checks.addAll(additionalResourcesLoader.getAdditionalChecks());

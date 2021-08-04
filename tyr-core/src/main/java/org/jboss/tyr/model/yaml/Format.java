@@ -28,6 +28,7 @@ public class Format {
     private Description description;
     private List<String> additionalChecks;
     private Map<String, String> commands;
+    private CommitsQuantity commitsQuantity;
 
     @JsonProperty("CI")
     private List<String> CI;
@@ -86,5 +87,13 @@ public class Format {
 
     public void setCI(List<String> CI) {
         this.CI = CI;
+    }
+
+    public CommitsQuantity getCommitsQuantity() {
+        return commitsQuantity;
+    }
+
+    public void setCommitsQuantity(CommitsQuantity commitsQuantity) {
+        this.commitsQuantity = commitsQuantity;
     }
 }

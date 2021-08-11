@@ -15,6 +15,7 @@
  */
 package org.jboss.tyr.verification;
 
+import org.jboss.tyr.model.Utils;
 import org.jboss.tyr.model.yaml.FormatYaml;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,5 +47,30 @@ public class VerificationsTest {
     @Test
     public void testNullParameterToVerify() {
         Assertions.assertThrows(NullPointerException.class, () -> VerificationHandler.verifyConfiguration(null));
+    }
+    @Test
+    public void testRepositoryFormatVerificationRegex() {
+        //Valid examples
+        Assertions.assertTrue("a/repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue("a/.".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue("a/_".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue("a/-".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue("a-a123/.test.repo.".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue("a-A-a/_test_repo_".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue(("a".repeat(39)+"/-Test-repo-123-").matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertTrue(("a/" + "-".repeat(100)).matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+
+        //Invalid username
+        Assertions.assertFalse("-a/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("a-/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("a_a/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("a.a/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("a--a/test-repo".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse(("a".repeat(40) + "/test-repo").matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+
+        //Invalid repository names
+        Assertions.assertFalse(("a/" + ".".repeat(101)).matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
+        Assertions.assertFalse("a/".matches(Utils.REPOSITORY_FORMAT_VERIFICATION_REGEX));
     }
 }

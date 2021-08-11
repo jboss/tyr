@@ -50,6 +50,10 @@ public class Utils {
     public static final String MESSAGE = "message";
     public static final String URL = "url";
 
+    //Repository verification regex
+    public static final String REPOSITORY_FORMAT_VERIFICATION_REGEX =
+            "^([a-zA-Z0-9](?:-?[a-zA-Z0-9]){0,38})/[a-zA-Z0-9_.-]{1,100}$";
+
     public static String getConfigDirectory() {
         String path = System.getProperty(TYR_CONFIG_DIR);
         if (path == null) {

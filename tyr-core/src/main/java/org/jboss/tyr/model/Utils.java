@@ -37,6 +37,12 @@ public class Utils {
     public static final String REF = "ref";
     public static final String BASE = "base";
     public static final String COMMITS_URL = "commits_url";
+    public static final String LABELS = "labels";
+    public static final String NAME = "name";
+
+    //Repository payload
+    public static final String REPOSITORY = "repository";
+    public static final String FULL_NAME = "full_name";
 
     //Issue payload
     public static final String ISSUE = "issue";
@@ -49,6 +55,15 @@ public class Utils {
     public static final String COMMIT = "commit";
     public static final String MESSAGE = "message";
     public static final String URL = "url";
+
+    //GitHub API
+    public static final String STATUSES_PATH = "/statuses";
+    public static final String REPOS_PATH = "/repos";
+    public static final String ISSUES_PATH = "/issues";
+    public static final String LABELS_PATH = "/labels";
+
+    //Hexadecimal color regex
+    public static final String COLOR_VERIFICATION = "^([a-f0-9]{6})$";
 
     //Repository verification regex
     public static final String REPOSITORY_FORMAT_VERIFICATION_REGEX =

@@ -18,6 +18,7 @@ package org.jboss.tyr.github;
 import org.jboss.logging.Logger;
 import org.jboss.tyr.InvalidPayloadException;
 import org.jboss.tyr.model.CommitStatus;
+import org.jboss.tyr.model.json.Label;
 import org.jboss.tyr.model.StatusPayload;
 import org.jboss.tyr.config.TyrConfiguration;
 import org.jboss.tyr.model.Utils;
@@ -39,6 +40,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.StringReader;
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 @Named("default")
 @ApplicationScoped
@@ -55,14 +58,13 @@ public class GitHubService {
         Client client = ClientBuilder.newClient();
         URI statusUri = UriBuilder
                 .fromUri(Utils.GITHUB_BASE)
-                .path("/repos")
+                .path(Utils.REPOS_PATH)
                 .path("/" + repository)
-                .path("/statuses")
+                .path(Utils.STATUSES_PATH)
                 .path("/" + sha)
                 .build();
 
         WebTarget target = client.target(statusUri);
-
         Entity<StatusPayload> json = Entity.json(new StatusPayload(status.toString(),
                 targetUrl, description, context));
 
@@ -79,6 +81,44 @@ public class GitHubService {
             log.debug("Github response: " + response.readEntity(String.class));
         } catch (Throwable e) {
             log.error("Cannot update GitHub status", e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+            client.close();
+        }
+    }
+
+    public void addLabelToPullRequest
+            (String repository, int pullRequestNumber, String targetBranch, String description, String color) {
+        Client client = ClientBuilder.newClient();
+        URI labelUri = UriBuilder
+                .fromUri(Utils.GITHUB_BASE)
+                .path(Utils.REPOS_PATH)
+                .path("/" + repository)
+                .path(Utils.ISSUES_PATH)
+                .path("/" + pullRequestNumber)
+                .path(Utils.LABELS_PATH)
+                .build();
+
+        WebTarget target = client.target(labelUri);
+
+        Entity<List<Label>> json = Entity.json(Collections.singletonList(new Label
+                (targetBranch, description, color)));
+
+        log.debug("Updating label: " + json);
+        Response response = null;
+
+        try {
+            response = target.request()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, "token " + configuration.oauthToken())
+                    .post(json);
+
+            log.debug("Pull request label update: " + response.getStatus());
+            log.debug("Github response: " + response.readEntity(String.class));
+        } catch (Throwable e) {
+            log.error("Cannot add label to pull request", e);
         } finally {
             if (response != null) {
                 response.close();

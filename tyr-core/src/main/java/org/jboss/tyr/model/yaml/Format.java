@@ -29,6 +29,7 @@ public class Format {
     private List<String> additionalChecks;
     private Map<String, String> commands;
     private CommitsQuantity commitsQuantity;
+    private LabelFormat label;
 
     @JsonProperty("CI")
     private List<String> CI;
@@ -95,5 +96,13 @@ public class Format {
 
     public void setCommitsQuantity(CommitsQuantity commitsQuantity) {
         this.commitsQuantity = commitsQuantity;
+    }
+
+    public LabelFormat getLabel() {
+        return label;
+    }
+
+    public void setLabel(LabelFormat label) {
+        this.label = label;
     }
 }

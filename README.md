@@ -1,3 +1,7 @@
+# **ARCHIVED AND NO LONGER MAINTAINED**
+# Development moved to https://github.com/wildfly/wildfly-github-bot
+
+
 # Tyr 
 
 ![Powered by OpenShift Online](https://www.openshift.com/images/logos/powered_by_openshift.png)
